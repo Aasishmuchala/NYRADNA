@@ -16,6 +16,16 @@ const navItems: NavItem[] = [
   { label: 'Settings', href: '/settings', icon: 'settings' },
 ];
 
+const createSteps: NavItem[] = [
+  { label: 'Intent', href: '/create/intent', icon: 'edit_note' },
+  { label: 'Brief', href: '/create/brief', icon: 'psychology' },
+  { label: 'Style DNA', href: '/create/style-dna', icon: 'palette' },
+  { label: 'Characters', href: '/create/character-setup', icon: 'face' },
+  { label: 'Review', href: '/create/review', icon: 'movie' },
+  { label: 'Generate', href: '/create/generating', icon: 'auto_awesome' },
+  { label: 'Export', href: '/create/export', icon: 'download' },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
 
@@ -43,7 +53,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 space-y-1 px-2">
+      <nav className="flex-1 space-y-1 px-2 overflow-y-auto">
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -67,6 +77,38 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Create Workflow Section */}
+        {pathname.startsWith('/create') && (
+          <>
+            <div className="uppercase tracking-widest text-[10px] text-[#adaaaa] px-6 mb-2 mt-6">
+              Workflow
+            </div>
+            {createSteps.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+                    active
+                      ? 'bg-[#262626] text-[#ff9064]'
+                      : 'text-[#adaaaa] hover:bg-[#131313] hover:text-white'
+                  }`}
+                >
+                  <span
+                    className={`material-symbols-outlined text-[20px] ${
+                      active ? '[font-variation-settings:"FILL"_1]' : ''
+                    }`}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="text-sm font-medium">{item.label}</span>
+                </Link>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* New Project CTA */}
