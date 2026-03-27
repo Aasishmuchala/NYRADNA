@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRECTOR - AI Video Creation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'manrope': ['Manrope', 'sans-serif'],
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'obsidian': '#0f0f0f',
+                        'slate-900': '#111318',
+                        'slate-800': '#1a1d26',
+                        'slate-700': '#252932',
+                        'slate-600': '#3a3f4d',
+                        'slate-500': '#5a6370',
+                        'slate-400': '#7a8390',
+                        'slate-300': '#a8b0bf',
+                        'slate-200': '#d0d5e0',
+                        'slate-100': '#e8ecf4',
+                        'slate-50': '#f5f7fc',
+                        'primary-600': '#7c3aed',
+                        'primary-500': '#a855f7',
+                        'primary-400': '#d946ef',
+                        'primary-300': '#f472b6',
+                        'primary-200': '#fbcfe8',
+                        'accent-cyan': '#06b6d4',
+                        'accent-emerald': '#10b981',
+                        'accent-amber': '#f59e0b',
+                        'accent-rose': '#f43f5e',
+                        'success': '#10b981',
+                        'warning': '#f59e0b',
+                        'error': '#ef4444',
+                    },
+                    backgroundColor: {
+                        'glass': 'rgba(255, 255, 255, 0.05)',
+                        'glass-light': 'rgba(255, 255, 255, 0.1)',
+                    },
+                    backdropFilter: {
+                        'blur': 'blur(10px)',
+                    },
+                    transitionDuration: {
+                        '400': '400ms',
+                        '600': '600ms',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f0f0f;
+            color: #e8ecf4;
+            overflow: hidden;
+        }
+
+        .screen-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-container.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        .screen-container#screen-style_dna {
+            overflow: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+
+        .fade-enter {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1d26;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3a3f4d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5a6370;
+        }
+    </style>
+</head>
+<body class="dark bg-slate-900">
+    <!-- Landing / Sign In Screen -->
+    <div id="screen-landing_sign_in" class="screen-container active">
+        <div class="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col">
+            <!-- Navigation -->
+            <nav class="px-6 py-4 flex items-center justify-between border-b border-slate-700">
+                <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-400">DIRECTOR</div>
+                <button onclick="go('landing_sign_in')" class="px-4 py-2 text-slate-300 hover:text-slate-100 transition">Sign In</button>
+            </nav>
+
+            <!-- Hero Section -->
+            <div class="flex-1 flex items-center justify-center px-6 py-16">
+                <div class="max-w-2xl text-center">
+                    <h1 class="text-6xl font-bold font-manrope mb-6 text-slate-50">
+                        Create Cinematic AI Videos
+                    </h1>
+                    <p class="text-xl text-slate-300 mb-8">
+                        Transform your ideas into stunning visual stories with our advanced AI video generation platform.
+                    </p>
+                    <div class="flex gap-4 justify-center mb-16">
+                        <button onclick="go('intent_input')" class="px-8 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 transition">
+                            Start for free
+                        </button>
+                        <button onclick="go('dashboard_home')" class="px-8 py-3 bg-slate-700 text-slate-100 rounded-lg font-semibold hover:bg-slate-600 transition">
+                            Sign in
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Signals -->
+            <div class="px-6 py-12 border-t border-slate-700">
+                <div class="max-w-6xl mx-auto">
+                    <p class="text-slate-400 text-center mb-8">Trusted by creators at leading studios</p>
+                    <div class="grid grid-cols-3 gap-8 text-center">
+                        <div>
+                            <div class="text-3xl font-bold text-primary-400 mb-2">10K+</div>
+                            <div class="text-slate-400">Videos Created</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-primary-400 mb-2">500+</div>
+                            <div class="text-slate-400">Active Creators</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-primary-400 mb-2">99%</div>
+                            <div class="text-slate-400">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Home Screen -->
+    <div id="screen-dashboard_home" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg bg-primary-500 text-white font-medium flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Dashboard</h1>
+                    <div class="flex items-center gap-4">
+                        <button class="p-2 hover:bg-slate-700 rounded-lg transition">
+                            <span class="material-symbols-outlined text-slate-300">search</span>
+                        </button>
+                        <button class="p-2 hover:bg-slate-700 rounded-lg transition">
+                            <span class="material-symbols-outlined text-slate-300">notifications</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-2xl font-bold font-manrope text-slate-50">Recent Projects</h2>
+                            <button onclick="go('intent_input')" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                                New Project
+                            </button>
+                        </div>
+
+                        <!-- Project Grid -->
+                        <div class="grid grid-cols-3 gap-6 mb-8">
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer" onclick="go('intent_input')">
+                                <div class="h-40 bg-gradient-to-br from-primary-500 to-primary-400"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Tech Product Demo</h3>
+                                    <p class="text-sm text-slate-400 mb-3">Updated 2 days ago</p>
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <span class="w-2 h-2 rounded-full bg-success"></span>
+                                        <span class="text-success">Ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-accent-cyan to-accent-emerald"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Brand Story</h3>
+                                    <p class="text-sm text-slate-400 mb-3">Updated 1 week ago</p>
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <span class="w-2 h-2 rounded-full bg-warning"></span>
+                                        <span class="text-warning">Generating</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-accent-rose to-accent-amber"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Social Campaign</h3>
+                                    <p class="text-sm text-slate-400 mb-3">Updated 3 weeks ago</p>
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                                        <span class="text-slate-400">Drafting</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resource Usage -->
+                        <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-lg font-semibold text-slate-100 mb-4">Usage This Month</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div>
+                                    <p class="text-slate-400 text-sm mb-2">Scene Minutes</p>
+                                    <div class="text-2xl font-bold text-primary-400">342 / 1000</div>
+                                </div>
+                                <div>
+                                    <p class="text-slate-400 text-sm mb-2">Characters</p>
+                                    <div class="text-2xl font-bold text-accent-cyan">12 / 50</div>
+                                </div>
+                                <div>
+                                    <p class="text-slate-400 text-sm mb-2">Storage</p>
+                                    <div class="text-2xl font-bold text-accent-emerald">24GB / 100GB</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Library Screen -->
+    <div id="screen-project_library" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg bg-primary-500 text-white font-medium flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Projects</h1>
+                    <button onclick="go('intent_input')" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        New Project
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <!-- Filter Bar -->
+                        <div class="flex gap-4 mb-6">
+                            <input type="text" placeholder="Search projects..." class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-primary-500 transition">
+                            <select class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-primary-500 transition">
+                                <option>All Status</option>
+                                <option>Ready</option>
+                                <option>Generating</option>
+                                <option>Drafting</option>
+                                <option>Exported</option>
+                            </select>
+                        </div>
+
+                        <!-- Project Grid -->
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer" onclick="go('brief_interrogation')">
+                                <div class="h-40 bg-gradient-to-br from-primary-500 to-primary-400"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-1">Tech Demo V1</h3>
+                                    <p class="text-xs text-slate-400 mb-3">Updated 2h ago</p>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="w-2 h-2 rounded-full bg-success"></span>
+                                        <span class="text-success">Ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-accent-cyan to-accent-emerald"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-1">Brand Story</h3>
+                                    <p class="text-xs text-slate-400 mb-3">Updated 1d ago</p>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="w-2 h-2 rounded-full bg-warning"></span>
+                                        <span class="text-warning">Generating</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-accent-rose to-accent-amber"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-1">Social Campaign</h3>
+                                    <p class="text-xs text-slate-400 mb-3">Updated 1w ago</p>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                                        <span class="text-slate-400">Drafting</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-slate-700 to-slate-600"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-slate-100 mb-1">Product Launch</h3>
+                                    <p class="text-xs text-slate-400 mb-3">Updated 2w ago</p>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                                        <span class="text-slate-400">Exported</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intent Input Screen -->
+    <div id="screen-intent_input" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Create New Project</h1>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6 flex items-center justify-center">
+                    <div class="w-full max-w-2xl">
+                        <h2 class="text-3xl font-bold font-manrope text-slate-50 mb-2">What do you want to create?</h2>
+                        <p class="text-slate-400 mb-8">Describe your video idea and let our AI handle the rest.</p>
+
+                        <!-- Textarea -->
+                        <div class="relative mb-6">
+                            <textarea placeholder="Enter your video concept... Tell us about characters, setting, mood, and key scenes." class="w-full h-40 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-primary-500 transition resize-none"></textarea>
+                            <div class="absolute top-3 right-3 flex items-center gap-2 text-slate-500 text-sm">
+                                <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                                <span>AI-powered</span>
+                            </div>
+                        </div>
+
+                        <!-- Example Chips -->
+                        <div class="mb-8">
+                            <p class="text-slate-400 text-sm mb-3">Example prompts:</p>
+                            <div class="flex gap-2 flex-wrap">
+                                <button class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-full text-slate-300 hover:border-primary-500 transition text-sm">Product unboxing video</button>
+                                <button class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-full text-slate-300 hover:border-primary-500 transition text-sm">Sci-fi short film</button>
+                                <button class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-full text-slate-300 hover:border-primary-500 transition text-sm">Brand story</button>
+                            </div>
+                        </div>
+
+                        <!-- Continue Button -->
+                        <div class="flex gap-4">
+                            <button onclick="go('dashboard_home')" class="px-6 py-3 bg-slate-700 text-slate-100 rounded-lg font-semibold hover:bg-slate-600 transition">
+                                Cancel
+                            </button>
+                            <button onclick="go('brief_interrogation')" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 transition">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brief Interrogation Screen -->
+    <div id="screen-brief_interrogation" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Project Setup - Step 2 of 5</h1>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="mb-8">
+                            <h2 class="text-3xl font-bold font-manrope text-slate-50 mb-2">Select Primary Persona</h2>
+                            <p class="text-slate-400">Choose the main character archetype for your video.</p>
+                            <!-- Progress Bar -->
+                            <div class="mt-6 w-full bg-slate-700 h-1 rounded-full overflow-hidden">
+                                <div class="bg-primary-500 h-full" style="width: 40%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Persona Grid -->
+                        <div class="grid grid-cols-2 gap-6 mb-8">
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-primary-500 transition cursor-pointer border-2 border-primary-500">
+                                <div class="h-40 bg-gradient-to-br from-primary-600 to-primary-400 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-6xl text-white">person</span>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Professional</h3>
+                                    <p class="text-slate-400 text-sm">Business expert, confident presenter</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-primary-500 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-accent-emerald to-accent-cyan flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-6xl text-white">star</span>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Influencer</h3>
+                                    <p class="text-slate-400 text-sm">Charismatic, engaging storyteller</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-primary-500 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-accent-amber to-accent-rose flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-6xl text-white">psychology</span>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Creative</h3>
+                                    <p class="text-slate-400 text-sm">Artistic visionary, trend-setting</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-primary-500 transition cursor-pointer">
+                                <div class="h-40 bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-6xl text-white">construction</span>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="font-semibold text-slate-100 mb-2">Technical</h3>
+                                    <p class="text-slate-400 text-sm">Expert explainer, detail-oriented</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Intelligence Feed -->
+                        <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                            <h3 class="font-semibold text-slate-100 mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary-400">info</span>
+                                Intelligence Feed
+                            </h3>
+                            <div class="space-y-3 text-sm text-slate-300">
+                                <p>Based on your brief, the Professional persona would be ideal for product demonstrations and corporate content.</p>
+                                <p>The system will learn from your choices to improve recommendations over time.</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 mt-8">
+                            <button onclick="go('intent_input')" class="px-6 py-3 bg-slate-700 text-slate-100 rounded-lg font-semibold hover:bg-slate-600 transition">
+                                Back
+                            </button>
+                            <button onclick="go('character_setup')" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 transition">
+                                CONTINUE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Setup Screen -->
+    <div id="screen-character_setup" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Project Setup - Step 3 of 5</h1>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-4xl mx-auto">
+                        <h2 class="text-3xl font-bold font-manrope text-slate-50 mb-2">Configure Your Character</h2>
+                        <p class="text-slate-400 mb-8">Choose between a real person or AI-generated character.</p>
+
+                        <!-- Tabs -->
+                        <div class="flex gap-2 mb-8 border-b border-slate-700">
+                            <button class="px-6 py-3 border-b-2 border-primary-500 text-primary-400 font-semibold">Real Person</button>
+                            <button class="px-6 py-3 text-slate-400 hover:text-slate-200 transition">AI Character</button>
+                        </div>
+
+                        <!-- Upload Zone -->
+                        <div class="bg-slate-800 border-2 border-dashed border-slate-600 rounded-lg p-12 text-center mb-8 hover:border-primary-500 transition cursor-pointer">
+                            <div class="flex justify-center mb-4">
+                                <span class="material-symbols-outlined text-5xl text-slate-500">cloud_upload</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-100 mb-2">Upload Photos</h3>
+                            <p class="text-slate-400 mb-4">Drag and drop or click to select images</p>
+                            <p class="text-xs text-slate-500">PNG, JPG up to 10MB each</p>
+                        </div>
+
+                        <!-- Thumbnail Grid -->
+                        <div class="mb-8">
+                            <h3 class="font-semibold text-slate-100 mb-4">Uploaded Photos</h3>
+                            <div class="grid grid-cols-4 gap-4">
+                                <div class="relative bg-slate-800 rounded-lg overflow-hidden h-24">
+                                    <div class="w-full h-full bg-gradient-to-br from-primary-500 to-primary-400 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-3xl">person</span>
+                                    </div>
+                                    <div class="absolute top-2 right-2 w-5 h-5 bg-success rounded-full flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-xs">check</span>
+                                    </div>
+                                </div>
+                                <div class="relative bg-slate-800 rounded-lg overflow-hidden h-24">
+                                    <div class="w-full h-full bg-gradient-to-br from-slate-700 to-slate-600 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-slate-500 text-3xl">person</span>
+                                    </div>
+                                    <div class="absolute top-2 right-2 w-5 h-5 bg-error rounded-full flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-xs">close</span>
+                                    </div>
+                                </div>
+                                <div class="relative bg-slate-800 rounded-lg overflow-hidden h-24">
+                                    <div class="w-full h-full bg-gradient-to-br from-accent-cyan to-accent-emerald flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-3xl">person</span>
+                                    </div>
+                                    <div class="absolute top-2 right-2 w-5 h-5 bg-success rounded-full flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-xs">check</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Character Metadata -->
+                        <div class="space-y-4 mb-8">
+                            <div>
+                                <label class="block text-slate-300 text-sm font-semibold mb-2">Character Name</label>
+                                <input type="text" placeholder="e.g., Alex Chen" class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-primary-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 text-sm font-semibold mb-2">Gender Presentation</label>
+                                <select class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-primary-500 transition">
+                                    <option>Not specified</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Non-binary</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Credits Info -->
+                        <div class="bg-slate-800 border border-slate-700 rounded-lg p-4 mb-8">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">Training Cost:</span>
+                                <span class="font-semibold text-primary-400">5 Credits</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4">
+                            <button onclick="go('brief_interrogation')" class="px-6 py-3 bg-slate-700 text-slate-100 rounded-lg font-semibold hover:bg-slate-600 transition">
+                                Back
+                            </button>
+                            <button onclick="go('style_dna')" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 transition">
+                                Train & Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Style DNA Screen -->
+    <div id="screen-style_dna" class="screen-container">
+        <div class="flex h-full bg-slate-900 overflow-hidden">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Style DNA - Step 4 of 5</h1>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-2 h-2 rounded-full bg-success"></span>
+                        <span class="text-success">Real-time Rendering</span>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-hidden flex gap-6 p-6">
+                    <!-- Left Panel - Controls -->
+                    <div class="w-80 bg-slate-800 rounded-lg p-6 overflow-y-auto border border-slate-700">
+                        <h2 class="text-lg font-bold font-manrope text-slate-50 mb-6">Style Controls</h2>
+
+                        <!-- Color Palette -->
+                        <div class="mb-8">
+                            <h3 class="text-sm font-semibold text-slate-300 mb-3">Color Palette</h3>
+                            <div class="grid grid-cols-6 gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-primary-500 cursor-pointer hover:ring-2 hover:ring-primary-400 transition"></div>
+                                <div class="w-8 h-8 rounded-lg bg-accent-cyan cursor-pointer hover:ring-2 hover:ring-accent-cyan transition"></div>
+                                <div class="w-8 h-8 rounded-lg bg-accent-emerald cursor-pointer hover:ring-2 hover:ring-accent-emerald transition"></div>
+                                <div class="w-8 h-8 rounded-lg bg-accent-amber cursor-pointer hover:ring-2 hover:ring-accent-amber transition"></div>
+                                <div class="w-8 h-8 rounded-lg bg-accent-rose cursor-pointer hover:ring-2 hover:ring-accent-rose transition"></div>
+                                <div class="w-8 h-8 rounded-lg bg-slate-600 cursor-pointer hover:ring-2 hover:ring-slate-500 transition"></div>
+                            </div>
+                        </div>
+
+                        <!-- Aspect Ratio -->
+                        <div class="mb-8">
+                            <label class="text-sm font-semibold text-slate-300 block mb-3">Aspect Ratio</label>
+                            <select class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 text-sm focus:outline-none focus:border-primary-500 transition">
+                                <option>16:9 (Cinematic)</option>
+                                <option>9:16 (Portrait)</option>
+                                <option>1:1 (Square)</option>
+                            </select>
+                        </div>
+
+                        <!-- Pacing Slider -->
+                        <div class="mb-8">
+                            <label class="text-sm font-semibold text-slate-300 block mb-3">Pacing</label>
+                            <input type="range" min="0" max="100" value="60" class="w-full">
+                            <div class="flex justify-between text-xs text-slate-400 mt-2">
+                                <span>Slow</span>
+                                <span>Fast</span>
+                            </div>
+                        </div>
+
+                        <!-- Lighting -->
+                        <div class="mb-8">
+                            <label class="text-sm font-semibold text-slate-300 block mb-3">Lighting</label>
+                            <select class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 text-sm focus:outline-none focus:border-primary-500 transition">
+                                <option>Cinematic</option>
+                                <option>Natural</option>
+                                <option>Studio</option>
+                                <option>Dramatic</option>
+                            </select>
+                        </div>
+
+                        <!-- Camera Motion -->
+                        <div class="mb-8">
+                            <label class="text-sm font-semibold text-slate-300 block mb-3">Camera Motion</label>
+                            <select class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 text-sm focus:outline-none focus:border-primary-500 transition">
+                                <option>Dynamic</option>
+                                <option>Static</option>
+                                <option>Smooth Pan</option>
+                                <option>Tracking</option>
+                            </select>
+                        </div>
+
+                        <!-- Lock Button -->
+                        <button class="w-full px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition font-semibold flex items-center justify-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-sm">lock</span>
+                            Lock Style DNA
+                        </button>
+                    </div>
+
+                    <!-- Right Panel - Preview -->
+                    <div class="flex-1 bg-slate-800 rounded-lg overflow-hidden border border-slate-700 flex items-center justify-center">
+                        <div class="w-full h-full bg-gradient-to-br from-primary-600 to-primary-500 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="material-symbols-outlined text-8xl text-white opacity-30 mb-4 block">play_circle</span>
+                                <p class="text-white opacity-50">Live Preview</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Action Bar -->
+                <div class="h-16 bg-slate-800 border-t border-slate-700 flex items-center justify-between px-6">
+                    <button onclick="go('character_setup')" class="px-6 py-3 bg-slate-700 text-slate-100 rounded-lg font-semibold hover:bg-slate-600 transition">
+                        Back
+                    </button>
+                    <button onclick="go('generation_progress')" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 transition">
+                        Generate Video
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generation Progress Screen -->
+    <div id="screen-generation_progress" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Generation in Progress</h1>
+                    <div class="flex items-center gap-4">
+                        <button class="px-4 py-2 bg-slate-700 text-slate-100 rounded-lg hover:bg-slate-600 transition flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-sm">pause</span>
+                            Pause Render
+                        </button>
+                        <button onclick="go('scene_review')" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-sm">preview</span>
+                            Preview Available
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-6xl mx-auto">
+                        <!-- Global Progress -->
+                        <div class="bg-slate-800 rounded-lg p-6 mb-8 border border-slate-700">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-semibold text-slate-100">Overall Progress</h2>
+                                <span class="text-2xl font-bold text-primary-400">14 of 20</span>
+                            </div>
+                            <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-primary-500 to-primary-400 h-full" style="width: 70%;"></div>
+                            </div>
+                            <p class="text-slate-400 text-sm mt-3">Scenes complete • Est. 8 minutes remaining</p>
+                        </div>
+
+                        <!-- Act Structure -->
+                        <h3 class="text-lg font-semibold text-slate-100 mb-4">Act Structure</h3>
+                        <div class="grid grid-cols-3 gap-4 mb-8">
+                            <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                <h4 class="font-semibold text-slate-100 mb-3">Act I: Setup</h4>
+                                <div class="bg-slate-700 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-success h-full" style="width: 100%;"></div>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-2">6 of 6 scenes</p>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                <h4 class="font-semibold text-slate-100 mb-3">Act II: Conflict</h4>
+                                <div class="bg-slate-700 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-warning h-full" style="width: 80%;"></div>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-2">4 of 5 scenes</p>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                <h4 class="font-semibold text-slate-100 mb-3">Act III: Resolution</h4>
+                                <div class="bg-slate-700 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-primary-500 h-full" style="width: 40%;"></div>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-2">4 of 9 scenes</p>
+                            </div>
+                        </div>
+
+                        <!-- Scene Pipeline -->
+                        <h3 class="text-lg font-semibold text-slate-100 mb-4">Scene Pipeline</h3>
+                        <div class="grid grid-cols-5 gap-4">
+                            <!-- Complete Scene -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition cursor-pointer" onclick="go('scene_review')">
+                                <div class="h-24 bg-gradient-to-br from-primary-600 to-primary-400"></div>
+                                <div class="p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-300">Scene 1</span>
+                                        <span class="w-5 h-5 rounded-full bg-success flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xs text-white">check</span>
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">Complete</div>
+                                    <div class="mt-2 flex items-center gap-1">
+                                        <span class="text-xs text-accent-emerald">98%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Generating Scene -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-primary-500">
+                                <div class="h-24 bg-gradient-to-br from-accent-cyan to-accent-emerald relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-3xl animate-spin">hourglass_bottom</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-300">Scene 2</span>
+                                        <span class="w-5 h-5 rounded-full bg-warning flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xs text-white">schedule</span>
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">Generating</div>
+                                    <div class="mt-2 flex items-center gap-1">
+                                        <span class="text-xs text-warning">45%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Queued Scene -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
+                                <div class="h-24 bg-slate-700"></div>
+                                <div class="p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-300">Scene 3</span>
+                                        <span class="w-5 h-5 rounded-full bg-slate-500 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xs text-white">schedule</span>
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">Queued</div>
+                                    <div class="mt-2 flex items-center gap-1">
+                                        <span class="text-xs text-slate-500">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Complete Scene -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition cursor-pointer">
+                                <div class="h-24 bg-gradient-to-br from-accent-rose to-accent-amber"></div>
+                                <div class="p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-300">Scene 4</span>
+                                        <span class="w-5 h-5 rounded-full bg-success flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xs text-white">check</span>
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">Complete</div>
+                                    <div class="mt-2 flex items-center gap-1">
+                                        <span class="text-xs text-accent-emerald">99%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Queued Scene -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
+                                <div class="h-24 bg-slate-700"></div>
+                                <div class="p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-slate-300">Scene 5</span>
+                                        <span class="w-5 h-5 rounded-full bg-slate-500 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xs text-white">schedule</span>
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">Queued</div>
+                                    <div class="mt-2 flex items-center gap-1">
+                                        <span class="text-xs text-slate-500">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene Review Screen -->
+    <div id="screen-scene_review" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Scene Review</h1>
+                    <button onclick="go('film_preview_export')" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition text-sm">
+                        Export Video
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-hidden flex gap-6 p-6">
+                    <!-- Left Panel - Scene Grid -->
+                    <div class="flex-1 flex flex-col overflow-y-auto">
+                        <h3 class="text-lg font-semibold text-slate-100 mb-4">Scenes</h3>
+                        <div class="grid grid-cols-4 gap-4 pr-4">
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border-2 border-primary-500 hover:border-primary-400 transition cursor-pointer">
+                                <div class="h-24 bg-gradient-to-br from-primary-600 to-primary-400 relative">
+                                    <div class="absolute inset-0 flex items-center justify-center ring-4 ring-primary-400">
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-xs font-semibold text-slate-300">Scene 1</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition cursor-pointer">
+                                <div class="h-24 bg-gradient-to-br from-accent-cyan to-accent-emerald"></div>
+                                <div class="p-3">
+                                    <div class="text-xs font-semibold text-slate-300">Scene 2</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition cursor-pointer">
+                                <div class="h-24 bg-gradient-to-br from-accent-rose to-accent-amber"></div>
+                                <div class="p-3">
+                                    <div class="text-xs font-semibold text-slate-300">Scene 3</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition cursor-pointer">
+                                <div class="h-24 bg-gradient-to-br from-slate-700 to-slate-600"></div>
+                                <div class="p-3">
+                                    <div class="text-xs font-semibold text-slate-300">Scene 4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Details -->
+                    <div class="w-96 bg-slate-800 rounded-lg p-6 border border-slate-700 overflow-y-auto flex flex-col">
+                        <h4 class="text-lg font-semibold text-slate-100 mb-4">Scene 1 Details</h4>
+
+                        <!-- Preview -->
+                        <div class="bg-slate-700 rounded-lg h-40 mb-6 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-4xl text-slate-500">image</span>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-2 gap-3 mb-6 text-sm">
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-slate-400 text-xs mb-1">Duration</p>
+                                <p class="text-slate-100 font-semibold">4.2s</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-slate-400 text-xs mb-1">Consistency</p>
+                                <p class="text-slate-100 font-semibold">98%</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-slate-400 text-xs mb-1">Characters</p>
+                                <p class="text-slate-100 font-semibold">2</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-slate-400 text-xs mb-1">Status</p>
+                                <p class="text-success font-semibold">Complete</p>
+                            </div>
+                        </div>
+
+                        <!-- Character Anchor -->
+                        <div class="mb-6">
+                            <p class="text-slate-300 text-sm font-semibold mb-2">Character Anchor</p>
+                            <div class="bg-slate-700 rounded-lg p-3 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary-500"></div>
+                                <div>
+                                    <p class="text-slate-100 text-sm font-semibold">Alex Chen</p>
+                                    <p class="text-slate-400 text-xs">Professional</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Refined Prompt -->
+                        <div class="mb-6">
+                            <p class="text-slate-300 text-sm font-semibold mb-2">Refined Prompt</p>
+                            <p class="text-slate-400 text-xs leading-relaxed">Professional presenting product demo in modern office setting with natural lighting and smooth camera movement</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="space-y-2 mt-auto">
+                            <button class="w-full px-4 py-2 bg-slate-700 text-slate-100 rounded-lg hover:bg-slate-600 transition font-semibold text-sm">
+                                Re-generate
+                            </button>
+                            <button class="w-full px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition font-semibold text-sm">
+                                Edit Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Film Preview & Export Screen -->
+    <div id="screen-film_preview_export" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Export Video</h1>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="grid grid-cols-3 gap-6">
+                            <!-- Left - Video Preview -->
+                            <div class="col-span-2">
+                                <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 mb-6">
+                                    <!-- Video Player -->
+                                    <div class="relative bg-black aspect-video flex items-center justify-center">
+                                        <button class="w-16 h-16 rounded-full bg-primary-500 hover:bg-primary-600 transition flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-white text-5xl">play_arrow</span>
+                                        </button>
+                                    </div>
+                                    <!-- Controls -->
+                                    <div class="p-4 bg-slate-750 border-t border-slate-700">
+                                        <div class="flex items-center gap-2 text-sm mb-3">
+                                            <input type="range" value="45" class="flex-1">
+                                            <span class="text-slate-400">1:32 / 3:24</span>
+                                        </div>
+                                        <div class="flex gap-2 justify-center">
+                                            <button class="p-2 hover:bg-slate-700 rounded transition">
+                                                <span class="material-symbols-outlined text-slate-400 text-sm">skip_previous</span>
+                                            </button>
+                                            <button class="p-2 hover:bg-slate-700 rounded transition">
+                                                <span class="material-symbols-outlined text-slate-400 text-sm">play_arrow</span>
+                                            </button>
+                                            <button class="p-2 hover:bg-slate-700 rounded transition">
+                                                <span class="material-symbols-outlined text-slate-400 text-sm">skip_next</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Video Title -->
+                                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                                    <h2 class="text-4xl font-bold font-manrope text-slate-50 tracking-tight">THE SILENT NEBULA</h2>
+                                    <p class="text-slate-400 mt-2">A sci-fi short film exploring themes of isolation and discovery</p>
+                                </div>
+                            </div>
+
+                            <!-- Right - Export Controls -->
+                            <div class="space-y-4">
+                                <!-- Output Settings -->
+                                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                                    <h3 class="text-lg font-semibold text-slate-100 mb-4">Output Settings</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-slate-300 text-sm font-semibold mb-2">Format</label>
+                                            <select class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 text-sm focus:outline-none focus:border-primary-500 transition">
+                                                <option>MP4 (H.264)</option>
+                                                <option>WebM</option>
+                                                <option>MOV</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-slate-300 text-sm font-semibold mb-2">Resolution</label>
+                                            <select class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 text-sm focus:outline-none focus:border-primary-500 transition">
+                                                <option>1080p</option>
+                                                <option>2K</option>
+                                                <option>4K</option>
+                                            </select>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center gap-2 text-slate-300 text-sm">
+                                                <input type="checkbox" checked class="w-4 h-4">
+                                                <span>Include Audio</span>
+                                            </label>
+                                            <label class="flex items-center gap-2 text-slate-300 text-sm">
+                                                <input type="checkbox" class="w-4 h-4">
+                                                <span>Add Subtitles</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pro Upsell -->
+                                <div class="bg-gradient-to-br from-primary-600 to-primary-500 rounded-lg p-6 text-white">
+                                    <h4 class="font-semibold mb-2">Upgrade to Pro</h4>
+                                    <p class="text-sm text-primary-100 mb-4">Get workspace premium for unlimited exports and priority rendering.</p>
+                                    <button class="w-full px-4 py-2 bg-white text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition text-sm">
+                                        Learn More
+                                    </button>
+                                </div>
+
+                                <!-- Metadata -->
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700 text-sm space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">File Size:</span>
+                                        <span class="text-slate-100 font-semibold">427 MB</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Duration:</span>
+                                        <span class="text-slate-100 font-semibold">3:24</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">FPS:</span>
+                                        <span class="text-slate-100 font-semibold">24fps</span>
+                                    </div>
+                                </div>
+
+                                <!-- Export Progress -->
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-slate-300 text-sm font-semibold">Rendering</span>
+                                        <span class="text-primary-400 text-sm font-semibold">82%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-primary-500 h-full" style="width: 82%;"></div>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mt-2">~3 minutes remaining</p>
+                                </div>
+
+                                <!-- Export Button -->
+                                <button class="w-full px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 transition">
+                                    Export & Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Library Screen -->
+    <div id="screen-character_library" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg bg-primary-500 text-white font-medium flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Characters</h1>
+                    <button onclick="go('character_setup')" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        New Character
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <!-- Character Grid -->
+                        <div class="grid grid-cols-4 gap-6">
+                            <!-- New Character Button -->
+                            <button onclick="go('character_setup')" class="bg-slate-800 rounded-lg overflow-hidden border-2 border-dashed border-slate-600 hover:border-primary-500 transition h-80 flex items-center justify-center">
+                                <div class="text-center">
+                                    <span class="material-symbols-outlined text-4xl text-slate-500 block mb-2">add</span>
+                                    <p class="text-slate-400 font-semibold">New Character</p>
+                                </div>
+                            </button>
+
+                            <!-- Character Card 1 -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition group">
+                                <div class="h-40 bg-gradient-to-br from-primary-600 to-primary-400 relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-5xl text-white opacity-30">play_arrow</span>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <h3 class="font-semibold text-slate-100">Alex Chen</h3>
+                                        <span class="text-xs bg-primary-500/20 text-primary-300 px-2 py-1 rounded">AI Generated</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-3">Used in 3 projects</p>
+                                    <p class="text-xs text-slate-500 mb-4">Created 2 days ago</p>
+                                    <div class="space-y-2 opacity-0 group-hover:opacity-100 transition">
+                                        <button class="w-full px-3 py-1 text-xs bg-slate-700 text-slate-100 rounded hover:bg-slate-600 transition">Rename</button>
+                                        <button class="w-full px-3 py-1 text-xs bg-primary-500 text-white rounded hover:bg-primary-600 transition">Use in Project</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Character Card 2 -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition group">
+                                <div class="h-40 bg-gradient-to-br from-accent-cyan to-accent-emerald relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-5xl text-white opacity-30">play_arrow</span>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <h3 class="font-semibold text-slate-100">Sarah</h3>
+                                        <span class="text-xs bg-success/20 text-success px-2 py-1 rounded">Real Asset</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-3">Used in 1 project</p>
+                                    <p class="text-xs text-slate-500 mb-4">Created 1 week ago</p>
+                                    <div class="space-y-2 opacity-0 group-hover:opacity-100 transition">
+                                        <button class="w-full px-3 py-1 text-xs bg-slate-700 text-slate-100 rounded hover:bg-slate-600 transition">Rename</button>
+                                        <button class="w-full px-3 py-1 text-xs bg-primary-500 text-white rounded hover:bg-primary-600 transition">Use in Project</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Character Card 3 -->
+                            <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-primary-500 transition group">
+                                <div class="h-40 bg-gradient-to-br from-accent-rose to-accent-amber relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-5xl text-white opacity-30">play_arrow</span>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <h3 class="font-semibold text-slate-100">Marcus</h3>
+                                        <span class="text-xs bg-warning/20 text-warning px-2 py-1 rounded">LoRA: Training</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-3">Used in 2 projects</p>
+                                    <p class="text-xs text-slate-500 mb-4">Created 3 weeks ago</p>
+                                    <div class="space-y-2 opacity-0 group-hover:opacity-100 transition">
+                                        <button class="w-full px-3 py-1 text-xs bg-slate-700 text-slate-100 rounded hover:bg-slate-600 transition">Rename</button>
+                                        <button class="w-full px-3 py-1 text-xs bg-primary-500 text-white rounded hover:bg-primary-600 transition">Use in Project</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings & Billing Screen -->
+    <div id="screen-settings_billing" class="screen-container">
+        <div class="flex h-full bg-slate-900">
+            <!-- Sidebar -->
+            <div class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="text-xl font-bold text-primary-400">DIRECTOR</div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <button onclick="go('dashboard_home')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">home</span>
+                        Dashboard
+                    </button>
+                    <button onclick="go('project_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">video_library</span>
+                        Projects
+                    </button>
+                    <button onclick="go('character_library')" class="w-full text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                        <span class="material-symbols-outlined">person</span>
+                        Characters
+                    </button>
+                    <button onclick="go('settings_billing')" class="w-full text-left px-4 py-2 rounded-lg bg-primary-500 text-white font-medium flex items-center gap-3">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </button>
+                </nav>
+                <div class="p-4 border-t border-slate-700">
+                    <button onclick="go('landing_sign_in')" class="w-full px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Top Bar -->
+                <div class="h-16 bg-slate-800 border-b border-slate-700 flex items-center px-6">
+                    <h1 class="text-xl font-semibold text-slate-100">Settings & Billing</h1>
+                </div>
+
+                <!-- Content Area -->
+                <div class="flex-1 overflow-hidden flex gap-6 p-6">
+                    <!-- Left Sidebar - Tabs -->
+                    <div class="w-48 flex flex-col space-y-2">
+                        <button class="text-left px-4 py-2 rounded-lg bg-primary-500 text-white font-medium flex items-center gap-3">
+                            <span class="material-symbols-outlined text-sm">person</span>
+                            Profile
+                        </button>
+                        <button class="text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                            <span class="material-symbols-outlined text-sm">credit_card</span>
+                            Billing
+                        </button>
+                        <button class="text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                            <span class="material-symbols-outlined text-sm">analytics</span>
+                            Usage
+                        </button>
+                        <button class="text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                            <span class="material-symbols-outlined text-sm">notifications</span>
+                            Notifications
+                        </button>
+                        <button class="text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                            <span class="material-symbols-outlined text-sm">key</span>
+                            API Keys
+                        </button>
+                        <button class="text-left px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition flex items-center gap-3">
+                            <span class="material-symbols-outlined text-sm">group</span>
+                            Team Access
+                        </button>
+                    </div>
+
+                    <!-- Right Panel - Content -->
+                    <div class="flex-1 overflow-y-auto pr-6">
+                        <!-- Current Tier -->
+                        <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 mb-6">
+                            <h3 class="text-lg font-semibold text-slate-100 mb-4">Current Plan</h3>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-2xl font-bold text-primary-400">Cinematic Pro</h4>
+                                    <p class="text-slate-400 text-sm">$99/month billed annually</p>
+                                </div>
+                                <button class="px-6 py-2 border border-slate-600 text-slate-100 rounded-lg hover:bg-slate-700 transition">
+                                    Upgrade
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Usage -->
+                        <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 mb-6">
+                            <h3 class="text-lg font-semibold text-slate-100 mb-4">Scene Blocks Used</h3>
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-slate-400">842 / 1000</span>
+                                    <span class="text-primary-400 font-semibold">84%</span>
+                                </div>
+                                <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                                    <div class="bg-primary-500 h-full" style="width: 84%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-400">Resets on April 1, 2026</p>
+                        </div>
+
+                        <!-- Payment Methods -->
+                        <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 mb-6">
+                            <h3 class="text-lg font-semibold text-slate-100 mb-4">Payment Methods</h3>
+                            <div class="bg-slate-700 rounded-lg p-4 flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <span class="material-symbols-outlined text-3xl text-slate-400">credit_card</span>
+                                    <div>
+                                        <p class="text-slate-100 font-semibold">Visa</p>
+                                        <p class="text-slate-400 text-sm">ending in 4242</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-2 text-slate-300 hover:text-slate-100 transition text-sm">
+                                    Edit
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Billing History -->
+                        <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-lg font-semibold text-slate-100 mb-4">Billing History</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-slate-700">
+                                            <th class="text-left py-2 text-slate-400 font-semibold">Date</th>
+                                            <th class="text-left py-2 text-slate-400 font-semibold">Description</th>
+                                            <th class="text-left py-2 text-slate-400 font-semibold">Amount</th>
+                                            <th class="text-left py-2 text-slate-400 font-semibold">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-700">
+                                        <tr>
+                                            <td class="py-3 text-slate-300">Mar 1, 2026</td>
+                                            <td class="py-3 text-slate-300">Cinematic Pro - Monthly</td>
+                                            <td class="py-3 text-slate-300">$99.00</td>
+                                            <td class="py-3"><span class="text-success">Paid</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 text-slate-300">Feb 1, 2026</td>
+                                            <td class="py-3 text-slate-300">Cinematic Pro - Monthly</td>
+                                            <td class="py-3 text-slate-300">$99.00</td>
+                                            <td class="py-3"><span class="text-success">Paid</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 text-slate-300">Jan 1, 2026</td>
+                                            <td class="py-3 text-slate-300">Cinematic Pro - Monthly</td>
+                                            <td class="py-3 text-slate-300">$99.00</td>
+                                            <td class="py-3"><span class="text-success">Paid</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Screen routing function
+        function go(screenName) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen-container');
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Show target screen
+            const targetScreen = document.getElementById(`screen-${screenName}`);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                // Scroll to top
+                targetScreen.scrollTop = 0;
+            }
+        }
+
+        // Initialize - show landing screen
+        window.addEventListener('load', () => {
+            go('landing_sign_in');
+        });
+    </script>
+</body>
+</html>
