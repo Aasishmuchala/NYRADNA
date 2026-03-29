@@ -17,11 +17,11 @@ interface NodeCardProps {
 }
 
 const CATEGORY_BORDER: Record<string, string> = {
-  source: 'border-[#d4c4b0]/30',
-  generation: 'border-[#ff9064]/30',
-  gate: 'border-[#9c27b0]/30',
-  processing: 'border-[#81e9ff]/30',
-  output: 'border-[#4caf50]/30',
+  source: 'border-secondary/30',
+  generation: 'border-primary/30',
+  gate: 'border-processing/30',
+  processing: 'border-tertiary/30',
+  output: 'border-success/30',
 };
 
 export const NodeCard = React.memo(function NodeCard({
@@ -60,13 +60,15 @@ export const NodeCard = React.memo(function NodeCard({
   return (
     <div
       className={`absolute w-[200px] rounded-xl border transition-shadow select-none
-        bg-[#1a1a1a]/90 backdrop-blur-lg
+        bg-surface-container/90 backdrop-blur-lg
         ${borderClass}
-        ${selected ? 'ring-2 ring-[#ff9064]/50 shadow-lg shadow-[#ff9064]/10' : ''}
-        ${status === 'running' ? 'animate-pulse shadow-md shadow-[#ff9064]/20' : ''}
+        ${selected ? 'ring-2 ring-primary/50 shadow-lg shadow-primary/10' : ''}
+        ${status === 'running' ? 'animate-pulse shadow-md shadow-primary/20' : ''}
       `}
       style={{ transform: `translate(${node.position.x}px, ${node.position.y}px)` }}
       onMouseDown={handleMouseDown}
+      role="group"
+      aria-label={`${typeDef.label} node, status: ${status}`}
     >
       {/* Header */}
       <div className="flex items-center gap-2 px-3 py-2 border-b border-white/5 cursor-grab active:cursor-grabbing">
@@ -112,36 +114,36 @@ export const NodeCard = React.memo(function NodeCard({
       {/* Output preview — show thumbnails for images/videos */}
       {status === 'done' && node.outputs && (
         <div className="px-2 py-1.5 border-t border-white/5 space-y-1">
-          {typeof node.outputs.image === 'string' && !node.outputs.image.startsWith('data:') && (
+          {typeof node.outputs.image === 'string' && node.outputs.image && (
             <img
               src={node.outputs.image}
-              alt="Output"
-              className="w-full h-20 object-cover rounded-md"
+              alt="Generated output"
+              className="w-full h-20 object-cover rounded-lg"
               loading="lazy"
             />
           )}
-          {typeof node.outputs.frame === 'string' && node.outputs.frame.startsWith('data:') && (
+          {typeof node.outputs.frame === 'string' && node.outputs.frame && (
             <img
               src={node.outputs.frame}
-              alt="Frame"
-              className="w-full h-20 object-cover rounded-md"
+              alt="Extracted frame"
+              className="w-full h-20 object-cover rounded-lg"
               loading="lazy"
             />
           )}
           {typeof node.outputs.video === 'string' && (
-            <div className="flex items-center gap-1.5 text-[10px] text-[#81e9ff]">
+            <div className="flex items-center gap-1.5 text-[10px] text-tertiary">
               <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>videocam</span>
               <span className="truncate">Video ready</span>
             </div>
           )}
           {node.outputs.pass !== undefined && (
-            <div className={`flex items-center gap-1.5 text-[10px] ${node.outputs.pass ? 'text-[#4caf50]' : 'text-[#ffb4ab]'}`}>
+            <div className={`flex items-center gap-1.5 text-[10px] ${node.outputs.pass ? 'text-success' : 'text-error'}`}>
               <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
                 {node.outputs.pass ? 'check_circle' : 'cancel'}
               </span>
               <span>
                 {node.outputs.pass ? 'Passed' : 'Failed'}
-                {node.outputs.score !== undefined && ` (${(node.outputs.score as number).toFixed(2)})`}
+                {typeof node.outputs.score === 'number' && ` (${node.outputs.score.toFixed(2)})`}
               </span>
             </div>
           )}
@@ -152,7 +154,7 @@ export const NodeCard = React.memo(function NodeCard({
       {(node.error || node.progressMessage) && (
         <div className="px-3 py-1.5 border-t border-white/5">
           {node.error ? (
-            <p className="text-[10px] text-[#ffb4ab] truncate">{node.error}</p>
+            <p className="text-[10px] text-error truncate">{node.error}</p>
           ) : (
             <p className="text-[10px] text-white/40 truncate">{node.progressMessage}</p>
           )}

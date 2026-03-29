@@ -19,6 +19,10 @@ const NodeCanvas = dynamic(() => import('@/components/pipeline/NodeCanvas').then
 });
 
 export default function GeneratingPage() {
+  useEffect(() => {
+    document.title = 'Generating — DIRECTOR';
+  }, []);
+
   const { state, update } = useWizard();
   const { generateAllVideos, retryVideo, stopAll, videos, batches, isGenerating, progress, currentBatchLabel, totalDuration, error } = useVideoGeneration();
   const [hasMounted, setHasMounted] = useState(false);
@@ -320,7 +324,7 @@ export default function GeneratingPage() {
     return (
       <main className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Mode toggle */}
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5 bg-[#141414]/80">
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5 bg-surface-container-low/80">
           <button
             onClick={() => setPipelineMode('simple')}
             className="text-xs text-white/40 hover:text-white/60 px-2 py-1 rounded"
@@ -328,7 +332,7 @@ export default function GeneratingPage() {
             Simple
           </button>
           <button
-            className="text-xs text-[#ff9064] bg-[#ff9064]/10 px-2 py-1 rounded font-medium"
+            className="text-xs text-primary bg-primary/10 px-2 py-1 rounded font-medium"
           >
             Node Editor
           </button>
@@ -355,7 +359,7 @@ export default function GeneratingPage() {
                 <h1 className="text-2xl font-bold">Video Planning</h1>
                 <button
                   onClick={() => setPipelineMode('node')}
-                  className="text-[10px] text-white/30 hover:text-[#ff9064] border border-white/10 hover:border-[#ff9064]/30 px-2 py-1 rounded-lg transition-colors"
+                  className="text-[10px] text-white/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"
                   title="Switch to visual node pipeline editor"
                 >
                   Node Editor
@@ -585,7 +589,7 @@ export default function GeneratingPage() {
             </h2>
             <button
               onClick={() => setPipelineMode('node')}
-              className="text-[10px] text-white/30 hover:text-[#ff9064] border border-white/10 hover:border-[#ff9064]/30 px-2 py-1 rounded-lg transition-colors"
+              className="text-[10px] text-white/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"
               title="Switch to visual node pipeline editor"
             >
               Node Editor

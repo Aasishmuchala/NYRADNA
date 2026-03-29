@@ -161,7 +161,8 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Chat failed';
-    return new Response(JSON.stringify({ error: message }), {
+    console.error('[/api/chat] Error:', message);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

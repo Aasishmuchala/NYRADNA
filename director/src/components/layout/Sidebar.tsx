@@ -63,7 +63,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
                 active
                   ? 'bg-surface-container-high text-primary'
                   : 'text-on-surface-variant hover:bg-surface-container-low hover:text-white'
@@ -118,7 +118,7 @@ export default function Sidebar() {
       <div className="px-4 py-4">
         <Link
           href="/dashboard"
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-container px-4 py-3 font-bold text-on-primary transition-transform hover:scale-105"
+          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-container px-4 py-3 font-bold text-on-primary transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           <span className="material-symbols-outlined text-[20px]">add_circle</span>
           <span>New Project</span>
@@ -129,7 +129,7 @@ export default function Sidebar() {
       <div className="border-t border-surface-container-high px-4 py-4">
         <Link
           href="/help"
-          className="flex items-center gap-3 rounded-lg px-4 py-2 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-white"
+          className="flex items-center gap-3 rounded-lg px-4 py-2 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           <span className="material-symbols-outlined text-[20px]">
             help_outline

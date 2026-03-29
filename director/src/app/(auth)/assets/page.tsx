@@ -45,6 +45,10 @@ function deriveProjectId(baseSeed: number): string {
 }
 
 export default function AssetsPage() {
+  useEffect(() => {
+    document.title = 'Assets — DIRECTOR';
+  }, []);
+
   const { state, update } = useWizard();
   const [filter, setFilter] = useState<AssetCategory | 'all'>('all');
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);

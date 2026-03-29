@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import type { ProductionAsset, AssetCategory } from '@/context/WizardContext';
 import { IMAGE_MODELS, VIDEO_MODELS } from '@/lib/models';
@@ -50,6 +50,10 @@ const STYLE_PRESETS = [
 // ─── Component ──────────────────────────────────────────────────────
 
 export default function StyleDnaPage() {
+  useEffect(() => {
+    document.title = 'Style DNA — DIRECTOR';
+  }, []);
+
   const { state, update } = useWizard();
   const [activeSection, setActiveSection] = useState<'style' | 'models'>('style');
   const [expandedAsset, setExpandedAsset] = useState<string | null>(null);

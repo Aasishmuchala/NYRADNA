@@ -30,10 +30,16 @@ export async function POST(req: NextRequest) {
 
     // Download video
     const videoPath = join(workDir, 'input.mp4');
-    const res = await fetch(videoUrl);
-    if (!res.ok) throw new Error('Failed to download video');
-    const buffer = Buffer.from(await res.arrayBuffer());
-    await writeFile(videoPath, buffer);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+    try {
+      const res = await fetch(videoUrl, { signal: controller.signal });
+      if (!res.ok) throw new Error('Failed to download video');
+      const buffer = Buffer.from(await res.arrayBuffer());
+      await writeFile(videoPath, buffer);
+    } finally {
+      clearTimeout(timeout);
+    }
 
     // Get video duration
     const duration = await new Promise<number>((resolve, reject) => {

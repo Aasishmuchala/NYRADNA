@@ -67,6 +67,10 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    document.title = 'Dashboard — DIRECTOR';
+  }, []);
+
+  useEffect(() => {
     refreshProjects();
   }, [refreshProjects]);
 
@@ -196,7 +200,8 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-3 pt-2">
                     <button
                       onClick={() => handleContinue(project.id)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:bg-primary/90 transition-colors cursor-pointer"
+                      aria-label={`Continue ${project.title}`}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:bg-primary/90 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30"
                     >
                       <span className="material-symbols-outlined text-sm">play_arrow</span>
                       Continue
@@ -205,7 +210,8 @@ export default function DashboardPage() {
                       onClick={() =>
                         setConfirmDelete({ open: true, id: project.id, title: project.title })
                       }
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant/30 text-sm text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error/30 transition-colors cursor-pointer"
+                      aria-label={`Delete ${project.title}`}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant/30 text-sm text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error/30 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-error/30"
                     >
                       <span className="material-symbols-outlined text-sm">delete</span>
                       Delete
@@ -221,7 +227,8 @@ export default function DashboardPage() {
         <section>
           <button
             onClick={handleNewProject}
-            className="w-full h-48 rounded-xl border-2 border-dashed border-outline-variant/30 hover:border-primary/50 hover:bg-primary/5 flex flex-col items-center justify-center gap-4 transition-all group cursor-pointer"
+            aria-label="Start new project"
+            className="w-full h-48 rounded-xl border-2 border-dashed border-outline-variant/30 hover:border-primary/50 hover:bg-primary/5 flex flex-col items-center justify-center gap-4 transition-all group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             <div className="w-16 h-16 rounded-full bg-surface-container-highest group-hover:bg-primary group-hover:text-on-primary flex items-center justify-center transition-all duration-300">
               <span className="material-symbols-outlined text-3xl" data-icon="add_circle">add_circle</span>

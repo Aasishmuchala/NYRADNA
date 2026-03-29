@@ -1,8 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Page() {
+  useEffect(() => {
+    document.title = 'DIRECTOR — AI Video Engine';
+  }, []);
+
   return (
     <div className="bg-surface text-on-surface font-body overflow-x-hidden selection:bg-primary selection:text-on-primary">
       {/* Hero Section */}
@@ -156,17 +161,17 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full py-12 px-8 border-t border-[#494847]/15 bg-[#0e0e0e]">
+      <footer className="w-full py-12 px-8 border-t border-outline-variant/15 bg-surface">
         <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
-          <div className="text-[#adaaaa] font-label text-xs uppercase tracking-widest">
+          <div className="text-on-surface-variant font-label text-xs uppercase tracking-widest">
             © 2025 DIRECTOR AI. All rights reserved.
           </div>
           <nav className="flex flex-wrap justify-center gap-8">
             {/* TODO: replace with real routes once /terms and /privacy pages exist */}
-            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="#">Terms of Service</a>
-            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
-            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord</a>
+            <a className="text-on-surface-variant hover:text-primary transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+            <a className="text-on-surface-variant hover:text-primary transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+            <a className="text-on-surface-variant hover:text-primary transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+            <a className="text-on-surface-variant hover:text-primary transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord</a>
           </nav>
         </div>
       </footer>

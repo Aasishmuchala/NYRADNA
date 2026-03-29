@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
@@ -17,6 +17,10 @@ interface Character {
 }
 
 export default function CharactersPage() {
+  useEffect(() => {
+    document.title = 'Characters — DIRECTOR';
+  }, []);
+
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'library' | 'training' | 'shared'>('library');
   const [sortOrder, setSortOrder] = useState<'recent' | 'name'>('recent');

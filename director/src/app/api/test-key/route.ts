@@ -28,11 +28,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ valid: false, error: `${provider} key not configured in environment` });
     }
 
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${key}` },
-    });
-    return NextResponse.json({ valid: res.ok });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    try {
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${key}` },
+        signal: controller.signal,
+      });
+      return NextResponse.json({ valid: res.ok });
+    } finally {
+      clearTimeout(timeout);
+    }
   } catch {
     return NextResponse.json({ valid: false, error: 'Connection failed' });
   }

@@ -7,22 +7,69 @@ import type { ExecutionContext } from './types';
 import { buildReferenceImageSet, type ReferenceImageSet } from '@/lib/subjectRefs';
 import { buildCinematicPrompt, buildVideoStyleSuffix } from '@/lib/cinematicPrompt';
 import { checkVisualDrift } from '@/lib/driftDetection';
-import type { WizardState } from '@/context/WizardContext';
+
+
+// ─── Blob URL cleanup ───────────────────────────────────────────────
+
+/** Tracks blob URLs created during pipeline execution for cleanup */
+const _blobUrlsToRevoke: string[] = [];
+
+/** Revoke all blob URLs created during pipeline execution to free memory */
+export function revokePipelineBlobUrls(): void {
+  while (_blobUrlsToRevoke.length > 0) {
+    const url = _blobUrlsToRevoke.pop()!;
+    try { URL.revokeObjectURL(url); } catch { /* already revoked */ }
+  }
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
-const POLL_INTERVAL = 2000;
-const MAX_POLLS = 240; // 8 minutes
+const INITIAL_POLL_INTERVAL = 2000;
+const MAX_POLL_INTERVAL = 10000;
+const MAX_POLL_DURATION_MS = 480_000; // 8 minutes
+const FETCH_TIMEOUT_MS = 30_000; // 30s per-request timeout
+
+/** Fetch with a timeout that rejects if the server hangs */
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init?: RequestInit & { timeout?: number },
+): Promise<Response> {
+  const timeout = init?.timeout ?? FETCH_TIMEOUT_MS;
+  const controller = new AbortController();
+  const merged = init?.signal
+    ? mergeAbortSignals(init.signal, controller.signal)
+    : controller.signal;
+
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(input, { ...init, signal: merged });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Combine two abort signals — aborts when either fires */
+function mergeAbortSignals(a: AbortSignal, b: AbortSignal): AbortSignal {
+  const controller = new AbortController();
+  const onAbort = () => controller.abort();
+  a.addEventListener('abort', onAbort, { once: true });
+  b.addEventListener('abort', onAbort, { once: true });
+  if (a.aborted || b.aborted) controller.abort();
+  return controller.signal;
+}
 
 async function pollPrediction(
   predictionId: string,
   signal: AbortSignal,
   onProgress?: (msg: string) => void,
 ): Promise<{ output: unknown; status: string }> {
-  for (let i = 0; i < MAX_POLLS; i++) {
+  const startTime = Date.now();
+  let pollInterval = INITIAL_POLL_INTERVAL;
+
+  while (Date.now() - startTime < MAX_POLL_DURATION_MS) {
     if (signal.aborted) throw new Error('Aborted');
 
-    const res = await fetch(`/api/status/${predictionId}`);
+    const res = await fetchWithTimeout(`/api/status/${predictionId}`, { signal });
     if (!res.ok) throw new Error(`Status check failed: ${res.status}`);
 
     const data = await res.json();
@@ -34,8 +81,11 @@ async function pollPrediction(
       throw new Error(data.error ?? `Prediction ${data.status}`);
     }
 
-    onProgress?.(`Processing... (${Math.round((i / MAX_POLLS) * 100)}%)`);
-    await abortableSleep(POLL_INTERVAL, signal);
+    const elapsed = Date.now() - startTime;
+    onProgress?.(`Processing... (${Math.round((elapsed / MAX_POLL_DURATION_MS) * 100)}%)`);
+    await abortableSleep(pollInterval, signal);
+    // Progressive backoff: 2s → 4s → 6s → ... → 10s max
+    pollInterval = Math.min(pollInterval + 1000, MAX_POLL_INTERVAL);
   }
 
   throw new Error('Prediction timed out after 8 minutes');
@@ -59,7 +109,7 @@ export async function executeReferenceImages(
   _config: Record<string, unknown>,
   ctx: ExecutionContext,
 ): Promise<Record<string, unknown>> {
-  const state = ctx.wizardState as unknown as WizardState;
+  const state = ctx.wizardState;
   const refSet = buildReferenceImageSet({
     productionAssets: state.productionAssets,
     aiCharacterImageUrl: state.aiCharacterImageUrl,
@@ -79,7 +129,7 @@ export async function executeScenePrompt(
   config: Record<string, unknown>,
   ctx: ExecutionContext,
 ): Promise<Record<string, unknown>> {
-  const state = ctx.wizardState as unknown as WizardState;
+  const state = ctx.wizardState;
   // Fall back to vision text from wizard state if no base_text connected
   const baseText = (inputs.base_text as string) || state.visionText || '';
 
@@ -118,11 +168,11 @@ export async function executeImageGen(
     body.referenceImages = refSet.referenceImages;
   }
 
-  const state = ctx.wizardState as Record<string, unknown>;
+  const state = ctx.wizardState;
   if (state.loraUrl) body.loraUrl = state.loraUrl;
   if (state.triggerWord) body.triggerWord = state.triggerWord;
 
-  const res = await fetch('/api/generate', {
+  const res = await fetchWithTimeout('/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -140,7 +190,8 @@ export async function executeImageGen(
     ctx.onProgress('', msg);
   });
 
-  const imageUrl = Array.isArray(result.output) ? result.output[0] : result.output;
+  const rawOutput = Array.isArray(result.output) ? result.output[0] : result.output;
+  const imageUrl = typeof rawOutput === 'string' ? rawOutput : String(rawOutput ?? '');
 
   return { image: imageUrl, prediction_id: predictionId };
 }
@@ -169,7 +220,7 @@ export async function executeVideoGen(
     body.referenceImages = refSet.referenceImages;
   }
 
-  const res = await fetch('/api/video', {
+  const res = await fetchWithTimeout('/api/video', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -187,7 +238,8 @@ export async function executeVideoGen(
     ctx.onProgress('', msg);
   });
 
-  const videoUrl = Array.isArray(result.output) ? result.output[0] : result.output;
+  const rawVideoOutput = Array.isArray(result.output) ? result.output[0] : result.output;
+  const videoUrl = typeof rawVideoOutput === 'string' ? rawVideoOutput : String(rawVideoOutput ?? '');
 
   return { video: videoUrl, prediction_id: predictionId };
 }
@@ -223,7 +275,7 @@ export async function executeMultiPromptBatch(
     body.startImageUrl = startImage;
   }
 
-  const res = await fetch('/api/video-batch', {
+  const res = await fetchWithTimeout('/api/video-batch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -241,7 +293,8 @@ export async function executeMultiPromptBatch(
     ctx.onProgress('', msg);
   });
 
-  const videoUrl = Array.isArray(result.output) ? result.output[0] : result.output;
+  const rawVideoOutput = Array.isArray(result.output) ? result.output[0] : result.output;
+  const videoUrl = typeof rawVideoOutput === 'string' ? rawVideoOutput : String(rawVideoOutput ?? '');
 
   // Multi-prompt returns a single video — duplicate the URL for each scene
   const videos = scenes.map(() => videoUrl);
@@ -258,7 +311,7 @@ export async function executeAudioGen(
 ): Promise<Record<string, unknown>> {
   const script = inputs.script as string;
 
-  const res = await fetch('/api/voiceover', {
+  const res = await fetchWithTimeout('/api/voiceover', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ script, voice: config.voice ?? 'alloy' }),
@@ -282,13 +335,19 @@ export async function executeFaceGate(
   ctx: ExecutionContext,
 ): Promise<Record<string, unknown>> {
   const imageUrl = inputs.image as string;
+  const refSet = inputs.refset as ReferenceImageSet | undefined;
   const threshold = (config.threshold as number) ?? 0.90;
 
-  // Call scene analysis API to get character consistency score
-  const res = await fetch('/api/analyze-scene', {
+  // Call scene analysis API with reference images for character consistency
+  const body: Record<string, unknown> = { imageUrl };
+  if (refSet?.referenceImages?.length) {
+    body.referenceImages = refSet.referenceImages;
+  }
+
+  const res = await fetchWithTimeout('/api/analyze-scene', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageUrl }),
+    body: JSON.stringify(body),
     signal: ctx.signal,
   });
 
@@ -312,12 +371,18 @@ export async function executeStyleGate(
   ctx: ExecutionContext,
 ): Promise<Record<string, unknown>> {
   const imageUrl = inputs.image as string;
+  const refSet = inputs.refset as ReferenceImageSet | undefined;
   const compositionFloor = (config.compositionFloor as number) ?? 0.40;
 
-  const res = await fetch('/api/analyze-scene', {
+  const body: Record<string, unknown> = { imageUrl };
+  if (refSet?.referenceImages?.length) {
+    body.referenceImages = refSet.referenceImages;
+  }
+
+  const res = await fetchWithTimeout('/api/analyze-scene', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageUrl }),
+    body: JSON.stringify(body),
     signal: ctx.signal,
   });
 
@@ -364,7 +429,7 @@ export async function executeFrameExtract(
   const videoUrl = inputs.video as string;
   const position = (config.position as string) ?? 'last';
 
-  const res = await fetch('/api/extract-frame', {
+  const res = await fetchWithTimeout('/api/extract-frame', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ videoUrl, position }),
@@ -386,14 +451,13 @@ export async function executePromptEnrich(
   _config: Record<string, unknown>,
   ctx: ExecutionContext,
 ): Promise<Record<string, unknown>> {
-  const state = ctx.wizardState as Record<string, unknown>;
+  const state = ctx.wizardState;
   // Fall back to wizard state scenes when not connected
   const inputScenes = inputs.scenes as Record<string, unknown>[] | undefined;
-  const scenes = inputScenes?.length
-    ? inputScenes
-    : ((state.scenes as Record<string, unknown>[]) ?? []).filter(
-        (s) => s.status === 'completed' && s.imageUrl,
-      );
+  const wizardScenes = (state.scenes ?? [])
+    .filter((s) => s.status === 'completed' && s.imageUrl)
+    .map((s) => ({ id: s.id, prompt: s.prompt, imageUrl: s.imageUrl, assetCategory: undefined, videoMotionPrompt: undefined } as Record<string, unknown>));
+  const scenes = inputScenes?.length ? inputScenes : wizardScenes;
   if (!scenes.length) return { scenes: [] };
 
   const scenesPayload = scenes.map((s, idx) => ({
@@ -422,10 +486,9 @@ export async function executePromptEnrich(
     aiDescription: state.aiDescription,
     triggerWord: state.triggerWord,
     loraUrl: state.loraUrl,
-    styleSuffix: state.styleSuffix,
   };
 
-  const res = await fetch('/api/direct-video', {
+  const res = await fetchWithTimeout('/api/direct-video', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ scenes: scenesPayload, context: contextPayload }),
@@ -483,11 +546,12 @@ export async function executeStitch(
     }));
   }
 
-  const res = await fetch('/api/stitch', {
+  const res = await fetchWithTimeout('/api/stitch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
     signal: ctx.signal,
+    timeout: 120_000, // Stitching can take longer — 2 min timeout
   });
 
   if (!res.ok) {
@@ -499,6 +563,8 @@ export async function executeStitch(
   // Convert to a blob URL for downstream consumption.
   const blob = await res.blob();
   const videoUrl = URL.createObjectURL(blob);
+  // Track for cleanup — revoke after export node consumes it
+  _blobUrlsToRevoke.push(videoUrl);
   return { video: videoUrl };
 }
 
@@ -506,13 +572,14 @@ export async function executeStitch(
 
 export async function executeExport(
   inputs: Record<string, unknown>,
-  _config: Record<string, unknown>,
+  config: Record<string, unknown>,
   ctx: ExecutionContext,
 ): Promise<Record<string, unknown>> {
   const videoUrl = inputs.video as string;
+  const format = (config.format as string) ?? 'mp4';
 
-  // Write the final video URL to wizard state
-  ctx.updateWizardState({ finalVideoUrl: videoUrl });
+  // Write the final video URL and export format to wizard state
+  ctx.updateWizardState({ finalVideoUrl: videoUrl, exportFormat: format });
 
   return {};
 }

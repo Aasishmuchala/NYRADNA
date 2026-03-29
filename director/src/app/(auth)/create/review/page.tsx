@@ -56,6 +56,10 @@ const CATEGORY_ICONS: Record<string, string> = {
 // ─── Component ───────────────────────────────────────────────────
 
 export default function ReviewPage() {
+  useEffect(() => {
+    document.title = 'Review — DIRECTOR';
+  }, []);
+
   const { state, update } = useWizard();
   const { generateScene, generateScenesSequentially, regenerateScene, editScene, generateVariants, pickVariant, scenes, isGenerating, generatingIndex, generatingTotal, error: genError } = useSceneGeneration();
   const [filterReady, setFilterReady] = useState(false);

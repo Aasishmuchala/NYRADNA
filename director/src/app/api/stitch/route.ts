@@ -34,6 +34,7 @@ interface StitchRequest {
   maxBridgeClips?: number;
   videoModelId?: string;
   subjectReferenceImages?: string[];
+  muteVideo?: boolean;
 }
 
 // ─── Timeout wrapper for FFmpeg operations ─────────────────────────
@@ -381,6 +382,7 @@ export async function POST(req: NextRequest) {
       autoContinuity = true,
       maxBridgeClips = 5,
       videoModelId,
+      muteVideo = false,
     } = body;
 
     if (!videoUrls || !Array.isArray(videoUrls) || videoUrls.length === 0) {
@@ -593,6 +595,24 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Strip audio if user disabled it and no external audio will be mixed
+    if (muteVideo && !backgroundMusicUrl && !voiceoverUrl) {
+      const mutedPath = join(workDir, `muted.${ext}`);
+      try {
+        await new Promise<void>((resolve, reject) => {
+          ffmpeg(finalPath)
+            .outputOptions(['-c:v', 'copy', '-an']) // copy video, strip audio
+            .output(mutedPath)
+            .on('end', () => resolve())
+            .on('error', (err: Error) => reject(err))
+            .run();
+        });
+        finalPath = mutedPath;
+      } catch {
+        // If muting fails, keep original (audio will remain)
+      }
+    }
+
     // Audio mixing
     if (backgroundMusicUrl || voiceoverUrl) {
       let musicPath: string | undefined;
@@ -674,6 +694,7 @@ export async function POST(req: NextRequest) {
       rm(workDir, { recursive: true, force: true }).catch(() => {});
     }
     const message = error instanceof Error ? error.message : 'Video stitching failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[/api/stitch] Error:', message);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

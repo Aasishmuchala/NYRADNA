@@ -42,6 +42,8 @@ export function NodeCanvas() {
     removeEdge,
     removeNode,
     updateNodePosition,
+    undo,
+    redo,
   } = usePipeline();
 
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -165,6 +167,7 @@ export function NodeCanvas() {
 
       const ports = side === 'output' ? typeDef.outputs : typeDef.inputs;
       const portIndex = ports.findIndex((p) => p.id === portId);
+      if (portIndex < 0) return;
       const pos = getPortPosition(node.position.x, node.position.y, portIndex, side);
 
       const rect = canvasRef.current?.getBoundingClientRect();
@@ -230,6 +233,20 @@ export function NodeCanvas() {
         return;
       }
 
+      // Ctrl/Cmd+Z — undo
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+        return;
+      }
+
+      // Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y — redo
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+        e.preventDefault();
+        redo();
+        return;
+      }
+
       // Ctrl/Cmd+S — save pipeline
       if ((e.metaKey || e.ctrlKey) && e.key === 's') {
         e.preventDefault();
@@ -247,7 +264,7 @@ export function NodeCanvas() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedNodeId, graph, selectNode, removeNode]);
+  }, [selectedNodeId, graph, selectNode, removeNode, undo, redo]);
 
   // ── Render Edge Positions ─────────────────────────────────────
 
@@ -264,6 +281,7 @@ export function NodeCanvas() {
 
         const sourceIdx = sourceType.outputs.findIndex((p) => p.id === edge.sourcePortId);
         const targetIdx = targetType.inputs.findIndex((p) => p.id === edge.targetPortId);
+        if (sourceIdx < 0 || targetIdx < 0) return null;
 
         return {
           edge,
@@ -283,7 +301,7 @@ export function NodeCanvas() {
         {/* Canvas */}
         <div
           ref={canvasRef}
-          className="flex-1 relative overflow-hidden bg-[#0a0a0a]"
+          className="flex-1 relative overflow-hidden bg-surface-container-lowest"
           onMouseDown={handleCanvasMouseDown}
           onMouseMove={handleCanvasMouseMove}
           onMouseUp={handleCanvasMouseUp}

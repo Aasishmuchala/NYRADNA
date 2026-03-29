@@ -5,7 +5,7 @@ import { validateUrl } from '@/lib/urlValidation';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { zipUrl, triggerWord, steps, learningRate } = body;
+    const { zipUrl, triggerWord, steps, learningRate, resolution } = body;
 
     if (!zipUrl || !triggerWord) {
       return NextResponse.json({ error: 'zipUrl and triggerWord are required' }, { status: 400 });
@@ -20,6 +20,9 @@ export async function POST(req: NextRequest) {
     if (learningRate !== undefined && (typeof learningRate !== 'number' || learningRate <= 0 || learningRate > 1)) {
       return NextResponse.json({ error: 'learningRate must be between 0 and 1' }, { status: 400 });
     }
+    if (resolution !== undefined && (typeof resolution !== 'number' || ![512, 768, 1024].includes(resolution))) {
+      return NextResponse.json({ error: 'resolution must be 512, 768, or 1024' }, { status: 400 });
+    }
 
     const urlCheck = validateUrl(zipUrl);
     if (!urlCheck.valid) {
@@ -31,11 +34,13 @@ export async function POST(req: NextRequest) {
       triggerWord,
       steps,
       learningRate,
+      resolution,
     });
 
     return NextResponse.json({ trainingId: result.id, status: result.status });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Training failed to start';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[/api/train] Error:', message);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

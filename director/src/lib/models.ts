@@ -113,6 +113,8 @@ export interface VideoModelDef {
   supportsMultiPrompt?: boolean;
   maxMultiPromptSegments?: number;   // max shots per multi_prompt (6 for Kling)
   maxMultiPromptDuration?: number;   // max total seconds across all segments (15 for Kling)
+  supportsLoRA?: boolean;            // can accept LoRA weights for fine-tuned generation
+  loraParam?: string;                // param name for LoRA weights
   maxDuration: number;
   description: string;
   speed: 'fast' | 'medium' | 'slow';
@@ -227,16 +229,59 @@ export const VIDEO_MODELS: VideoModelDef[] = [
     costTier: '$',
     inputMapping: { startImage: 'first_frame_image', prompt: 'prompt' }, // no duration param
   },
+  // LoRA-capable video models
+  {
+    id: 'cogvideox-5b',
+    name: 'CogVideoX-5B',
+    replicateId: 'cuuupid/cogvideox-5b',
+    supportsImageToVideo: true,
+    supportsReferenceImages: false,
+    supportsAudio: false,
+    supportsLoRA: true,
+    loraParam: 'lora_url',
+    maxDuration: 6,
+    description: 'Open-source video model with LoRA support. Train your own character for video.',
+    speed: 'slow',
+    quality: 'high',
+    costTier: '$$',
+    inputMapping: { startImage: 'image', prompt: 'prompt' },
+  },
+  {
+    id: 'hunyuan-video',
+    name: 'Hunyuan Video',
+    replicateId: 'tencent/hunyuan-video',
+    supportsImageToVideo: false,
+    supportsReferenceImages: false,
+    supportsAudio: false,
+    supportsLoRA: true,
+    loraParam: 'lora_url',
+    maxDuration: 5,
+    description: 'Tencent video model. High quality text-to-video with LoRA fine-tuning support.',
+    speed: 'slow',
+    quality: 'ultra',
+    costTier: '$$$',
+    inputMapping: { startImage: 'image', prompt: 'prompt' },
+  },
 ];
+
+// ─── Lookup Maps (O(1) instead of O(n) per call) ───────────────────
+
+const _imageModelMap = new Map<string, ImageModelDef>(
+  IMAGE_MODELS.map((m) => [m.id, m]),
+);
+
+const _videoModelMap = new Map<string, VideoModelDef>(
+  VIDEO_MODELS.map((m) => [m.id, m]),
+);
 
 // ─── Helpers ───────────────────────────────────────────────────────
 
 export function getImageModel(id: string): ImageModelDef | undefined {
-  return IMAGE_MODELS.find((m) => m.id === id);
+  return _imageModelMap.get(id);
 }
 
 export function getVideoModel(id: string): VideoModelDef | undefined {
-  return VIDEO_MODELS.find((m) => m.id === id);
+  return _videoModelMap.get(id);
 }
 
 export function getLoraCompatibleModels(): ImageModelDef[] {
@@ -244,5 +289,11 @@ export function getLoraCompatibleModels(): ImageModelDef[] {
 }
 
 export function getBestModelForLora(): ImageModelDef {
-  return IMAGE_MODELS.find((m) => m.id === 'flux-dev-lora')!;
+  const model = IMAGE_MODELS.find((m) => m.id === 'flux-dev-lora');
+  if (!model) throw new Error('flux-dev-lora model not found in IMAGE_MODELS registry');
+  return model;
+}
+
+export function getVideoLoraModels(): VideoModelDef[] {
+  return VIDEO_MODELS.filter((m) => m.supportsLoRA);
 }

@@ -1,11 +1,21 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useRef, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, useRef, useMemo, ReactNode, useEffect } from 'react';
 import type { TrainingStatus, SceneImage, VideoResult, GenerationBatch } from '@/types/replicate';
+import type { NarrativeContext } from '@/lib/narrativeMemory';
 import { getLoraCompatibleModels, getBestModelForLora } from '@/lib/models';
 import { saveProject, saveProjectImmediate, loadProject, getAutoSave, clearAutoSave } from '@/lib/projectStorage';
 
 export type AssetCategory = 'character' | 'prop' | 'wardrobe' | 'location' | 'vehicle' | 'accessory';
+
+export interface LoraProfile {
+  id: string;
+  name: string;
+  triggerWord: string;
+  loraUrl: string;
+  scale: number; // 0.0 - 1.0, default 0.8
+  trainedAt: number; // timestamp
+}
 
 export interface ProductionAsset {
   id: string;
@@ -60,6 +70,13 @@ export interface WizardState {
   loraUrl: string | null;
   triggerWord: string;
 
+  // Multi-LoRA profiles (trained characters)
+  loraProfiles: LoraProfile[];
+  activeLoraIds: string[]; // which LoRAs to blend during generation
+
+  // Video LoRA (CogVideoX / Hunyuan trained weights)
+  videoLoraUrl: string | null;
+
   // Scene generation state
   scenes: SceneImage[];
   activeSceneId: string | null;
@@ -94,6 +111,9 @@ export interface WizardState {
 
   // Character consistency lock — frozen physical description prepended to every prompt
   characterDescriptionLock: string;
+
+  // Narrative memory — carries story context across scenes and batches
+  narrativeContext: NarrativeContext | null;
 
   // Pipeline editor
   pipelineMode: 'simple' | 'node';
@@ -133,6 +153,11 @@ const defaultState: WizardState = {
   loraUrl: null,
   triggerWord: 'DIRECTOR_CHAR',
 
+  loraProfiles: [],
+  activeLoraIds: [],
+
+  videoLoraUrl: null,
+
   scenes: [],
   activeSceneId: null,
 
@@ -158,6 +183,8 @@ const defaultState: WizardState = {
   voiceoverUrl: null,
 
   characterDescriptionLock: '',
+
+  narrativeContext: null,
 
   pipelineMode: 'simple',
   activePipelineId: null,
@@ -214,13 +241,37 @@ export function WizardProvider({ children }: { children: ReactNode }) {
         if (!currentIsLora) {
           next.selectedImageModel = getBestModelForLora().id;
         }
+        // Auto-add to LoRA profiles when a new training completes
+        const alreadySaved = next.loraProfiles.some((p) => p.loraUrl === partial.loraUrl);
+        if (!alreadySaved) {
+          const profile: LoraProfile = {
+            id: `lora-${Date.now()}`,
+            name: next.triggerWord || 'Character',
+            triggerWord: next.triggerWord,
+            loraUrl: partial.loraUrl,
+            scale: 0.8,
+            trainedAt: Date.now(),
+          };
+          next.loraProfiles = [...next.loraProfiles, profile];
+          next.activeLoraIds = [...next.activeLoraIds, profile.id];
+        }
       }
-      // Deduplicate scenes and videoResults to prevent key collisions
+      // Deduplicate scenes and videoResults to prevent key collisions (O(n) via Set)
       if (partial.scenes) {
-        next.scenes = next.scenes.filter((s, i, arr) => arr.findIndex((x) => x.id === s.id) === i);
+        const seen = new Set<string>();
+        next.scenes = next.scenes.filter((s) => {
+          if (seen.has(s.id)) return false;
+          seen.add(s.id);
+          return true;
+        });
       }
       if (partial.videoResults) {
-        next.videoResults = next.videoResults.filter((v, i, arr) => arr.findIndex((x) => x.id === v.id) === i);
+        const seen = new Set<string>();
+        next.videoResults = next.videoResults.filter((v) => {
+          if (seen.has(v.id)) return false;
+          seen.add(v.id);
+          return true;
+        });
       }
       // Persist to localStorage (debounced)
       saveProject(next);
@@ -292,8 +343,13 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     return true;
   }, []);
 
+  const contextValue = useMemo(
+    () => ({ state, update, reset, resetWithoutSave, hardReset, saveAsProject, loadFromProject }),
+    [state, update, reset, resetWithoutSave, hardReset, saveAsProject, loadFromProject],
+  );
+
   return (
-    <WizardContext.Provider value={{ state, update, reset, resetWithoutSave, hardReset, saveAsProject, loadFromProject }}>
+    <WizardContext.Provider value={contextValue}>
       {children}
     </WizardContext.Provider>
   );

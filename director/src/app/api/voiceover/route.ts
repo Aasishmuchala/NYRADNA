@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ audioUrl, durationSeconds });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Voiceover generation failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[/api/voiceover] Error:', message);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

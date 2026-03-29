@@ -50,11 +50,16 @@ export function validateUrl(
 
   const trimmed = url.trim();
 
-  // Allow data URIs if explicitly enabled
+  // Allow data URIs if explicitly enabled (cap at 10MB to prevent memory pressure)
   if (trimmed.startsWith('data:')) {
-    return options?.allowDataUri
-      ? { valid: true }
-      : { valid: false, error: 'data: URIs are not allowed' };
+    if (!options?.allowDataUri) {
+      return { valid: false, error: 'data: URIs are not allowed' };
+    }
+    const MAX_DATA_URI_BYTES = 10 * 1024 * 1024; // 10MB
+    if (trimmed.length > MAX_DATA_URI_BYTES) {
+      return { valid: false, error: `data: URI exceeds ${MAX_DATA_URI_BYTES / 1024 / 1024}MB limit` };
+    }
+    return { valid: true };
   }
 
   // Block dangerous schemes

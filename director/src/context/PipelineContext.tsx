@@ -13,6 +13,7 @@ import {
 } from '@/lib/pipeline/graph';
 import { getDefaultConfig, NODE_TYPE_REGISTRY } from '@/lib/pipeline/nodeTypes';
 import { executePipeline, executePipelineFrom } from '@/lib/pipeline/executor';
+import { revokePipelineBlobUrls } from '@/lib/pipeline/nodeExecutors';
 import { savePipeline } from '@/lib/pipeline/serialization';
 import type { ExecutionContext } from '@/lib/pipeline/types';
 import { useWizard } from '@/context/WizardContext';
@@ -33,6 +34,11 @@ interface PipelineContextType {
   // Selection
   selectedNodeId: string | null;
   selectNode: (id: string | null) => void;
+  // Undo/Redo
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
   // Execution
   execute: () => Promise<void>;
   executeFrom: (nodeId: string) => Promise<void>;
@@ -76,9 +82,63 @@ export function PipelineProvider({
   graphRef.current = graph;
   const isExecutingRef = useRef(false);
 
-  const setGraph = useCallback((g: PipelineGraph) => {
-    setGraphState(g);
+  // ── Undo/Redo Stack ──────────────────────────────────────────────
+  const MAX_UNDO = 50;
+  const undoStack = useRef<PipelineGraph[]>([]);
+  const redoStack = useRef<PipelineGraph[]>([]);
+
+  /** Push current graph to undo stack before a mutation */
+  const pushUndo = useCallback(() => {
+    undoStack.current = [...undoStack.current.slice(-(MAX_UNDO - 1)), graphRef.current];
+    redoStack.current = []; // Clear redo on new action
   }, []);
+
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+
+  /** Wrapper that pushes undo before applying a graph mutation */
+  const setGraphWithUndo = useCallback((updater: (prev: PipelineGraph) => PipelineGraph) => {
+    pushUndo();
+    setGraphState(updater);
+    setCanUndo(true);
+    setCanRedo(false);
+  }, [pushUndo]);
+
+  const undo = useCallback(() => {
+    if (undoStack.current.length === 0) return;
+    const prev = undoStack.current.pop()!;
+    redoStack.current.push(graphRef.current);
+    setGraphState(prev);
+    setCanUndo(undoStack.current.length > 0);
+    setCanRedo(true);
+  }, []);
+
+  const redo = useCallback(() => {
+    if (redoStack.current.length === 0) return;
+    const next = redoStack.current.pop()!;
+    undoStack.current.push(graphRef.current);
+    setGraphState(next);
+    setCanUndo(true);
+    setCanRedo(redoStack.current.length > 0);
+  }, []);
+
+  // Abort execution on unmount
+  useEffect(() => {
+    return () => {
+      if (abortRef.current) {
+        abortRef.current.abort();
+        abortRef.current = null;
+      }
+      isExecutingRef.current = false;
+    };
+  }, []);
+
+  const setGraph = useCallback((g: PipelineGraph) => {
+    pushUndo();
+    setGraphState(g);
+    setCanUndo(true);
+    setCanRedo(false);
+  }, [pushUndo]);
 
   // Auto-save: debounce 3 seconds after any graph change
   useEffect(() => {
@@ -94,19 +154,20 @@ export function PipelineProvider({
   const addNodeFn = useCallback((type: string, position: { x: number; y: number }): string => {
     const config = getDefaultConfig(type);
     const node = createNode(type, position, config);
-    setGraphState((prev) => graphAddNode(prev, node));
+    setGraphWithUndo((prev) => graphAddNode(prev, node));
     return node.id;
-  }, []);
+  }, [setGraphWithUndo]);
 
   const removeNodeFn = useCallback((nodeId: string) => {
-    setGraphState((prev) => graphRemoveNode(prev, nodeId));
+    setGraphWithUndo((prev) => graphRemoveNode(prev, nodeId));
     setSelectedNodeId((prev) => (prev === nodeId ? null : prev));
-  }, []);
+  }, [setGraphWithUndo]);
 
   const updateNodeConfig = useCallback((nodeId: string, config: Record<string, unknown>) => {
-    setGraphState((prev) => graphUpdateNode(prev, nodeId, { config }));
-  }, []);
+    setGraphWithUndo((prev) => graphUpdateNode(prev, nodeId, { config }));
+  }, [setGraphWithUndo]);
 
+  // Position updates happen on every mouse move — don't push undo for each pixel
   const updateNodePosition = useCallback((nodeId: string, position: { x: number; y: number }) => {
     setGraphState((prev) => graphUpdateNode(prev, nodeId, { position }));
   }, []);
@@ -117,7 +178,7 @@ export function PipelineProvider({
     (source: { nodeId: string; portId: string }, target: { nodeId: string; portId: string }): boolean => {
       // Type-check before adding — read from latest graph state via callback
       let valid = false;
-      setGraphState((prev) => {
+      setGraphWithUndo((prev) => {
         const sourceNode = prev.nodes.find((n) => n.id === source.nodeId);
         const targetNode = prev.nodes.find((n) => n.id === target.nodeId);
         if (!sourceNode || !targetNode) return prev;
@@ -131,12 +192,12 @@ export function PipelineProvider({
       });
       return valid;
     },
-    [],
+    [setGraphWithUndo],
   );
 
   const removeEdgeFn = useCallback((edgeId: string) => {
-    setGraphState((prev) => graphRemoveEdge(prev, edgeId));
-  }, []);
+    setGraphWithUndo((prev) => graphRemoveEdge(prev, edgeId));
+  }, [setGraphWithUndo]);
 
   // ── Execution ───────────────────────────────────────────────────
 
@@ -156,8 +217,8 @@ export function PipelineProvider({
 
     const ctx: ExecutionContext = {
       signal: controller.signal,
-      wizardState: state as unknown as Record<string, unknown>,
-      updateWizardState: (partial) => update(partial as Parameters<typeof update>[0]),
+      wizardState: state,
+      updateWizardState: (partial) => update(partial),
       onProgress: (nodeId, message, pct) => {
         setGraphState((prev) =>
           graphUpdateNode(prev, nodeId, { progressMessage: message, progressPct: pct }),
@@ -185,6 +246,8 @@ export function PipelineProvider({
       isExecutingRef.current = false;
       setIsExecuting(false);
       abortRef.current = null;
+      // Free memory from blob URLs created during execution
+      revokePipelineBlobUrls();
     }
   }, [state, update]);
 
@@ -208,8 +271,8 @@ export function PipelineProvider({
 
     const ctx: ExecutionContext = {
       signal: controller.signal,
-      wizardState: state as unknown as Record<string, unknown>,
-      updateWizardState: (partial) => update(partial as Parameters<typeof update>[0]),
+      wizardState: state,
+      updateWizardState: (partial) => update(partial),
       onProgress: (nId, message, pct) => {
         setGraphState((prev) =>
           graphUpdateNode(prev, nId, { progressMessage: message, progressPct: pct }),
@@ -236,6 +299,7 @@ export function PipelineProvider({
       isExecutingRef.current = false;
       setIsExecuting(false);
       abortRef.current = null;
+      revokePipelineBlobUrls();
     }
   }, [state, update]);
 
@@ -256,6 +320,10 @@ export function PipelineProvider({
         removeEdge: removeEdgeFn,
         selectedNodeId,
         selectNode: setSelectedNodeId,
+        undo,
+        redo,
+        canUndo,
+        canRedo,
         execute,
         executeFrom,
         abort,

@@ -9,6 +9,10 @@ import { listSavedPipelines, loadPipeline } from '@/lib/pipeline/serialization';
 import type { PipelineGraph } from '@/lib/pipeline/graph';
 
 export default function PipelinePage() {
+  useEffect(() => {
+    document.title = 'Pipeline — DIRECTOR';
+  }, []);
+
   const [selectedPreset, setSelectedPreset] = useState<PipelineGraph | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -49,7 +53,7 @@ export default function PipelinePage() {
             <button
               key={preset.id}
               onClick={() => setSelectedPreset(preset)}
-              className="bg-[#1a1a1a]/80 border border-white/10 rounded-xl p-4 text-left hover:border-[#ff9064]/30 transition-colors"
+              className="bg-surface-container/80 border border-white/10 rounded-xl p-4 text-left hover:border-primary/30 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               <h3 className="text-sm font-medium text-white/80 mb-1">{preset.name}</h3>
               <p className="text-[10px] text-white/30">{preset.description}</p>

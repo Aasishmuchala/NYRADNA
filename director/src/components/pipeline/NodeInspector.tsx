@@ -12,7 +12,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
   const node = graph.nodes.find((n) => n.id === selectedNodeId);
   if (!node) {
     return (
-      <div className="w-[260px] bg-[#141414]/95 backdrop-blur-lg border-l border-white/5 flex items-center justify-center">
+      <div className="w-[260px] bg-surface-container-low/95 backdrop-blur-lg border-l border-white/5 flex items-center justify-center">
         <p className="text-xs text-white/20">Select a node to inspect</p>
       </div>
     );
@@ -29,7 +29,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
   );
 
   return (
-    <div className="w-[260px] bg-[#141414]/95 backdrop-blur-lg border-l border-white/5 overflow-y-auto custom-scrollbar">
+    <div className="w-[260px] bg-surface-container-low/95 backdrop-blur-lg border-l border-white/5 overflow-y-auto custom-scrollbar">
       {/* Header */}
       <div className="p-3 border-b border-white/5">
         <div className="flex items-center gap-2 mb-1">
@@ -45,7 +45,8 @@ export const NodeInspector = React.memo(function NodeInspector() {
             <button
               onClick={() => executeFrom(node.id)}
               disabled={isExecuting}
-              className="text-[10px] text-[#ff9064] hover:underline disabled:opacity-50"
+              className="text-[10px] text-primary hover:underline disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-primary/30 rounded"
+              aria-label="Retry pipeline from this node"
             >
               Retry from here
             </button>
@@ -78,13 +79,14 @@ export const NodeInspector = React.memo(function NodeInspector() {
             <div>
               <span className="text-[10px] text-white/30 block mb-1">Image</span>
               {node.outputs.image.startsWith('data:') ? (
-                <img src={node.outputs.image} alt="Output" className="w-full rounded-lg" />
+                <img src={node.outputs.image} alt="Generated output" className="w-full rounded-lg" />
               ) : (
                 <>
-                  <img src={node.outputs.image} alt="Output" className="w-full rounded-lg mb-1" loading="lazy" />
+                  <img src={node.outputs.image} alt="Generated output" className="w-full rounded-lg mb-1" loading="lazy" />
                   <button
                     onClick={() => navigator.clipboard.writeText(node.outputs!.image as string)}
-                    className="text-[9px] text-white/30 hover:text-white/60 transition-colors"
+                    className="text-[9px] text-white/30 hover:text-white/60 transition-colors focus:outline-none focus:text-white/60"
+                    aria-label="Copy image URL to clipboard"
                   >
                     Copy URL
                   </button>
@@ -97,7 +99,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
           {typeof node.outputs.frame === 'string' && (
             <div>
               <span className="text-[10px] text-white/30 block mb-1">Extracted Frame</span>
-              <img src={node.outputs.frame} alt="Frame" className="w-full rounded-lg" loading="lazy" />
+              <img src={node.outputs.frame} alt="Extracted frame" className="w-full rounded-lg" loading="lazy" />
             </div>
           )}
 
@@ -113,7 +115,8 @@ export const NodeInspector = React.memo(function NodeInspector() {
               />
               <button
                 onClick={() => navigator.clipboard.writeText(node.outputs!.video as string)}
-                className="text-[9px] text-white/30 hover:text-white/60 transition-colors mt-1"
+                className="text-[9px] text-white/30 hover:text-white/60 transition-colors mt-1 focus:outline-none focus:text-white/60"
+                aria-label="Copy video URL to clipboard"
               >
                 Copy URL
               </button>
@@ -122,12 +125,12 @@ export const NodeInspector = React.memo(function NodeInspector() {
 
           {/* Gate result */}
           {node.outputs.pass !== undefined && (
-            <div className={`flex items-center gap-2 p-2 rounded-lg ${node.outputs.pass ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: node.outputs.pass ? '#4caf50' : '#ffb4ab' }}>
+            <div className={`flex items-center gap-2 p-2 rounded-lg ${node.outputs.pass ? 'bg-success/10' : 'bg-error/10'}`}>
+              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: node.outputs.pass ? 'var(--color-success)' : 'var(--color-error)' }}>
                 {node.outputs.pass ? 'check_circle' : 'cancel'}
               </span>
               <div>
-                <span className={`text-xs font-medium ${node.outputs.pass ? 'text-[#4caf50]' : 'text-[#ffb4ab]'}`}>
+                <span className={`text-xs font-medium ${node.outputs.pass ? 'text-success' : 'text-error'}`}>
                   {node.outputs.pass ? 'Gate Passed' : 'Gate Failed'}
                 </span>
                 {node.outputs.score !== undefined && (
@@ -182,8 +185,8 @@ export const NodeInspector = React.memo(function NodeInspector() {
       {/* Error detail */}
       {node.error && (
         <div className="p-3 border-t border-white/5">
-          <h4 className="text-[10px] font-medium text-[#ffb4ab]/60 uppercase mb-1">Error</h4>
-          <p className="text-[10px] text-[#ffb4ab]/80 break-words">{node.error}</p>
+          <h4 className="text-[10px] font-medium text-error/60 uppercase mb-1">Error</h4>
+          <p className="text-[10px] text-error/80 break-words">{node.error}</p>
         </div>
       )}
 
@@ -191,7 +194,8 @@ export const NodeInspector = React.memo(function NodeInspector() {
       <div className="p-3 border-t border-white/5">
         <button
           onClick={() => removeNode(node.id)}
-          className="w-full text-xs text-red-400/60 hover:text-red-400 py-1.5 rounded-lg hover:bg-red-400/10 transition-colors"
+          className="w-full text-xs text-red-400/60 hover:text-red-400 py-1.5 rounded-lg hover:bg-red-400/10 transition-colors focus:outline-none focus:ring-1 focus:ring-red-400/30"
+          aria-label={`Delete ${typeDef.label} node`}
         >
           Delete Node
         </button>
@@ -219,7 +223,7 @@ function ConfigField({
           <select
             value={String(value)}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-[#ff9064]/40"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           >
             {field.options?.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -244,7 +248,7 @@ function ConfigField({
             step={field.step ?? 0.01}
             value={Number(value)}
             onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ff9064]"
+            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary"
           />
         </label>
       );
@@ -260,7 +264,7 @@ function ConfigField({
             max={field.max}
             step={field.step ?? 1}
             onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-[#ff9064]/40"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </label>
       );
@@ -272,7 +276,7 @@ function ConfigField({
             type="checkbox"
             checked={Boolean(value)}
             onChange={(e) => onChange(e.target.checked)}
-            className="w-3.5 h-3.5 rounded border-white/20 bg-white/5 accent-[#ff9064]"
+            className="w-3.5 h-3.5 rounded border-white/20 bg-white/5 accent-primary"
           />
           <span className="text-[10px] text-white/50">{field.label}</span>
         </label>
@@ -286,7 +290,7 @@ function ConfigField({
             type="text"
             value={String(value ?? '')}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-[#ff9064]/40"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </label>
       );

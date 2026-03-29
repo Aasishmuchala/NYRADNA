@@ -85,13 +85,15 @@ export const CATEGORY_ICONS: Record<NodeCategory, string> = {
 
 // ─── Execution Context ──────────────────────────────────────────────
 
+import type { WizardState } from '@/context/WizardContext';
+
 export interface ExecutionContext {
   /** Abort signal for cancellation */
   signal: AbortSignal;
   /** Read-only access to wizard state */
-  wizardState: Record<string, unknown>;
+  wizardState: WizardState;
   /** Write results back to wizard state */
-  updateWizardState: (partial: Record<string, unknown>) => void;
+  updateWizardState: (partial: Partial<WizardState>) => void;
   /** Report progress for a node */
   onProgress: (nodeId: string, message: string, pct?: number) => void;
   /** Get output from a previously executed node */

@@ -67,6 +67,6 @@ export async function POST(req: NextRequest) {
     const message = error instanceof Error ? error.message : 'Image generation failed';
     const stack = error instanceof Error ? error.stack : '';
     console.error(`[/api/generate] Error: ${message} | imageModelId: ${imageModelId}\n${stack}`);
-    return NextResponse.json({ error: `${message} (model: ${imageModelId || 'default'})` }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import { apiFetch } from '@/lib/api';
 import type { Prediction, VideoResult, GenerationBatch } from '@/types/replicate';
@@ -15,6 +15,14 @@ import { getVideoModel } from '@/lib/models';
 import { buildVideoStyleSuffix, buildConsistencyPrefix } from '@/lib/cinematicPrompt';
 import { checkVisualDrift } from '@/lib/driftDetection';
 import { buildReferenceImageSet } from '@/lib/subjectRefs';
+import {
+  initNarrativeContext,
+  buildSceneMemory,
+  addSceneToContext,
+  buildNarrativeInjection,
+  buildBatchTransitionContext,
+} from '@/lib/narrativeMemory';
+import type { NarrativeContext } from '@/lib/narrativeMemory';
 
 // ─── Quality Gate Helpers (Simple Mode) ──────────────────────────────
 
@@ -147,6 +155,13 @@ export function useVideoGeneration() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
+  // Abort generation on unmount to prevent setState on unmounted component
+  useEffect(() => {
+    return () => {
+      abortRef.current = true;
+    };
+  }, []);
+
   // ─── Submit with 429 retry ───────────────────────────────────
 
   const submitVideoWithRetry = useCallback(async (
@@ -174,7 +189,8 @@ export function useVideoGeneration() {
 
       if (isRateLimit && attempt < maxRetries - 1) {
         const retryMatch = errText.match(/resets in ~(\d+)s/);
-        const waitSec = retryMatch ? parseInt(retryMatch[1], 10) + 1 : (attempt + 1) * 12;
+        const parsedSec = retryMatch ? parseInt(retryMatch[1], 10) + 1 : (attempt + 1) * 12;
+        const waitSec = Math.min(parsedSec, 120); // Cap at 2 minutes to prevent unbounded waits
         await new Promise(r => setTimeout(r, waitSec * 1000));
         continue;
       }
@@ -329,6 +345,24 @@ export function useVideoGeneration() {
     setError(null);
     abortRef.current = false;
 
+    // Initialize narrative memory for story continuity across batches
+    let narrativeCtx: NarrativeContext = stateRef.current.narrativeContext
+      ?? initNarrativeContext(stateRef.current.visionText);
+
+    // Record scene memories for all approved scenes
+    for (let i = 0; i < completedScenes.length; i++) {
+      const scene = completedScenes[i];
+      const memory = buildSceneMemory(
+        scene.id,
+        i,
+        scene.prompt,
+        completedScenes.length,
+        scene.videoMotionPrompt,
+      );
+      narrativeCtx = addSceneToContext(narrativeCtx, memory);
+    }
+    update({ narrativeContext: narrativeCtx });
+
     // Check if model supports multi_prompt (Kling 3.0)
     const videoModelDef = getVideoModel(stateRef.current.selectedVideoModel);
     const useMultiPrompt = videoModelDef?.supportsMultiPrompt ?? false;
@@ -368,6 +402,9 @@ export function useVideoGeneration() {
       }));
       update({ generationBatches: legacyBatches, currentBatchIndex: 0 });
 
+      // Track anchor frame across batches for cross-batch continuity
+      let mpAnchorFrameUrl: string | undefined;
+
       for (let batchIdx = 0; batchIdx < mpBatches.length; batchIdx++) {
         if (abortRef.current) break;
 
@@ -388,8 +425,11 @@ export function useVideoGeneration() {
         const refSet = buildReferenceImageSet(stateRef.current);
         console.log(`[multi_prompt batch ${batchIdx + 1}] ${batchScenes.length} scenes, refs=${refSet.referenceImages.length}`);
 
+        // ── Cross-Batch Anchor Frame ──────────────────────────────
+        // Use the previous batch's last frame as start image for seamless transitions
+        let batchStartImage = mpAnchorFrameUrl ?? batchScenes[0].imageUrl;
+
         // ── Face Consistency Gate (batch start image) ─────────────
-        let batchStartImage = batchScenes[0].imageUrl;
         if (batchStartImage && refSet.characterCount > 0) {
           const gateResult = await gateAndRegenImage(
             batchStartImage,
@@ -400,22 +440,68 @@ export function useVideoGeneration() {
           );
           if (gateResult.imageUrl !== batchStartImage) {
             batchStartImage = gateResult.imageUrl;
-            const updatedScenes = stateRef.current.scenes.map(s =>
-              s.id === batchScenes[0].id ? { ...s, imageUrl: batchStartImage } : s
-            );
-            update({ scenes: updatedScenes });
+            // Only update scene image if we didn't use an anchor frame
+            if (!mpAnchorFrameUrl) {
+              const updatedScenes = stateRef.current.scenes.map(s =>
+                s.id === batchScenes[0].id ? { ...s, imageUrl: batchStartImage } : s
+              );
+              update({ scenes: updatedScenes });
+            }
             console.log(`[gate] Multi-prompt batch ${batchIdx + 1}: regenerated start image, consistency ${(gateResult.gateScore * 100).toFixed(0)}%`);
           }
         }
 
-        // Build segments with prompts (Kling multi_prompt has 512 char limit per segment)
+        // ── Inter-Batch Drift Detection ───────────────────────────
+        if (batchIdx > 0) {
+          const prevBatchEnd = completedScenes[startIdx - 1];
+          const currBatchStart = batchScenes[0];
+          const prevPrompt = prevBatchEnd?.videoPrompt || prevBatchEnd?.videoMotionPrompt || '';
+          const currPrompt = currBatchStart?.videoPrompt || currBatchStart?.videoMotionPrompt || '';
+          if (prevPrompt && currPrompt) {
+            try {
+              const drift = await checkVisualDrift(prevPrompt, currPrompt);
+              if (drift.drifted) {
+                console.warn(
+                  `[drift] Cross-batch gap between batch ${batchIdx} and ${batchIdx + 1}: similarity=${drift.similarity.toFixed(2)}. ${drift.reason || 'Visual drift detected at batch boundary'}`
+                );
+              }
+            } catch {
+              // Drift check is informational — don't block on errors
+            }
+          }
+        }
+
+        // ── Build Segments with Narrative Memory ──────────────────
         const MAX_SEGMENT_PROMPT = 500;
         const styleSuffix = buildVideoStyleSuffix(stateRef.current);
-        const segments = batchScenes.map(scene => {
+
+        // Build batch transition context from narrative memory
+        const batchNarrativeCtx = batchIdx > 0
+          ? buildBatchTransitionContext(narrativeCtx, startIdx)
+          : '';
+
+        const segments = batchScenes.map((scene, segIdx) => {
           const basePrompt = scene.videoPrompt || scene.videoMotionPrompt || '';
-          const fullPrompt = basePrompt
-            ? (basePrompt.length > 200 ? `${basePrompt}, ${styleSuffix}` : [buildConsistencyPrefix(stateRef.current), basePrompt, styleSuffix].filter(Boolean).join(', '))
-            : [buildConsistencyPrefix(stateRef.current), styleSuffix].filter(Boolean).join(', ');
+
+          // Inject per-scene narrative continuity
+          const sceneNarrative = buildNarrativeInjection(narrativeCtx, startIdx + segIdx);
+
+          // Compose: narrative context + consistency prefix + scene prompt + style suffix
+          const narrativePrefix = segIdx === 0 && batchNarrativeCtx
+            ? batchNarrativeCtx
+            : sceneNarrative;
+
+          const promptParts = [
+            narrativePrefix,
+            buildConsistencyPrefix(stateRef.current),
+            basePrompt,
+            styleSuffix,
+          ].filter(Boolean);
+
+          const fullPrompt = basePrompt && basePrompt.length > 200
+            ? [narrativePrefix, basePrompt, styleSuffix].filter(Boolean).join(', ')
+            : promptParts.join(', ');
+
           // Truncate to stay within Kling's 512 char limit per shot
           const trimmed = fullPrompt.length > MAX_SEGMENT_PROMPT ? fullPrompt.slice(0, MAX_SEGMENT_PROMPT) : fullPrompt;
           return { prompt: trimmed, duration: 3 };
@@ -466,9 +552,10 @@ export function useVideoGeneration() {
             }
             completedCount += batchScenes.length;
 
-            // Extract last frame for next batch's continuity
+            // Extract last frame for next batch's cross-batch continuity
             const lastFrame = await extractLastFrame(videoUrl);
             if (lastFrame) {
+              mpAnchorFrameUrl = lastFrame;
               allVideos[endIdx] = { ...allVideos[endIdx], lastFrameUrl: lastFrame };
             }
           } else {
@@ -477,6 +564,8 @@ export function useVideoGeneration() {
             for (let i = startIdx; i <= endIdx; i++) {
               allVideos[i] = { ...allVideos[i], status: 'failed', error: prediction.error || 'Multi-prompt batch failed' };
             }
+            // Reset anchor frame on failure so next batch uses its own start image
+            mpAnchorFrameUrl = undefined;
           }
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Multi-prompt batch failed';
@@ -487,6 +576,8 @@ export function useVideoGeneration() {
           completedCount += (endIdx - startIdx + 1);
           setProgress(Math.round((completedCount / totalCount) * 100));
           update({ videoResults: [...allVideos] });
+          // Reset anchor frame on failure
+          mpAnchorFrameUrl = undefined;
         }
 
         setProgress(Math.round((completedCount / totalCount) * 100));
@@ -551,9 +642,24 @@ export function useVideoGeneration() {
 
           const styleSuffix = buildVideoStyleSuffix(stateRef.current);
           const basePrompt = scene.videoPrompt || scene.videoMotionPrompt || '';
-          const fullPrompt = basePrompt
-            ? (basePrompt.length > 200 ? `${basePrompt}, ${styleSuffix}` : [buildConsistencyPrefix(stateRef.current), basePrompt, styleSuffix].filter(Boolean).join(', '))
-            : [buildConsistencyPrefix(stateRef.current), styleSuffix].filter(Boolean).join(', ');
+
+          // Inject narrative memory for story continuity
+          const sceneNarrative = buildNarrativeInjection(narrativeCtx, sceneIdx);
+          const isFirstInBatchNarrative = sceneIdx === startIdx && batchIdx > 0;
+          const narrativePrefix = isFirstInBatchNarrative
+            ? buildBatchTransitionContext(narrativeCtx, startIdx)
+            : sceneNarrative;
+
+          const promptParts = [
+            narrativePrefix,
+            buildConsistencyPrefix(stateRef.current),
+            basePrompt,
+            styleSuffix,
+          ].filter(Boolean);
+
+          const fullPrompt = basePrompt && basePrompt.length > 200
+            ? [narrativePrefix, basePrompt, styleSuffix].filter(Boolean).join(', ')
+            : promptParts.join(', ');
 
           // ── Face Consistency Gate ──────────────────────────────────
           // Check start image quality before expensive video generation

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 
 export interface User {
   id: string;
@@ -20,11 +20,15 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(
-    process.env.NODE_ENV === 'development'
-      ? { id: 'dev', name: 'Developer', email: 'dev@local', avatar: '', plan: 'Pro' }
-      : null
-  );
+  const [user, setUser] = useState<User | null>(null);
+
+  // In development, auto-login with a mock user after mount (avoids SSR mismatch)
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && !user) {
+      setUser({ id: 'dev', name: 'Developer', email: 'dev@local', avatar: '', plan: 'Pro' });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const [isLoading, setIsLoading] = useState(false);
 
   const login = useCallback(async (_email: string, _password: string) => {

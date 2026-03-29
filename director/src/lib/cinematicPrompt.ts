@@ -162,7 +162,7 @@ function buildSceneContinuityContext(
 ): string {
   if (sceneIndex === 0) return 'opening scene, establishing the visual world';
 
-  const progressPct = sceneIndex / (totalScenes - 1);
+  const progressPct = totalScenes > 1 ? sceneIndex / (totalScenes - 1) : 1;
   const narrativePhase = progressPct < 0.3 ? 'early narrative, still establishing'
     : progressPct < 0.7 ? 'mid-narrative, rising action'
     : 'approaching climax, peak intensity';

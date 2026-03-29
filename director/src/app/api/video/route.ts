@@ -67,6 +67,6 @@ export async function POST(req: NextRequest) {
     const message = error instanceof Error ? error.message : 'Video generation failed';
     const stack = error instanceof Error ? error.stack : '';
     console.error(`[/api/video] Error: ${message} | model: ${videoModelId}\n${stack}`);
-    return NextResponse.json({ error: `${message} (model: ${videoModelId || 'default'})` }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

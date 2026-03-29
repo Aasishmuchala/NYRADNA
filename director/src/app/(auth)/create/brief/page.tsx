@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import { getSelectedModel } from '@/lib/apiKeyStore';
 
@@ -82,6 +82,10 @@ const personas: Persona[] = [
 ];
 
 export default function BriefPage() {
+  useEffect(() => {
+    document.title = 'Brief — DIRECTOR';
+  }, []);
+
   const { state, update } = useWizard();
   const selectedPersona = state.selectedPersona;
 
@@ -153,8 +157,8 @@ export default function BriefPage() {
             <span className="text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant">Step 2 of 5</span>
             <span className="text-xs font-label text-primary font-bold">Target Audience Selection</span>
           </div>
-          <div className="w-full h-1 bg-[#262626] rounded-full overflow-hidden">
-            <div className="w-2/5 h-full bg-[#ff9064] rounded-full shadow-[0_0_40px_rgba(255,144,100,0.1)]"></div>
+          <div className="w-full h-1 bg-surface-bright rounded-full overflow-hidden">
+            <div className="w-2/5 h-full bg-primary rounded-full shadow-[0_0_40px_rgba(255,144,100,0.1)]"></div>
           </div>
         </div>
 
@@ -170,13 +174,13 @@ export default function BriefPage() {
             <button
               key={persona.id}
               onClick={() => update({ selectedPersona: persona.id })}
-              className={`group relative overflow-hidden bg-[#131313] rounded-xl aspect-[4/3] text-left transition-all duration-300 hover:bg-[#1a1a1a] border-2 ${
+              className={`group relative overflow-hidden bg-surface-container-low rounded-xl aspect-[4/3] text-left transition-all duration-300 hover:bg-surface-container border-2 focus:outline-none focus:ring-2 focus:ring-primary/30 ${
                 selectedPersona === persona.id
                   ? 'border-primary ring-4 ring-primary/30'
-                  : 'border-[#494847]/10'
+                  : 'border-outline-variant/10'
               }`}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-[#0e0e0e]/40"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-surface/40"></div>
               <div className="relative h-full p-5 flex flex-col justify-end">
                 <span className="material-symbols-outlined mb-2 text-[28px]" style={{ color: persona.iconColor }}>{persona.icon}</span>
                 <h3 className="font-headline text-lg font-bold text-white">{persona.title}</h3>
@@ -194,13 +198,13 @@ export default function BriefPage() {
                 update({ selectedPersona: 0 });
               }
             }}
-            className={`group relative overflow-hidden bg-[#131313] rounded-xl aspect-[4/3] text-left transition-all duration-300 border-2 ${
+            className={`group relative overflow-hidden bg-surface-container-low rounded-xl aspect-[4/3] text-left transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-primary/30 ${
               isCustomSelected
                 ? 'border-primary ring-4 ring-primary/30'
-                : 'border-dashed border-[#494847]/30 hover:border-[#494847]/60'
+                : 'border-dashed border-outline-variant/30 hover:border-outline-variant/60'
             }`}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-[#0e0e0e]/40"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-surface/40"></div>
             <div className="relative h-full p-5 flex flex-col justify-end">
               <span className="material-symbols-outlined mb-2 text-[28px] text-primary">smart_toy</span>
               <h3 className="font-headline text-lg font-bold text-white">
@@ -217,7 +221,7 @@ export default function BriefPage() {
 
         {/* Custom Persona Input */}
         {isCustomSelected && (
-          <div className="space-y-4 p-6 rounded-2xl bg-[#131313] border border-[#494847]/20">
+          <div className="space-y-4 p-6 rounded-2xl bg-surface-container-low border border-outline-variant/20">
             <div className="flex items-center gap-2 mb-1">
               <span className="material-symbols-outlined text-primary text-sm">smart_toy</span>
               <span className="text-xs uppercase tracking-widest font-bold text-primary">AI Persona Builder</span>
@@ -232,7 +236,7 @@ export default function BriefPage() {
                 onChange={(e) => setCustomInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleGenerateCustom()}
                 placeholder="e.g. Millennial parents who love outdoor adventures"
-                className="flex-1 bg-[#0e0e0e] border border-[#494847]/20 rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#adaaaa]/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                className="flex-1 bg-surface border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
               />
               <button
                 onClick={handleGenerateCustom}
@@ -255,7 +259,7 @@ export default function BriefPage() {
 
             {/* Generated persona preview */}
             {customGenerated && state.customPersonaTitle && (
-              <div className="mt-4 p-4 rounded-xl bg-[#262626]/40 border-l-2 border-primary space-y-2">
+              <div className="mt-4 p-4 rounded-xl bg-surface-bright/40 border-l-2 border-primary space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="font-headline font-bold text-white">{state.customPersonaTitle}</h4>
                   <button
@@ -302,43 +306,43 @@ export default function BriefPage() {
 
       {/* Right Column: Intelligence Feed */}
       <aside className="w-full md:w-80 shrink-0">
-        <div className="sticky top-24 bg-[#131313]/50 backdrop-blur-md border border-[#494847]/10 rounded-2xl p-6 space-y-6">
+        <div className="sticky top-24 bg-surface-container-low/50 backdrop-blur-md border border-outline-variant/10 rounded-2xl p-6 space-y-6">
           <div className="space-y-1">
             <h2 className="text-xs font-label uppercase tracking-widest text-primary">Intelligence Feed</h2>
             <p className="text-sm font-headline font-bold text-white">What DIRECTOR understands so far</p>
           </div>
           <div className="space-y-4">
             {/* Core Concept */}
-            <div className="p-4 rounded-xl bg-[#262626]/40 border-l-2 border-[#ff9064]">
+            <div className="p-4 rounded-xl bg-surface-bright/40 border-l-2 border-primary">
               <div className="flex items-center gap-2 mb-1">
-                <span className="material-symbols-outlined text-xs text-[#ff9064]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                <span className="text-[10px] uppercase tracking-wider text-[#adaaaa]">Core Concept</span>
+                <span className="material-symbols-outlined text-xs text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Core Concept</span>
               </div>
               <p className="text-xs text-white leading-relaxed">{state.visionText || 'Your concept will appear here once defined.'}</p>
             </div>
 
             {/* Persona Info */}
             {selectedPersonaData ? (
-              <div className="p-4 rounded-xl bg-[#262626]/40 border-l-2 border-[#81e9ff]">
+              <div className="p-4 rounded-xl bg-surface-bright/40 border-l-2 border-tertiary">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="material-symbols-outlined text-xs text-[#81e9ff]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                  <span className="text-[10px] uppercase tracking-wider text-[#adaaaa]">Target Audience</span>
+                  <span className="material-symbols-outlined text-xs text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                  <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Target Audience</span>
                 </div>
                 <p className="text-xs text-white leading-relaxed">{selectedPersonaData.feedDescription}</p>
               </div>
             ) : (
-              <div className="p-4 rounded-xl bg-[#000000] border border-dashed border-[#494847]/20 flex flex-col items-center justify-center text-center py-8">
-                <span className="material-symbols-outlined text-[#adaaaa]/30 text-3xl mb-2">psychology</span>
-                <p className="text-[10px] text-[#adaaaa] italic">Waiting for persona selection to optimize visual tone...</p>
+              <div className="p-4 rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant/20 flex flex-col items-center justify-center text-center py-8">
+                <span className="material-symbols-outlined text-on-surface-variant/30 text-3xl mb-2">psychology</span>
+                <p className="text-[10px] text-on-surface-variant italic">Waiting for persona selection to optimize visual tone...</p>
               </div>
             )}
           </div>
 
           {/* Footer Hint */}
-          <div className="pt-4 border-t border-[#494847]/10">
+          <div className="pt-4 border-t border-outline-variant/10">
             <div className="flex items-start gap-3 opacity-60">
-              <span className="material-symbols-outlined text-sm text-[#81e9ff] mt-0.5">lightbulb</span>
-              <p className="text-[10px] text-[#adaaaa] leading-tight">Selecting a persona influences the cinematic lighting and soundtrack suggestions in the next phase.</p>
+              <span className="material-symbols-outlined text-sm text-tertiary mt-0.5">lightbulb</span>
+              <p className="text-[10px] text-on-surface-variant leading-tight">Selecting a persona influences the cinematic lighting and soundtrack suggestions in the next phase.</p>
             </div>
           </div>
         </div>

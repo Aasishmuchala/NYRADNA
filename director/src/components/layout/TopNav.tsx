@@ -53,18 +53,19 @@ export default function TopNav({
           ) : (
             <>
               {/* Notification Bell */}
-              <button className="relative rounded-full p-2 transition-colors hover:bg-surface-container-high">
+              <button className="relative rounded-full p-2 transition-colors hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="Notifications">
                 <span className="material-symbols-outlined text-on-surface-variant text-[20px] transition-colors hover:text-white">
                   notifications_none
                 </span>
                 {/* Notification Indicator */}
-                <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-primary"></span>
+                <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true"></span>
               </button>
 
               {/* Help Icon */}
               <Link
                 href="/help"
-                className="rounded-full p-2 transition-colors hover:bg-surface-container-high"
+                className="rounded-full p-2 transition-colors hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary/30"
+                aria-label="Help and support"
               >
                 <span className="material-symbols-outlined text-on-surface-variant text-[20px] transition-colors hover:text-white">
                   help_outline
@@ -77,7 +78,7 @@ export default function TopNav({
                   <p className="text-sm font-medium text-white">{user?.name ?? 'User'}</p>
                   <p className="text-xs text-on-surface-variant">{user?.plan ?? 'Free'}</p>
                 </div>
-                <button className="h-10 w-10 overflow-hidden rounded-full bg-surface-container-high ring-1 ring-[#3a3a3a] transition-transform hover:scale-105">
+                <button className="h-10 w-10 overflow-hidden rounded-full bg-surface-container-high ring-1 ring-surface-bright transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="User profile menu">
                   {user?.avatar ? (
                     <img
                       src={user.avatar}

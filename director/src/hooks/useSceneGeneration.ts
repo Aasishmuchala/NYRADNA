@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import { apiFetch } from '@/lib/api';
 import type { Prediction, SceneImage } from '@/types/replicate';
@@ -14,6 +14,13 @@ export function useSceneGeneration() {
   const loopRunning = useRef(false);
   const stateRef = useRef(state);
   stateRef.current = state;
+
+  // Stop generation loop on unmount
+  useEffect(() => {
+    return () => {
+      loopRunning.current = false;
+    };
+  }, []);
 
   // ─── Submit a single prediction with retry on 429 ──────────────
 

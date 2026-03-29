@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import { getSoundtrack } from '@/lib/soundtracks';
 import { buildReferenceImageSet } from '@/lib/subjectRefs';
@@ -51,15 +51,42 @@ export function useStitching() {
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const completedVideos = state.videoResults.filter(
-    (v) => v.status === 'completed' && v.videoUrl,
-  );
+  // Revoke blob URL and abort in-progress operations on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
+  }, []);
+
+  // Track filmUrl for cleanup — revoke when component unmounts
+  const filmUrlRef = useRef<string | null>(null);
+  useEffect(() => {
+    filmUrlRef.current = filmUrl;
+    return () => {
+      if (filmUrlRef.current) {
+        URL.revokeObjectURL(filmUrlRef.current);
+      }
+    };
+  }, [filmUrl]);
+
+  // Deduplicate videos by URL — multi-prompt batches share one video across
+  // multiple scene entries. Stitching the same file N times would be wrong.
+  const completedVideos = state.videoResults
+    .filter((v) => v.status === 'completed' && v.videoUrl)
+    .filter((v, i, arr) => arr.findIndex((x) => x.videoUrl === v.videoUrl) === i);
 
   /** Estimated total clips including potential bridge clips. */
   const estimatedClips = completedVideos.length;
 
-  /** Rough estimated duration in seconds (~5s per clip is a conservative average). */
-  const estimatedDuration = estimatedClips * 5;
+  /** Rough estimated duration formatted as a readable string. */
+  const estimatedDurationSec = estimatedClips * 5;
+  const estimatedDuration =
+    estimatedDurationSec >= 60
+      ? `${Math.floor(estimatedDurationSec / 60)}m ${estimatedDurationSec % 60}s`
+      : `${estimatedDurationSec}s`;
 
   /**
    * Stream a Response body into a Blob while reporting progress.
@@ -137,7 +164,10 @@ export function useStitching() {
         return null;
       }
 
-      // Create a new AbortController for this stitch operation
+      // Abort previous operation if still running
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       const controller = new AbortController();
       abortControllerRef.current = controller;
 
@@ -166,10 +196,10 @@ export function useStitching() {
           };
         });
 
-        // Resolve soundtrack
+        // Resolve soundtrack (only when audio is enabled)
         const selectedTrack = getSoundtrack(state.selectedSoundtrack);
         const backgroundMusicUrl =
-          selectedTrack.id !== 'none' && selectedTrack.previewUrl
+          state.includeAudio && selectedTrack.id !== 'none' && selectedTrack.previewUrl
             ? selectedTrack.previewUrl
             : undefined;
 
@@ -201,8 +231,10 @@ export function useStitching() {
             maxBridgeClips,
             videoModelId: state.selectedVideoModel,
             subjectReferenceImages,
+            // When audio is disabled, tell the API to strip all audio tracks
+            muteVideo: !state.includeAudio,
             ...(backgroundMusicUrl ? { backgroundMusicUrl } : {}),
-            ...(state.voiceoverUrl
+            ...(state.includeAudio && state.voiceoverUrl
               ? { voiceoverUrl: state.voiceoverUrl }
               : {}),
           }),
@@ -286,6 +318,7 @@ export function useStitching() {
       state.exportFormat,
       state.colorIndex,
       state.selectedVideoModel,
+      state.includeAudio,
     ],
   );
 

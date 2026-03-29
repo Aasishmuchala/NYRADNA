@@ -159,7 +159,7 @@ async function executeNode(
     nodeOutputs.set(nodeId, outputs);
 
     // Gate handling: if this is a gate node and it failed, skip downstream
-    if (typeDef.category === 'gate' && outputs.pass === false) {
+    if (typeDef.category === 'gate' && outputs.pass !== undefined && outputs.pass === false) {
       const shouldRetry = node.config.retryOnFail === true;
       const maxRetries = (node.config.maxRetries as number) ?? 3;
 
@@ -175,12 +175,13 @@ async function executeNode(
         }
       }
 
-      // Gate failed — skip all downstream nodes
+      // Gate failed — skip downstream nodes that have NO alternative path
       const downstream = getReachableDownstream(graph, nodeId);
       for (const downId of downstream) {
-        // Only skip if ALL paths to this node go through the failed gate
-        // Simple heuristic: skip all reachable downstream
-        skippedNodes.add(downId);
+        // Only skip if ALL upstream paths to this node go through the failed gate
+        if (allPathsGoThrough(graph, downId, nodeId)) {
+          skippedNodes.add(downId);
+        }
       }
 
       onStatus(nodeId, 'done', {
@@ -282,7 +283,7 @@ async function executeForEach(
   for (let i = 0; i < items.length; i++) {
     if (ctx.signal.aborted) throw new Error('Pipeline aborted');
 
-    onStatus(nodeId, 'running', { message: `Processing ${i + 1}/${items.length}`, pct: (i / items.length) * 100 });
+    onStatus(nodeId, 'running', { message: `Processing ${i + 1}/${items.length}`, pct: ((i + 1) / items.length) * 100 });
 
     const itemInputs = { ...inputs, [arrayPortId]: items[i] };
     const result = await executeWithRetry(typeDef, itemInputs, config, ctx, nodeId, onStatus);
@@ -325,7 +326,7 @@ async function executeWithRetry(
       // Only retry on transient errors
       if (!isTransientError(lastError)) throw lastError;
 
-      const backoff = BASE_BACKOFF_MS * Math.pow(2, attempt);
+      const backoff = Math.min(BASE_BACKOFF_MS * Math.pow(2, attempt), 60_000);
       onStatus(nodeId, 'running', {
         message: `Retry ${attempt + 1}/${MAX_TRANSIENT_RETRIES} in ${Math.round(backoff / 1000)}s...`,
       });
@@ -418,6 +419,40 @@ async function retryGateUpstream(
   }
 
   return false; // All retries exhausted
+}
+
+// ─── Gate Path Analysis ─────────────────────────────────────────────
+
+/**
+ * Returns true if every path from any root to `targetId` passes through `gateId`.
+ * If a node has an alternative path that bypasses the gate, it should NOT be skipped.
+ */
+function allPathsGoThrough(graph: PipelineGraph, targetId: string, gateId: string): boolean {
+  // BFS backwards from targetId, checking if we can reach a root without going through gateId
+  const visited = new Set<string>();
+  const queue = [targetId];
+
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    if (visited.has(current)) continue;
+    visited.add(current);
+
+    if (current === gateId) continue; // Stop traversal at the gate
+
+    const upstreamIds = getUpstreamNodeIds(graph, current);
+
+    // If this node is a root (no upstream) and it's not the gate, there's an alternative path
+    if (upstreamIds.length === 0 && current !== gateId) {
+      return false;
+    }
+
+    for (const upId of upstreamIds) {
+      if (!visited.has(upId)) queue.push(upId);
+    }
+  }
+
+  // If we never reached a root without going through the gate, all paths go through it
+  return true;
 }
 
 // ─── Public Helpers ─────────────────────────────────────────────────

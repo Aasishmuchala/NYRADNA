@@ -336,7 +336,7 @@ export async function generateBridgeFrame(
  */
 export async function generateBridgeVideo(
   lastFramePath: string,
-  _firstFramePath: string,
+  firstFramePath: string,
   workDir: string,
   replicateToken: string,
   videoModelId?: string,
@@ -350,12 +350,26 @@ export async function generateBridgeVideo(
     const lastFrameBuffer = await readFile(lastFramePath);
     const lastFrameB64 = `data:image/png;base64,${lastFrameBuffer.toString('base64')}`;
 
+    // Read first frame of next clip to guide the bridge toward it
+    let targetDesc = '';
+    try {
+      const firstFrameBuffer = await readFile(firstFramePath);
+      const firstFrameSize = firstFrameBuffer.length;
+      // Use file size difference as a rough indicator of scene change magnitude
+      const sizeRatio = firstFrameSize / Math.max(lastFrameBuffer.length, 1);
+      if (sizeRatio > 1.5 || sizeRatio < 0.67) {
+        targetDesc = ', gradual scene transition with smooth lighting shift';
+      }
+    } catch {
+      // If we can't read the first frame, proceed without target guidance
+    }
+
     // Generate a short 2-second transition video from the last frame
     const modelId = videoModelId ?? 'kwaivgi/kling-v3-omni-video';
 
     const input: Record<string, unknown> = {
       start_image: lastFrameB64,
-      prompt: 'smooth subtle camera movement, gentle transition, maintaining scene continuity, same lighting same color palette, seamless cinematic flow',
+      prompt: `smooth subtle camera movement, gentle cinematic transition, maintaining exact same lighting and color palette, seamless visual flow, same environment and atmosphere${targetDesc}`,
       duration: 2,
       mode: 'standard',
       aspect_ratio: '16:9',

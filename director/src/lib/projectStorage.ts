@@ -55,7 +55,8 @@ function safeSetItem(key: string, value: string): boolean {
     try {
       const index = readIndex();
       if (index.length > 1) {
-        const oldest = index.pop()!;
+        const oldest = index.pop();
+        if (!oldest) return false;
         localStorage.removeItem(projectKey(oldest.id));
         writeIndex(index);
         localStorage.setItem(key, value);

@@ -16,7 +16,7 @@ export function NodePalette() {
   };
 
   return (
-    <div className="w-[200px] bg-[#141414]/95 backdrop-blur-lg border-r border-white/5 overflow-y-auto custom-scrollbar">
+    <div className="w-[200px] bg-surface-container-low/95 backdrop-blur-lg border-r border-white/5 overflow-y-auto custom-scrollbar">
       <div className="p-3 border-b border-white/5">
         <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider">Nodes</h3>
       </div>
@@ -35,8 +35,9 @@ export function NodePalette() {
                 key={nodeDef.type}
                 onClick={() => handleAdd(nodeDef.type)}
                 className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left
-                  hover:bg-white/5 transition-colors group"
+                  hover:bg-white/5 focus:bg-white/5 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors group"
                 title={nodeDef.description}
+                aria-label={`Add ${nodeDef.label} node`}
               >
                 <span
                   className="material-symbols-outlined text-white/40 group-hover:text-white/60"

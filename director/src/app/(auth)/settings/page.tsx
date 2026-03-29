@@ -35,6 +35,10 @@ const OPENROUTER_MODELS = [
 type KeyStatus = 'idle' | 'testing' | 'connected' | 'invalid';
 
 export default function SettingsPage() {
+  useEffect(() => {
+    document.title = 'Settings — DIRECTOR';
+  }, []);
+
   const [activeTab, setActiveTab] = useState<'profile' | 'billing' | 'usage' | 'notifications' | 'api-keys' | 'team-access' | 'danger-zone'>('billing');
 
   // Profile form state
@@ -146,7 +150,8 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('profile')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    aria-selected={activeTab === 'profile'}
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'profile'
                         ? 'text-primary border-r-2 border-primary font-bold'
                         : 'text-on-surface-variant hover:text-white'
@@ -158,7 +163,7 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('billing')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'billing'
                         ? 'text-primary border-r-2 border-primary font-bold'
                         : 'text-on-surface-variant hover:text-white'
@@ -170,7 +175,7 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('usage')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'usage'
                         ? 'text-primary border-r-2 border-primary font-bold'
                         : 'text-on-surface-variant hover:text-white'
@@ -182,7 +187,7 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('notifications')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'notifications'
                         ? 'text-primary border-r-2 border-primary font-bold'
                         : 'text-on-surface-variant hover:text-white'
@@ -201,7 +206,7 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('api-keys')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'api-keys'
                         ? 'text-primary border-r-2 border-primary font-bold'
                         : 'text-on-surface-variant hover:text-white'
@@ -213,7 +218,7 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('team-access')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'team-access'
                         ? 'text-primary border-r-2 border-primary font-bold'
                         : 'text-on-surface-variant hover:text-white'
@@ -232,7 +237,7 @@ export default function SettingsPage() {
                 <li>
                   <button
                     onClick={() => setActiveTab('danger-zone')}
-                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'danger-zone'
                         ? 'text-red-400 border-r-2 border-red-400 font-bold'
                         : 'text-on-surface-variant hover:text-red-400'
@@ -275,7 +280,7 @@ export default function SettingsPage() {
                   type="text"
                   value={profileForm.name}
                   onChange={(e) => setProfileForm({...profileForm, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-surface-container-low text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-surface-container-low text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
                 />
               </div>
 
@@ -286,7 +291,7 @@ export default function SettingsPage() {
                   type="email"
                   value={profileForm.email}
                   onChange={(e) => setProfileForm({...profileForm, email: e.target.value})}
-                  className="w-full px-4 py-3 bg-surface-container-low text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-surface-container-low text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
                 />
               </div>
 

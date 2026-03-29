@@ -5,17 +5,22 @@ import { useWizard } from '@/context/WizardContext';
 import { apiFetch, apiUpload } from '@/lib/api';
 import type { TrainingStatus } from '@/types/replicate';
 
-export interface TrainingConfig {
+export type VideoTrainingTarget = 'cogvideox-5b' | 'hunyuan-video';
+
+export interface VideoTrainingConfig {
   steps?: number;
   learningRate?: number;
-  resolution?: number;
+  targetModel: VideoTrainingTarget;
+  password: string;
 }
 
-export function useTraining() {
+export function useVideoTraining() {
   const { state, update } = useWizard();
   const [isUploading, setIsUploading] = useState(false);
   const [isTraining, setIsTraining] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [trainingStatus, setTrainingStatus] = useState<TrainingStatus | null>(null);
+  const [videoLoraUrl, setVideoLoraUrl] = useState<string | null>(state.videoLoraUrl ?? null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Clean up polling interval on unmount
@@ -28,14 +33,13 @@ export function useTraining() {
     };
   }, []);
 
-  const uploadImages = useCallback(async (files: File[]) => {
+  const uploadVideos = useCallback(async (files: File[]) => {
     setIsUploading(true);
     setError(null);
     try {
       const formData = new FormData();
       files.forEach((f) => formData.append('files', f));
       const { zipUrl } = await apiUpload<{ zipUrl: string }>('/api/upload', formData);
-      update({ trainingImages: files });
       return zipUrl;
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Upload failed';
@@ -44,50 +48,50 @@ export function useTraining() {
     } finally {
       setIsUploading(false);
     }
-  }, [update]);
+  }, []);
 
-  const startTraining = useCallback(async (files: File[], config?: TrainingConfig) => {
+  const startTraining = useCallback(async (files: File[], config: VideoTrainingConfig) => {
     setError(null);
     setIsTraining(true);
+    setTrainingStatus(null);
 
-    const zipUrl = await uploadImages(files);
+    const zipUrl = await uploadVideos(files);
     if (!zipUrl) {
       setIsTraining(false);
       return;
     }
 
     try {
-      const { trainingId } = await apiFetch<{ trainingId: string; status: string }>('/api/train', {
+      const { trainingId } = await apiFetch<{ trainingId: string; status: string }>('/api/train-video', {
         method: 'POST',
         body: JSON.stringify({
           zipUrl,
           triggerWord: state.triggerWord,
-          ...(config?.steps ? { steps: config.steps } : {}),
-          ...(config?.learningRate ? { learningRate: config.learningRate } : {}),
-          ...(config?.resolution ? { resolution: config.resolution } : {}),
+          steps: config.steps,
+          learningRate: config.learningRate,
+          targetModel: config.targetModel,
+          password: config.password,
         }),
       });
 
-      update({ trainingId });
-
-      // Start polling
+      // Poll for status using the same /api/train/[id] endpoint (it reads from Replicate)
       pollRef.current = setInterval(async () => {
         try {
           const status = await apiFetch<TrainingStatus>(`/api/train/${trainingId}`);
-          update({ trainingStatus: status });
+          setTrainingStatus(status);
 
           if (status.status === 'succeeded') {
             clearInterval(pollRef.current!);
             pollRef.current = null;
             setIsTraining(false);
-            update({
-              loraUrl: status.output?.weights ?? null,
-            });
+            const weightsUrl = status.output?.weights ?? null;
+            setVideoLoraUrl(weightsUrl);
+            update({ videoLoraUrl: weightsUrl });
           } else if (status.status === 'failed' || status.status === 'canceled') {
             clearInterval(pollRef.current!);
             pollRef.current = null;
             setIsTraining(false);
-            setError(status.error ?? 'Training failed');
+            setError(status.error ?? 'Video training failed');
           }
         } catch {
           clearInterval(pollRef.current!);
@@ -95,13 +99,13 @@ export function useTraining() {
           setIsTraining(false);
           setError('Failed to poll training status');
         }
-      }, 3000);
+      }, 5000); // Poll every 5s (video training is slower)
     } catch (err) {
       setIsTraining(false);
-      const msg = err instanceof Error ? err.message : 'Training failed to start';
+      const msg = err instanceof Error ? err.message : 'Video training failed to start';
       setError(msg);
     }
-  }, [state.triggerWord, update, uploadImages]);
+  }, [state.triggerWord, update, uploadVideos]);
 
   const cancelTraining = useCallback(() => {
     if (pollRef.current) {
@@ -112,14 +116,14 @@ export function useTraining() {
   }, []);
 
   return {
-    uploadImages,
+    uploadVideos,
     startTraining,
     cancelTraining,
     isUploading,
     isTraining,
-    progress: state.trainingStatus?.progress ?? 0,
-    status: state.trainingStatus,
-    loraUrl: state.loraUrl,
+    progress: trainingStatus?.progress ?? 0,
+    status: trainingStatus,
+    videoLoraUrl,
     error,
   };
 }

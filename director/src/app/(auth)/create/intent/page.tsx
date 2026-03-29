@@ -75,6 +75,10 @@ function stripBriefBlock(content: string): string {
 // ─── Component ──────────────────────────────────────────────────────
 
 export default function IntentPage() {
+  useEffect(() => {
+    document.title = 'Vision — DIRECTOR';
+  }, []);
+
   const { update } = useWizard();
   const router = useRouter();
 

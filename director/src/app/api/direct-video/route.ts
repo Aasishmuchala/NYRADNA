@@ -390,6 +390,6 @@ REMEMBER: The image IS the first video frame. The character is ALREADY in positi
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Director video prompting failed';
     console.error(`[/api/direct-video] Error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

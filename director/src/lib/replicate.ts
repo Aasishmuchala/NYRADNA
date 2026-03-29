@@ -71,6 +71,7 @@ export async function getTraining(id: string): Promise<TrainingStatus> {
 export async function generateImage(options: {
   prompt: string;
   loraUrl?: string;
+  loraUrls?: { url: string; scale: number }[]; // Multi-LoRA blending
   imageModelId?: string;
   model?: 'schnell' | 'pro';
   aspectRatio?: string;
@@ -132,20 +133,23 @@ export async function generateImage(options: {
     // flux-schnell and recraft-v4 don't support reference images — skip silently
   }
 
-  // When a LoRA is provided, use a LoRA-compatible model
-  if (options.loraUrl) {
-    const loraModel = modelDef?.loraSupport
+  // When LoRA(s) are provided, use a LoRA-compatible model
+  const multiLora = options.loraUrls?.length ? options.loraUrls : options.loraUrl ? [{ url: options.loraUrl, scale: 0.8 }] : [];
+
+  if (multiLora.length > 0) {
+    const loraModel = (modelDef?.loraSupport
       ? modelDef
-      : getImageModel('flux-dev-lora')!;
+      : getImageModel('flux-dev-lora') ?? modelDef)!;
 
     const isKlein = loraModel.id === 'flux-2-klein-9b-lora' || loraModel.id === 'flux-2-klein-4b-lora';
     if (isKlein) {
-      // Klein models expect lora_weights as array of URLs, lora_scales as array of floats
-      input.lora_weights = [options.loraUrl];
-      input.lora_scales = [0.8];
+      // Klein models support multi-LoRA natively via arrays
+      input.lora_weights = multiLora.map((l) => l.url);
+      input.lora_scales = multiLora.map((l) => l.scale);
     } else {
-      input[loraModel.loraParam ?? 'lora_weights'] = options.loraUrl;
-      input.lora_scale = 0.8;
+      // Non-Klein models only support single LoRA — use the first one
+      input[loraModel.loraParam ?? 'lora_weights'] = multiLora[0].url;
+      input.lora_scale = multiLora[0].scale;
     }
 
     const prediction = await replicate.predictions.create({
@@ -179,6 +183,8 @@ export async function generateVideo(options: {
   referenceImages?: string[];
   generateAudio?: boolean;
   videoModelId?: string;
+  videoLoraUrl?: string;
+  videoLoraScale?: number;
 }): Promise<{ id: string; status: string }> {
   const replicate = getClient();
 
@@ -231,7 +237,15 @@ export async function generateVideo(options: {
     input.reference_images = options.referenceImages.slice(0, maxRefs);
   }
 
-  console.log(`[replicate] generateVideo model=${replicateModel} refs=${(input.reference_images as string[] | undefined)?.length ?? 0}`);
+  // Video LoRA — inject trained weights for models that support it
+  if (options.videoLoraUrl && modelDef?.supportsLoRA && modelDef.loraParam) {
+    input[modelDef.loraParam] = options.videoLoraUrl;
+    if (options.videoLoraScale !== undefined) {
+      input.lora_strength = options.videoLoraScale;
+    }
+  }
+
+  console.log(`[replicate] generateVideo model=${replicateModel} refs=${(input.reference_images as string[] | undefined)?.length ?? 0} videoLora=${!!options.videoLoraUrl}`);
 
   const prediction = await replicate.predictions.create({
     model: replicateModel as `${string}/${string}`,
@@ -287,6 +301,47 @@ export async function generateMultiPromptVideo(options: {
   });
 
   return { id: prediction.id, status: prediction.status };
+}
+
+// ─── Video LoRA Training (CogVideoX / Hunyuan) ──────────────────────
+
+export async function startVideoTraining(config: {
+  inputZipUrl: string;
+  triggerWord: string;
+  steps?: number;
+  learningRate?: number;
+  targetModel: 'cogvideox-5b' | 'hunyuan-video';
+}): Promise<{ id: string; status: string }> {
+  const replicate = getClient();
+
+  // CogVideoX-5B LoRA training via community trainer
+  // Hunyuan Video LoRA training via community trainer
+  const trainerMap: Record<string, { owner: string; model: string }> = {
+    'cogvideox-5b': { owner: 'zsxkib', model: 'cogvideox-lora-trainer' },
+    'hunyuan-video': { owner: 'lucataco', model: 'hunyuanvideo-lora-trainer' },
+  };
+
+  const trainer = trainerMap[config.targetModel];
+  if (!trainer) throw new Error(`No trainer available for ${config.targetModel}`);
+
+  const input: Record<string, unknown> = {
+    input_videos: config.inputZipUrl,
+    trigger_word: config.triggerWord,
+    max_train_steps: config.steps ?? 2000,
+    learning_rate: config.learningRate ?? 0.0001,
+  };
+
+  const training = await replicate.trainings.create(
+    trainer.owner,
+    trainer.model,
+    undefined as unknown as string, // Use latest version
+    {
+      destination: `${process.env.REPLICATE_USERNAME || 'user'}/director-video-lora`,
+      input,
+    }
+  );
+
+  return { id: training.id, status: training.status };
 }
 
 export async function editImage(

@@ -18,6 +18,10 @@ const openExternal = (url: string) => {
 };
 
 export default function ExportPage() {
+  useEffect(() => {
+    document.title = 'Export — DIRECTOR';
+  }, []);
+
   const { state, update } = useWizard();
   const voiceover = useVoiceover();
   const stitching = useStitching();
@@ -59,7 +63,8 @@ export default function ExportPage() {
     }
   }, [currentClipIndex]);
 
-  const previewVideoUrl = stitching.filmUrl ?? completedVideos[currentClipIndex]?.videoUrl ?? null;
+  // Priority: stitched film > pipeline final video > individual clips
+  const previewVideoUrl = stitching.filmUrl ?? state.finalVideoUrl ?? completedVideos[currentClipIndex]?.videoUrl ?? null;
 
   const handleDownloadAll = async () => {
     const urls = [
@@ -176,7 +181,7 @@ export default function ExportPage() {
             </div>
           )}
           {/* Clip indicator — only show when playing individual clips (not stitched) */}
-          {!stitching.filmUrl && completedVideos.length > 1 && (
+          {!stitching.filmUrl && !state.finalVideoUrl && completedVideos.length > 1 && (
             <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/70 backdrop-blur-sm rounded-full px-4 py-2">
               <button
                 onClick={() => setCurrentClipIndex(Math.max(0, currentClipIndex - 1))}
@@ -197,9 +202,9 @@ export default function ExportPage() {
               </button>
             </div>
           )}
-          {stitching.filmUrl && (
+          {(stitching.filmUrl || state.finalVideoUrl) && (
             <div className="absolute top-4 left-4 bg-success/90 text-white text-xs font-bold px-3 py-1 rounded-full">
-              STITCHED FILM
+              {stitching.filmUrl ? 'STITCHED FILM' : 'PIPELINE OUTPUT'}
             </div>
           )}
         </div>
@@ -221,7 +226,7 @@ export default function ExportPage() {
         {(completedScenes.length > 0 || completedVideos.length > 0) && (
           <div className="space-y-4">
             <h3 className="text-sm font-headline font-bold uppercase tracking-widest text-on-surface-variant">Generated Assets</h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {completedScenes.map((scene) => (
                 <a
                   key={scene.id}
@@ -261,27 +266,30 @@ export default function ExportPage() {
               </div>
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium">Resolution</label>
-                <div className="flex p-1 bg-surface-container-highest rounded-lg">
-                  <button
-                    onClick={() => update({ exportResolution: '1080p' })}
-                    className={`px-4 py-1 text-xs font-bold rounded-md transition ${
-                      state.exportResolution === '1080p'
-                        ? 'bg-primary text-on-primary'
-                        : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
-                    }`}
-                  >
-                    1080p
-                  </button>
-                  <button
-                    onClick={() => update({ exportResolution: '4k' })}
-                    className={`px-4 py-1 text-xs font-bold rounded-md transition ${
-                      state.exportResolution === '4k'
-                        ? 'bg-primary text-on-primary'
-                        : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
-                    }`}
-                  >
-                    4K
-                  </button>
+                <div className="flex items-center gap-2">
+                  <div className="flex p-1 bg-surface-container-highest rounded-lg">
+                    <button
+                      onClick={() => update({ exportResolution: '1080p' })}
+                      className={`px-4 py-1 text-xs font-bold rounded-md transition ${
+                        state.exportResolution === '1080p'
+                          ? 'bg-primary text-on-primary'
+                          : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
+                      }`}
+                    >
+                      1080p
+                    </button>
+                    <button
+                      onClick={() => update({ exportResolution: '4k' })}
+                      className={`px-4 py-1 text-xs font-bold rounded-md transition ${
+                        state.exportResolution === '4k'
+                          ? 'bg-primary text-on-primary'
+                          : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
+                      }`}
+                    >
+                      4K
+                    </button>
+                  </div>
+                  <span className="text-[10px] text-on-surface-variant/50 bg-surface-container px-2 py-0.5 rounded">Soon</span>
                 </div>
               </div>
             </div>
@@ -290,15 +298,16 @@ export default function ExportPage() {
           <div className="p-6 rounded-xl bg-surface-container-low border border-outline-variant/10 space-y-4">
             <h3 className="text-sm font-headline font-bold uppercase tracking-widest text-on-surface-variant">Audio & Text</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between opacity-50">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-tertiary">subtitles</span>
                   <span className="text-sm font-medium">Burn-in Subtitles</span>
+                  <span className="text-[10px] text-on-surface-variant/50 bg-surface-container px-2 py-0.5 rounded">Soon</span>
                 </div>
                 <input
-                  checked={state.includeSubtitles}
-                  onChange={(e) => update({ includeSubtitles: e.target.checked })}
-                  className="w-10 h-5 bg-surface-container-highest rounded-full border-none text-primary focus:ring-0 cursor-pointer"
+                  checked={false}
+                  disabled
+                  className="w-10 h-5 bg-surface-container-highest rounded-full border-none text-primary focus:ring-0 cursor-not-allowed"
                   type="checkbox"
                 />
               </div>
@@ -524,6 +533,18 @@ export default function ExportPage() {
               : 'STITCH & EXPORT FILM'}
           </button>
 
+          {/* Direct download for pipeline output (single video) */}
+          {state.finalVideoUrl && !stitching.filmUrl && (
+            <a
+              href={state.finalVideoUrl}
+              download={`${safeFilmName}-pipeline.${state.exportFormat}`}
+              className="w-full bg-gradient-to-br from-primary to-primary-container py-4 rounded-xl text-on-primary font-headline font-black text-lg shadow-lg hover:shadow-primary/20 active:scale-95 transition-all flex items-center justify-center gap-3 text-center no-underline"
+            >
+              <span className="material-symbols-outlined">download</span>
+              DOWNLOAD PIPELINE OUTPUT
+            </a>
+          )}
+
           {/* Download individual assets */}
           <button
             onClick={handleDownloadAll}
@@ -535,7 +556,7 @@ export default function ExportPage() {
           </button>
           <div className="pt-4 border-t border-outline-variant/15">
             <h5 className="text-xs font-bold text-on-surface-variant uppercase tracking-tighter mb-4 text-center">Share Directly</h5>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2">
               <button onClick={() => navigator.clipboard.writeText(window.location.href).then(() => { setAlertMsg({ title: 'Copied', message: 'Link copied to clipboard.' }); setShowAlert(true); })} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-highest hover:bg-surface-bright transition-colors">
                 <span className="material-symbols-outlined text-on-surface-variant">link</span>
                 <span className="text-[10px] uppercase font-bold text-on-surface-variant">Copy Link</span>
