@@ -51,7 +51,7 @@ export default function Page() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <Link
-                href="/create/intent"
+                href="/dashboard"
                 className="group relative px-10 py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
               >
                 <span>Start for free</span>
@@ -145,7 +145,7 @@ export default function Page() {
               <h3 className="font-headline text-4xl font-black tracking-tight mb-4">Ready to produce?</h3>
               <p className="text-on-surface-variant text-lg max-w-md mb-8">Join the next generation of creative directors. Turn your intent into a cinematic reality in seconds.</p>
               <Link
-                href="/create/intent"
+                href="/dashboard"
                 className="px-8 py-4 bg-primary text-on-primary font-bold rounded-lg transition-transform hover:scale-105 active:scale-95"
               >
                 Claim Your First Render
@@ -159,11 +159,12 @@ export default function Page() {
       <footer className="w-full py-12 px-8 border-t border-[#494847]/15 bg-[#0e0e0e]">
         <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
           <div className="text-[#adaaaa] font-label text-xs uppercase tracking-widest">
-            © 2024 DIRECTOR AI. All rights reserved.
+            © 2025 DIRECTOR AI. All rights reserved.
           </div>
           <nav className="flex flex-wrap justify-center gap-8">
-            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="/terms">Terms of Service</a>
-            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="/privacy">Privacy Policy</a>
+            {/* TODO: replace with real routes once /terms and /privacy pages exist */}
+            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+            <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
             <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
             <a className="text-[#adaaaa] hover:text-[#ff9064] transition-colors font-label text-xs uppercase tracking-widest opacity-80 hover:opacity-100" href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord</a>
           </nav>

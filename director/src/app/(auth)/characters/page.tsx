@@ -3,6 +3,18 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
+
+interface Character {
+  id: string;
+  name: string;
+  projects: number;
+  date: string;
+  status: string;
+  tag: string;
+  loraStatus: string;
+  image: string;
+}
 
 export default function CharactersPage() {
   const router = useRouter();
@@ -11,13 +23,10 @@ export default function CharactersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [renameId, setRenameId] = useState<string | null>(null);
   const [renameName, setRenameName] = useState('');
-
-  const characters = [
-    { id: '1', name: 'Elias Thorne', projects: 12, date: 'Oct 24, 2024', status: 'active', tag: 'AI Generated', loraStatus: 'LoRA: Active', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD6BE7BKdxqMaVFpnCm2WZ7VaAVPyn9TBwYSoHXwYZdB9vge_0ZfOsj7MkM1LkljPyHOVbLtQf_HncAL3_RVk4Jid4IQat4Sw8dBVHldysqgL5IUNiZ-TMl_URWsz5UV5CSobPO2pB7jjVuD-LRRlFiLr2xu7WmgOuSLF0Y-W8nbWoa_i5wQMVajIbxHGE3nYYU-GF2pTPLPQRwMrZK_CMruSuFsMKjAXA64wBweSbX_AsreVNBsmLBbW12NYXGB2x9_IN1Erbirt8' },
-    { id: '2', name: 'Sloane Vane', projects: 4, date: 'Nov 02, 2024', status: 'active', tag: 'Real Asset', loraStatus: 'Base Only', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCS3wtfgLtqwiiK_X83C2i421M7panEcHPMGYIYaORQJX9T1npDcstrQIF5dFNG_WZUVnuC7d3h715mhZ8-6snyr9NibI1gx-tI-MA3YFv3Bw0gqI3cGDPxQvJDcMUx9fnSWaD16cTh7r7AsZysetEy-VZ_1S5-l3YJioUCidU5tHA2lmgrXN3GGY8LRLzGc1k-nV05_8FqFz4QfPm_jyUf0BPsNKX_UcHH7G1T1YPA1fKMe-2utJ61k5Zui8dOy1kvn7RwKBF4oBw' },
-    { id: '3', name: 'The Captain', projects: 1, date: 'Nov 15, 2024', status: 'active', tag: 'AI Generated', loraStatus: 'LoRA: Ready', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDNRNbCaysjVWCY-oVuGz1FHojxSY15sJzb2jyTeg22OFUMwmEAN36u738vJD-RVk3rdACnQAAaeHhLex7_gw4cmPe44hzYa1kX3LwbDi5U25JDSwzIgZd2G3r2r6DHwzEvkWaBzZ1bkhLgPl103zEup2ud91_XSVU351m_xhwdE3tNvvH3ihnov5M1HIaOJWHW-QT31YXxPcVSMhVPqpB1iHqPYRtI-rBx49LhfXFPeo_BfeKLY9XZ6FBR5jC2nVr7_7nMclbduiw' },
-    { id: '4', name: 'Nova Prime', projects: 0, date: 'Just Now', status: 'training', tag: 'AI Generated', loraStatus: 'Training...', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAPA2AqFvY1NaI3cVmxqOhWr8Ht4unJQw7I7PTD0Wl4lObLVl4cO3OQHHDD9nrc8sej24vY8VuUUpAxg2atf-S1oZXGkfZ-YZMyTPa3bfRmWoJIOHx-ih9GngsFE7VkrSwRf4N3gVD_KUfxu-nkN-e0JUtzFMj61fFPYX03E9mdBAteUXFx0Hy8lEcA7hiSndQ8HCSR9wu2-hpJmMVyMiRglFqvuH6772ZwQyG6D4kwCQCp9l6eYAW2mb3JxBiA9r1ZaZQR35VaRQI' }
-  ];
+  const [characters] = useState<Character[]>([]);
+  const [alertModal, setAlertModal] = useState({ open: false, title: '', message: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; name: string }>({ open: false, name: '' });
+  const [renameModal, setRenameModal] = useState<{ open: boolean; id: string; name: string }>({ open: false, id: '', name: '' });
 
   let filteredCharacters = characters.filter(char =>
     char.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -28,22 +37,11 @@ export default function CharactersPage() {
   }
 
   const handleRename = (id: string, currentName: string) => {
-    setRenameId(id);
-    setRenameName(currentName);
-  };
-
-  const confirmRename = (id: string) => {
-    const newName = prompt('Enter new character name:', renameName);
-    if (newName && newName.trim()) {
-      alert(`Character renamed to "${newName}"`);
-    }
-    setRenameId(null);
+    setRenameModal({ open: true, id, name: currentName });
   };
 
   const handleDelete = (name: string) => {
-    if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      alert(`${name} has been deleted.`);
-    }
+    setDeleteConfirm({ open: true, name });
   };
 
   const handleUseInProject = (id: string) => {
@@ -179,9 +177,40 @@ export default function CharactersPage() {
                 </div>
               </div>
             ))}
+
+            {filteredCharacters.length === 0 && (
+              <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">person_search</span>
+                <p className="text-on-surface-variant">No characters found. Create your first character to get started.</p>
+              </div>
+            )}
           </div>
         </div>
       </main>
+
+      <AlertModal
+        open={alertModal.open}
+        onClose={() => setAlertModal({ ...alertModal, open: false })}
+        title={alertModal.title}
+        message={alertModal.message}
+      />
+      <ConfirmModal
+        open={deleteConfirm.open}
+        onClose={() => setDeleteConfirm({ ...deleteConfirm, open: false })}
+        onConfirm={() => {
+          setAlertModal({ open: true, title: 'Deleted', message: `${deleteConfirm.name} has been deleted.` });
+        }}
+        title="Delete Character"
+        message={`Are you sure you want to delete "${deleteConfirm.name}"?`}
+        confirmLabel="Delete"
+        danger
+      />
+      <AlertModal
+        open={renameModal.open}
+        onClose={() => setRenameModal({ ...renameModal, open: false })}
+        title="Rename Character"
+        message={`Rename functionality for "${renameModal.name}" will be available when connected to a backend.`}
+      />
     </div>
   );
 }

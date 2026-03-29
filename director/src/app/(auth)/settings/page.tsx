@@ -1,15 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
+import { useWizard } from '@/context/WizardContext';
+import {
+  getApiKeys,
+  setApiKey,
+  testReplicateKey,
+  testOpenRouterKey,
+  getSelectedModel,
+  setSelectedModel,
+  DEFAULT_LLM_MODEL,
+} from '@/lib/apiKeyStore';
+
+const OPENROUTER_MODELS = [
+  // ── Paid: Best for Director AI (creative, structured output, long context) ──
+  { id: 'google/gemini-2.5-pro', name: 'Gemini 2.5 Pro', free: false, tag: 'Best Overall' },
+  { id: 'anthropic/claude-sonnet-4', name: 'Claude Sonnet 4', free: false, tag: 'Best Creative' },
+  { id: 'minimax/minimax-m2.7', name: 'MiniMax M2.7', free: false, tag: 'Agentic' },
+  { id: 'minimax/minimax-m2.5', name: 'MiniMax M2.5', free: false, tag: 'Productive' },
+  { id: 'minimax/minimax-m2-her', name: 'MiniMax M2-Her', free: false, tag: 'Character AI' },
+  { id: 'mistralai/mistral-small-creative', name: 'Mistral Small Creative', free: false, tag: 'Storytelling' },
+  { id: 'reka/reka-edge', name: 'Reka Edge', free: false, tag: 'Vision' },
+  // ── Free: Great for testing & low-budget shoots ──
+  { id: 'minimax/minimax-m2.5:free', name: 'MiniMax M2.5 Free', free: true, tag: 'Free' },
+  { id: 'meta-llama/llama-4-maverick:free', name: 'Llama 4 Maverick', free: true, tag: 'Free' },
+  { id: 'deepseek/deepseek-chat-v3-0324:free', name: 'DeepSeek V3', free: true, tag: 'Free' },
+  { id: 'qwen/qwen3-235b-a22b:free', name: 'Qwen3 235B', free: true, tag: 'Free' },
+  { id: 'google/gemma-3-27b-it:free', name: 'Gemma 3 27B', free: true, tag: 'Free' },
+];
+
+type KeyStatus = 'idle' | 'testing' | 'connected' | 'invalid';
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<'profile' | 'billing' | 'usage' | 'notifications' | 'api-keys' | 'team-access'>('billing');
+  const [activeTab, setActiveTab] = useState<'profile' | 'billing' | 'usage' | 'notifications' | 'api-keys' | 'team-access' | 'danger-zone'>('billing');
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@company.com',
+    name: '',
+    email: '',
     avatar: '',
   });
 
@@ -22,23 +53,84 @@ export default function SettingsPage() {
 
   // Usage state
   const [usageData] = useState({
-    creditsUsed: 842,
-    creditsTotal: 1000,
-    apiCalls: 1240,
-    storageUsed: 2.4,
-    storageTotal: 10,
+    creditsUsed: 0,
+    creditsTotal: 0,
+    apiCalls: 0,
+    storageUsed: 0,
+    storageTotal: 0,
   });
 
-  // API Key state
-  const [apiKeys] = useState([
-    { id: '1', name: 'Production Key', masked: 'sk_prod_••••••••••••••••5678', created: 'Nov 12, 2024' },
-  ]);
+  // API Key provider state
+  const [replicateKey, setReplicateKey] = useState('');
+  const [openrouterKey, setOpenrouterKey] = useState('');
+  const [replicateStatus, setReplicateStatus] = useState<KeyStatus>('idle');
+  const [openrouterStatus, setOpenrouterStatus] = useState<KeyStatus>('idle');
+  const [showReplicateKey, setShowReplicateKey] = useState(false);
+  const [showOpenrouterKey, setShowOpenrouterKey] = useState(false);
+  const [selectedORModel, setSelectedORModel] = useState(OPENROUTER_MODELS[0].id);
+
+  // Load stored keys on mount
+  useEffect(() => {
+    const stored = getApiKeys();
+    if (stored.replicate) { setReplicateKey(stored.replicate); setReplicateStatus('connected'); }
+    if (stored.openrouter) { setOpenrouterKey(stored.openrouter); setOpenrouterStatus('connected'); }
+    setSelectedORModel(getSelectedModel());
+  }, []);
+
+  const handleSaveKey = useCallback(async (
+    provider: 'replicate' | 'openrouter',
+    key: string,
+    setStatus: (s: KeyStatus) => void,
+  ) => {
+    if (!key.trim()) {
+      setStatus('idle');
+      return;
+    }
+    setStatus('testing');
+    const ok = provider === 'replicate'
+      ? await testReplicateKey(key)
+      : await testOpenRouterKey(key);
+
+    if (ok) {
+      setApiKey(provider, key);
+      setStatus('connected');
+      setAlertMsg({ open: true, title: 'API Key', message: `${provider.charAt(0).toUpperCase() + provider.slice(1)} key saved and verified!` });
+    } else {
+      setStatus('invalid');
+      setAlertMsg({ open: true, title: 'API Key', message: `${provider.charAt(0).toUpperCase() + provider.slice(1)} key is invalid. Please check and try again.` });
+    }
+  }, []);
+
+  const handleTestKey = useCallback(async (
+    provider: 'replicate' | 'openrouter',
+    key: string,
+    setStatus: (s: KeyStatus) => void,
+  ) => {
+    if (!key.trim()) return;
+    setStatus('testing');
+    const ok = provider === 'replicate'
+      ? await testReplicateKey(key)
+      : await testOpenRouterKey(key);
+    setStatus(ok ? 'connected' : 'invalid');
+  }, []);
 
   // Team members state
-  const [teamMembers] = useState([
-    { id: '1', name: 'Sarah Chen', email: 'sarah@company.com', role: 'Admin' },
-    { id: '2', name: 'Mike Torres', email: 'mike@company.com', role: 'Editor' },
-  ]);
+  const [teamMembers] = useState<{ id: string; name: string; email: string; role: string }[]>([]);
+
+  // Alert modal state
+  const [alertMsg, setAlertMsg] = useState({ open: false, title: '', message: '' });
+
+  // Hard reset
+  const { hardReset } = useWizard();
+  const router = useRouter();
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [resetComplete, setResetComplete] = useState(false);
+
+  const handleHardReset = useCallback(() => {
+    hardReset();
+    setResetComplete(true);
+    setTimeout(() => router.push('/dashboard'), 1500);
+  }, [hardReset, router]);
 
   return (
     <div className="max-w-6xl mx-auto px-8 py-12">
@@ -132,6 +224,25 @@ export default function SettingsPage() {
                 </li>
               </ul>
             </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-red-400/70 mb-4 font-bold">
+                Danger Zone
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <button
+                    onClick={() => setActiveTab('danger-zone')}
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left ${
+                      activeTab === 'danger-zone'
+                        ? 'text-red-400 border-r-2 border-red-400 font-bold'
+                        : 'text-on-surface-variant hover:text-red-400'
+                    }`}
+                  >
+                    Reset Data
+                  </button>
+                </li>
+              </ul>
+            </div>
           </nav>
         </aside>
 
@@ -149,7 +260,7 @@ export default function SettingsPage() {
                 <label className="text-sm font-bold text-on-surface">Profile Avatar</label>
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">
-                    {profileForm.name.charAt(0)}
+                    {profileForm.name.charAt(0) || '?'}
                   </div>
                   <button className="px-4 py-2 bg-surface-container-highest rounded-lg text-sm font-bold hover:bg-surface-bright transition-colors">
                     Upload Avatar
@@ -180,7 +291,7 @@ export default function SettingsPage() {
               </div>
 
               <button
-                onClick={() => alert('Profile updated successfully!')}
+                onClick={() => setAlertMsg({ open: true, title: 'Profile', message: 'Profile updated successfully!' })}
                 className="px-6 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-container transition-colors"
               >
                 Save Changes
@@ -214,13 +325,13 @@ export default function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-4 mt-8">
                     <button
-                      onClick={() => alert('Opening subscription management...')}
+                      onClick={() => setAlertMsg({ open: true, title: 'Subscription', message: 'Opening subscription management...' })}
                       className="bg-surface-container-highest text-on-surface px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-surface-bright transition-colors"
                     >
                       Manage Subscription
                     </button>
                     <button
-                      onClick={() => alert('Feature coming soon')}
+                      onClick={() => setAlertMsg({ open: true, title: 'Change Plan', message: 'Feature coming soon' })}
                       className="text-primary-dim text-sm font-bold hover:underline"
                     >
                       Change Plan
@@ -238,19 +349,19 @@ export default function SettingsPage() {
                       </h4>
                     </div>
                     <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-3xl font-black font-headline">842</span>
-                      <span className="text-on-surface-variant text-xs">/ 1,000</span>
+                      <span className="text-3xl font-black font-headline">{usageData.creditsUsed}</span>
+                      <span className="text-on-surface-variant text-xs">/ {usageData.creditsTotal.toLocaleString()}</span>
                     </div>
                     {/* Progress Bar */}
                     <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden mb-2">
-                      <div className="h-full bg-primary" style={{ width: '84%' }} />
+                      <div className="h-full bg-primary" style={{ width: usageData.creditsTotal > 0 ? `${(usageData.creditsUsed / usageData.creditsTotal) * 100}%` : '0%' }} />
                     </div>
                     <p className="text-[10px] text-on-surface-variant font-medium">
-                      84% of monthly quota used
+                      {usageData.creditsTotal > 0 ? Math.round((usageData.creditsUsed / usageData.creditsTotal) * 100) : 0}% of monthly quota used
                     </p>
                   </div>
                   <button
-                    onClick={() => alert('Adding credits...')}
+                    onClick={() => setAlertMsg({ open: true, title: 'Credits', message: 'Adding credits...' })}
                     className="w-full mt-6 py-2 text-xs font-black uppercase tracking-widest border border-outline-variant/30 rounded-lg hover:bg-white hover:text-black transition-all"
                   >
                     Add Credits
@@ -268,7 +379,7 @@ export default function SettingsPage() {
                     </p>
                   </div>
                   <button
-                    onClick={() => alert('Add payment method functionality coming soon')}
+                    onClick={() => setAlertMsg({ open: true, title: 'Payment Method', message: 'Add payment method functionality coming soon' })}
                     className="flex items-center gap-2 text-primary-dim text-sm font-bold group"
                   >
                     <span className="material-symbols-outlined text-sm">add</span>
@@ -286,7 +397,7 @@ export default function SettingsPage() {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-white tracking-wide">
-                          •••• •••• •••• 4242
+                          &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242
                         </p>
                         <p className="text-xs text-on-surface-variant">Expires 12/26 — Visa</p>
                       </div>
@@ -296,7 +407,7 @@ export default function SettingsPage() {
                         Primary
                       </span>
                       <span
-                        onClick={() => alert('Payment method deleted')}
+                        onClick={() => setAlertMsg({ open: true, title: 'Payment Method', message: 'Payment method deleted' })}
                         className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-error"
                       >
                         delete
@@ -311,7 +422,7 @@ export default function SettingsPage() {
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-bold font-headline">Billing History</h3>
                   <button
-                    onClick={() => alert('Exporting billing history...')}
+                    onClick={() => setAlertMsg({ open: true, title: 'Export', message: 'Exporting billing history...' })}
                     className="text-xs font-medium text-on-surface-variant flex items-center gap-1 hover:text-white"
                   >
                     <span className="material-symbols-outlined text-sm">download</span>
@@ -402,9 +513,9 @@ export default function SettingsPage() {
                   <span className="text-2xl font-black">{usageData.creditsUsed} / {usageData.creditsTotal}</span>
                 </div>
                 <div className="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
-                  <div className="h-full bg-primary" style={{ width: `${(usageData.creditsUsed / usageData.creditsTotal) * 100}%` }} />
+                  <div className="h-full bg-primary" style={{ width: usageData.creditsTotal > 0 ? `${(usageData.creditsUsed / usageData.creditsTotal) * 100}%` : '0%' }} />
                 </div>
-                <p className="text-sm text-on-surface-variant">{Math.round((usageData.creditsUsed / usageData.creditsTotal) * 100)}% of monthly quota used</p>
+                <p className="text-sm text-on-surface-variant">{usageData.creditsTotal > 0 ? Math.round((usageData.creditsUsed / usageData.creditsTotal) * 100) : 0}% of monthly quota used</p>
               </div>
 
               {/* API Calls */}
@@ -423,9 +534,9 @@ export default function SettingsPage() {
                   <span className="text-2xl font-black">{usageData.storageUsed} / {usageData.storageTotal} GB</span>
                 </div>
                 <div className="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
-                  <div className="h-full bg-tertiary" style={{ width: `${(usageData.storageUsed / usageData.storageTotal) * 100}%` }} />
+                  <div className="h-full bg-tertiary" style={{ width: usageData.storageTotal > 0 ? `${(usageData.storageUsed / usageData.storageTotal) * 100}%` : '0%' }} />
                 </div>
-                <p className="text-sm text-on-surface-variant">{Math.round((usageData.storageUsed / usageData.storageTotal) * 100)}% of storage capacity used</p>
+                <p className="text-sm text-on-surface-variant">{usageData.storageTotal > 0 ? Math.round((usageData.storageUsed / usageData.storageTotal) * 100) : 0}% of storage capacity used</p>
               </div>
             </div>
           )}
@@ -495,7 +606,7 @@ export default function SettingsPage() {
               </div>
 
               <button
-                onClick={() => alert('Notification preferences saved!')}
+                onClick={() => setAlertMsg({ open: true, title: 'Notifications', message: 'Notification preferences saved!' })}
                 className="px-6 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-container transition-colors mt-6"
               >
                 Save Preferences
@@ -506,42 +617,157 @@ export default function SettingsPage() {
           {/* API Keys Tab Content */}
           {activeTab === 'api-keys' && (
             <div className="space-y-8">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold font-headline">API Keys</h2>
-                <button
-                  onClick={() => alert('Creating new API key...')}
-                  className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-container transition-colors"
-                >
-                  Create New Key
-                </button>
+              <div>
+                <h2 className="text-2xl font-bold font-headline mb-2">API Keys</h2>
+                <p className="text-sm text-on-surface-variant">
+                  Configure your API keys for AI providers. Keys are stored locally in your browser.
+                </p>
               </div>
 
-              <div className="space-y-4">
-                {apiKeys.map((key) => (
-                  <div key={key.id} className="bg-surface-container-low p-6 rounded-lg border border-outline-variant/30 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-white">{key.name}</h3>
-                        <p className="text-xs text-on-surface-variant mt-1">Created {key.created}</p>
-                      </div>
-                      <button
-                        onClick={() => alert('API key deleted')}
-                        className="text-error hover:text-error-dark transition-colors"
-                      >
-                        <span className="material-symbols-outlined">delete</span>
-                      </button>
+              {/* Replicate Card */}
+              <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/15 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-blue-400">image</span>
                     </div>
-                    <div className="font-mono text-sm bg-surface-container-lowest p-3 rounded flex items-center justify-between">
-                      <span className="text-on-surface-variant">{key.masked}</span>
-                      <button
-                        onClick={() => alert('API key copied to clipboard!')}
-                        className="text-primary hover:text-primary-container transition-colors"
-                      >
-                        <span className="material-symbols-outlined">content_copy</span>
-                      </button>
+                    <div>
+                      <h3 className="font-bold text-white">Replicate</h3>
+                      <p className="text-xs text-on-surface-variant">Powers: Image Gen, Video Gen, LoRA Training</p>
                     </div>
                   </div>
-                ))}
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                    replicateStatus === 'connected'
+                      ? 'bg-green-500/10 text-green-400'
+                      : replicateStatus === 'invalid'
+                        ? 'bg-red-500/10 text-red-400'
+                        : 'bg-surface-container-highest text-on-surface-variant'
+                  }`}>
+                    {replicateStatus === 'connected' ? 'Connected' : replicateStatus === 'invalid' ? 'Invalid' : 'Not configured'}
+                  </span>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showReplicateKey ? 'text' : 'password'}
+                    value={replicateKey}
+                    onChange={(e) => { setReplicateKey(e.target.value); setReplicateStatus('idle'); }}
+                    placeholder="r8_..."
+                    className="w-full px-4 py-3 pr-12 bg-surface-container-highest text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none transition-colors font-mono text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowReplicateKey(!showReplicateKey)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-white"
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      {showReplicateKey ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handleTestKey('replicate', replicateKey, setReplicateStatus)}
+                    disabled={!replicateKey.trim() || replicateStatus === 'testing'}
+                    className="px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-white hover:bg-surface-bright transition-colors disabled:opacity-30"
+                  >
+                    {replicateStatus === 'testing' ? (
+                      <span className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                        Testing...
+                      </span>
+                    ) : 'Test Connection'}
+                  </button>
+                  <button
+                    onClick={() => handleSaveKey('replicate', replicateKey, setReplicateStatus)}
+                    disabled={!replicateKey.trim() || replicateStatus === 'testing'}
+                    className="px-4 py-2 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-container transition-colors disabled:opacity-30"
+                  >
+                    Save Key
+                  </button>
+                </div>
+              </div>
+
+              {/* OpenRouter Card */}
+              <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/15 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-purple-400">route</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white">OpenRouter</h3>
+                      <p className="text-xs text-on-surface-variant">Powers: Director AI Chat, Persona Generation (multi-model)</p>
+                    </div>
+                  </div>
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                    openrouterStatus === 'connected'
+                      ? 'bg-green-500/10 text-green-400'
+                      : openrouterStatus === 'invalid'
+                        ? 'bg-red-500/10 text-red-400'
+                        : 'bg-surface-container-highest text-on-surface-variant'
+                  }`}>
+                    {openrouterStatus === 'connected' ? 'Connected' : openrouterStatus === 'invalid' ? 'Invalid' : 'Not configured'}
+                  </span>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showOpenrouterKey ? 'text' : 'password'}
+                    value={openrouterKey}
+                    onChange={(e) => { setOpenrouterKey(e.target.value); setOpenrouterStatus('idle'); }}
+                    placeholder="sk-or-..."
+                    className="w-full px-4 py-3 pr-12 bg-surface-container-highest text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none transition-colors font-mono text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOpenrouterKey(!showOpenrouterKey)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-white"
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      {showOpenrouterKey ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+
+                {/* Model Selector */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Model</label>
+                  <select
+                    value={selectedORModel}
+                    onChange={(e) => { setSelectedORModel(e.target.value); setSelectedModel(e.target.value); }}
+                    className="w-full px-4 py-3 bg-surface-container-highest text-on-surface rounded-lg border border-outline-variant/30 focus:border-primary focus:outline-none transition-colors text-sm appearance-none cursor-pointer"
+                  >
+                    {OPENROUTER_MODELS.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}{m.tag ? ` [${m.tag}]` : ''}{m.free ? ' (Free)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handleTestKey('openrouter', openrouterKey, setOpenrouterStatus)}
+                    disabled={!openrouterKey.trim() || openrouterStatus === 'testing'}
+                    className="px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-white hover:bg-surface-bright transition-colors disabled:opacity-30"
+                  >
+                    {openrouterStatus === 'testing' ? (
+                      <span className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                        Testing...
+                      </span>
+                    ) : 'Test Connection'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedModel(selectedORModel);
+                      handleSaveKey('openrouter', openrouterKey, setOpenrouterStatus);
+                    }}
+                    disabled={!openrouterKey.trim() || openrouterStatus === 'testing'}
+                    className="px-4 py-2 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-container transition-colors disabled:opacity-30"
+                  >
+                    Save Key
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -552,7 +778,7 @@ export default function SettingsPage() {
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold font-headline">Team Members</h2>
                 <button
-                  onClick={() => alert('Invite dialog opening...')}
+                  onClick={() => setAlertMsg({ open: true, title: 'Invite', message: 'Invite dialog opening...' })}
                   className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-container transition-colors"
                 >
                   Invite Member
@@ -560,6 +786,12 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-4">
+                {teamMembers.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">group_off</span>
+                    <p className="text-on-surface-variant">No team members yet. Invite someone to collaborate.</p>
+                  </div>
+                )}
                 {teamMembers.map((member) => (
                   <div key={member.id} className="bg-surface-container-low p-5 rounded-lg border border-outline-variant/30 flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -576,7 +808,7 @@ export default function SettingsPage() {
                         {member.role}
                       </span>
                       <button
-                        onClick={() => alert('Removing team member...')}
+                        onClick={() => setAlertMsg({ open: true, title: 'Team', message: 'Removing team member...' })}
                         className="text-error hover:text-error-dark transition-colors"
                       >
                         <span className="material-symbols-outlined">close</span>
@@ -587,8 +819,77 @@ export default function SettingsPage() {
               </div>
             </div>
           )}
+
+          {/* Danger Zone Tab Content */}
+          {activeTab === 'danger-zone' && (
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold font-headline mb-2 text-red-400">Danger Zone</h2>
+                <p className="text-sm text-on-surface-variant">
+                  Irreversible actions that will permanently delete your project data.
+                </p>
+              </div>
+
+              {resetComplete ? (
+                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-8 flex flex-col items-center gap-4">
+                  <span className="material-symbols-outlined text-5xl text-green-400">check_circle</span>
+                  <p className="text-lg font-bold text-green-400">All data cleared successfully</p>
+                  <p className="text-sm text-on-surface-variant">Redirecting to dashboard...</p>
+                </div>
+              ) : (
+                <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-8 space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                      <span className="material-symbols-outlined text-red-400 text-2xl">delete_forever</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white text-lg mb-1">Reset All Project Data</h3>
+                      <p className="text-sm text-on-surface-variant leading-relaxed">
+                        This will permanently delete all projects, scenes, generated images, video results,
+                        production assets, training data, and wizard state from your browser.
+                        Your API keys will be preserved.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-500/5 border border-red-500/10 rounded-lg p-4">
+                    <p className="text-xs text-red-400/80 font-medium">
+                      This action cannot be undone. All locally stored project data will be permanently removed.
+                      Remote images hosted on Replicate will remain accessible via their URLs but will no longer
+                      be linked to any project.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setShowResetConfirm(true)}
+                    className="px-6 py-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg text-sm font-bold hover:bg-red-500/20 transition-colors"
+                  >
+                    Delete All Data & Start Fresh
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Hard Reset Confirmation Modal */}
+      <ConfirmModal
+        open={showResetConfirm}
+        onClose={() => setShowResetConfirm(false)}
+        onConfirm={handleHardReset}
+        title="Delete All Project Data?"
+        message="This will permanently wipe all projects, scenes, images, videos, assets, and wizard state. Your API keys will be kept. This cannot be undone."
+        confirmLabel="Yes, Delete Everything"
+        danger
+      />
+
+      <AlertModal
+        open={alertMsg.open}
+        onClose={() => setAlertMsg({ ...alertMsg, open: false })}
+        title={alertMsg.title}
+        message={alertMsg.message}
+      />
     </div>
   );
 }

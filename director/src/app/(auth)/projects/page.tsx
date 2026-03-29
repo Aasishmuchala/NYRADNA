@@ -2,7 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
+
+interface Project {
+  id: number;
+  title: string;
+  badge: string;
+  duration: string | null;
+  created: string;
+  edited: string;
+  image: string;
+  isGenerating?: boolean;
+}
 
 export default function ProjectsPage() {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -10,64 +21,9 @@ export default function ProjectsPage() {
   const [selectedProjects, setSelectedProjects] = useState<number[]>([]);
   const [sortOrder, setSortOrder] = useState<'recent' | 'oldest'>('recent');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-
-  const projects = [
-    {
-      id: 1,
-      title: 'Neon Genesis: Part II',
-      badge: 'Ready',
-      duration: '02:45',
-      created: 'Created Oct 12, 2023',
-      edited: 'Edited 2h ago',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_wHq3QXsceTS2rc2HuEGzYF0n1tKtmOo-fEJAeghoFXe5Spw87ymjjovDrjMjZNT1P35rGrjFjuIM_KuYtS9ATeDVRB3Edx6tuGyMt3zcOzFcL6V6zAgEXMF9slv_IQdmgAEoNLp4TtHFkyJrufKc6WLw9woBG0YMETZUMbAh3-Kn9J9GZK6aC_ew3oK0OY-6BskM_Q79W649_mv2OVemPk5QX09ixNE6L34QynoeZGuToJRVrcrWbJ9moQZzvymgIZ21yA4Agcc',
-    },
-    {
-      id: 2,
-      title: 'Desert Echoes',
-      badge: 'Generating',
-      duration: null,
-      created: 'Created Oct 10, 2023',
-      edited: 'Edited 14m ago',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuARQUxIA42SK7fz-JfUhG74LyCSZQuSUZBRhsDWJLoNB2isqFZY9vYwWjX9QQTsRLjDDg2ODuW08fI7M-U-ZprxKdfqL2EP_OvLIikIC9Y6idZXbbjoFQlMcEZlDvtzeQylzAixNnjIVFv5jt5rnAamTkfZpZ0sD1MDM0XPMpkVDesyc3o79o32To4aa5Hmw-lpjjxqREagdqNckn_LvBC2A4ZxPjjXDL6yu5-cKji31-VwboSCg7PtcYai60-ac4ZcWxzp1shXVP4',
-      isGenerating: true,
-    },
-    {
-      id: 3,
-      title: 'Noir Studio Session',
-      badge: 'Drafting',
-      duration: '--:--',
-      created: 'Created Oct 08, 2023',
-      edited: 'Edited 1d ago',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAn98tZ7BsAvTq3jq4b41dG-3mbk6FUlxE27I-ErEHwC8cebU4ULDyIrV43vP4lTgjpTFRDhWdF9_EqA31K8wzklYE5uz56Z5BfOrpFLP6QnGzLnf29khucx_JGUBL1Ih_LIjWAIC201L7pmiN1KOWzIysIRuRawxVCJ55zl1DM1zVS0N5nj_1WkJX-HF2rWWiqg03ZjKKBEFFf6LyyAam6qjdqka_ejgOxLYsORuu-syGJgyEvRoqjy-XrD-PY0dAQ4jY5O0i00sE',
-    },
-    {
-      id: 4,
-      title: 'Forest Sprint Final',
-      badge: 'Exported',
-      duration: '01:15',
-      created: 'Created Oct 05, 2023',
-      edited: 'Edited 3d ago',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDJ4GZyZmwUG0gLavisV-Ysxlm9vZswAkuwIM11cWUFFnIJIcWbHJbng8Mze9QIQUZmYKxRxMZCzi74OqEF3B9tu1bFyhVQpKolkBnOoYA5qCteTxo5eCWt_23x71W3d_c1fYLwtUxU-axyLXGz6aPl0lqp4W5LsGaDKCl0w-I5i1HopRSHLF9LxXjhzNMbfsG1_6Q-byParj2SLFuKrOC3ZCEgCAUEc9K2wrShDraXwV6NqspzirZPsuX3N-7L8veH1ecUUj5BfMs',
-    },
-    {
-      id: 5,
-      title: 'Skyline Montage',
-      badge: 'Ready',
-      duration: '00:45',
-      created: 'Created Sep 30, 2023',
-      edited: 'Edited 1w ago',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAeoVG7FVlT8jg3outzTR1TvC7aAWTQ1dVyc3t5f4AbOQmA7yfiCyHyKlVhOJavSrLamcBZciz1mmii7fTDOM2kZeGiLmte_wcJxN7OpPMaQTIC0qV-TfdMu-g7oqxrs7MuoKO6Nm0gez4wMXvhIAZiu6Gdb2sI8xtgwHD8Czk_IusCSl1ebq-9NwXtdVl8TbOr6rZG7ptjwF5x1mfbVmlPRebBhBxo9ROT0J9muaPzrY9_mtQUyDZiVEQf0Ogsnt8j2xutcXM2C-U',
-    },
-    {
-      id: 6,
-      title: 'Abstract Flow V3',
-      badge: 'Ready',
-      duration: '03:20',
-      created: 'Created Sep 28, 2023',
-      edited: 'Edited 1w ago',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAtHkDj2KwkHegyLvCTeeEmHjBg4_VxUewNUM9FGhILWTYVa240e9xgkUT4MpkHdklsFuar33rrIDZIkDX5sS2yvKpchah7RMcUVgaQPEDIDOJKGLKoyrr-AYnoXP5feAHNS5F8WPorrBaOpK0TGTI9wrhCv1C7pmmMY5GU5RtjuPwaZ2dEmw3gDB8O6jIHGH0Y9xbxUmtkcHpZ-WH1OYMl79Np3nKRGHweolTaXENZvges9qiBpG6aV6DmKXdEtcdhy6oGyMbspBo',
-    },
-  ];
+  const [projects] = useState<Project[]>([]);
+  const [alertModal, setAlertModal] = useState({ open: false, title: '', message: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; title: string }>({ open: false, title: '' });
 
   const getBadgeClasses = (badge: string) => {
     switch (badge) {
@@ -111,7 +67,7 @@ export default function ProjectsPage() {
   };
 
   const handleBulkAction = (action: string) => {
-    alert(`Performing ${action} on ${selectedProjects.length} project(s)`);
+    setAlertModal({ open: true, title: 'Bulk Action', message: `Performing ${action} on ${selectedProjects.length} project(s)` });
   };
 
   return (
@@ -268,7 +224,7 @@ export default function ProjectsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert(`Opening ${project.title}`);
+                          setAlertModal({ open: true, title: 'Open Project', message: `Opening ${project.title}` });
                           setOpenMenuId(null);
                         }}
                         className="block w-full text-left px-4 py-2 text-sm text-[#adaaaa] hover:text-white hover:bg-[#1a1a1a] transition-colors"
@@ -278,7 +234,7 @@ export default function ProjectsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert(`Duplicating ${project.title}`);
+                          setAlertModal({ open: true, title: 'Duplicate Project', message: `Duplicating ${project.title}` });
                           setOpenMenuId(null);
                         }}
                         className="block w-full text-left px-4 py-2 text-sm text-[#adaaaa] hover:text-white hover:bg-[#1a1a1a] transition-colors"
@@ -288,7 +244,7 @@ export default function ProjectsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert(`Deleting ${project.title}`);
+                          setDeleteConfirm({ open: true, title: project.title });
                           setOpenMenuId(null);
                         }}
                         className="block w-full text-left px-4 py-2 text-sm text-[#ff716c] hover:text-[#d7383b] hover:bg-[#1a1a1a] transition-colors"
@@ -307,6 +263,14 @@ export default function ProjectsPage() {
           </div>
         ))}
 
+        {sortedProjects.length === 0 && (
+          <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">video_library</span>
+            <h3 className="text-lg font-bold mb-2">No projects yet</h3>
+            <p className="text-on-surface-variant text-sm mb-6">Create your first AI-generated film to get started.</p>
+          </div>
+        )}
+
         {/* Add New Project Ghost Card */}
         <Link href="/create/intent">
           <button className="group relative flex flex-col items-center justify-center bg-[#131313] border-2 border-dashed border-[#494847]/30 rounded-xl aspect-video hover:bg-[#262626] transition-all duration-300 w-full h-full">
@@ -317,6 +281,24 @@ export default function ProjectsPage() {
           </button>
         </Link>
       </div>
+
+      <AlertModal
+        open={alertModal.open}
+        onClose={() => setAlertModal({ ...alertModal, open: false })}
+        title={alertModal.title}
+        message={alertModal.message}
+      />
+      <ConfirmModal
+        open={deleteConfirm.open}
+        onClose={() => setDeleteConfirm({ ...deleteConfirm, open: false })}
+        onConfirm={() => {
+          // Delete logic would go here
+        }}
+        title="Delete Project"
+        message={`Are you sure you want to delete "${deleteConfirm.title}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        danger
+      />
     </div>
   );
 }

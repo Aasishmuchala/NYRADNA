@@ -44,6 +44,15 @@
   --color-on-surface: #e6e1dc;
   --color-on-surface-variant: #adaaaa;
 
+  /* Status */
+  --color-success: #4caf50;
+  --color-success-dim: #45a049;
+  --color-success-container: #1a2e1a;
+  --color-processing: #9c27b0;
+  --color-processing-dim: #7b1fa2;
+  --color-processing-container: #2a1a2e;
+  --color-failed-container: #2e1a1a;
+
   /* Outline */
   --color-outline-variant: #494847;
 
@@ -105,6 +114,14 @@
 @keyframes shimmerAnimation {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-up {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Text Gradient */
