@@ -34,27 +34,28 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User in freestyle mode (no active pipeline run) can access all steps without gating restrictions
   4. Pipeline auto-advance pauses at stage boundaries marked for user navigation, waiting for user action before proceeding
   5. Page refresh preserves pipeline state -- the user returns to their current step, not the beginning
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [x] 01-01-PLAN.md — Install Zustand, define pipeline types, create pipeline store with gating logic and tests
+- [x] 01-02-PLAN.md — Wire sidebar gating indicators and gate Continue/Generate buttons on step pages
+- [x] 01-03-PLAN.md — Create pipeline orchestrator with auto-advance and awaitUserAdvance boundary pausing
 
 ### Phase 2: Director's Cut
 **Goal**: Users can author a comprehensive creative brief that defines their narrative vision before any generation begins, and this brief gates all downstream pipeline activity
 **Depends on**: Phase 1
 **Requirements**: DIR-01, DIR-02, DIR-03, DIR-04, DIR-05, DIR-06, DIR-07
 **Success Criteria** (what must be TRUE):
-  1. User can navigate to /studio/directors-cut from the sidebar and fill out storyline (title, synopsis, theme), tone/style (mood, palette, cinematography references), and narrative direction (transitions, emotional beats per segment)
+  1. User can navigate to /create/directors-cut from the sidebar and fill out storyline (title, synopsis, theme), tone/style (mood, palette, cinematography references), and narrative direction (transitions, emotional beats per segment)
   2. User's Director's Brief persists to Supabase and survives full page refresh without data loss
   3. User cannot proceed to pipeline node generation without a completed Director's Brief -- the pipeline blocks with an actionable message
   4. User can see a SequencePlan produced by the Creative Director agent after submitting their brief, showing how their narrative vision maps to planned segments
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [x] 02-01-PLAN.md — Install Supabase, extend pipeline with directors-cut stage, define DirectorsBrief types and migration SQL
+- [x] 02-02-PLAN.md — Build Director's Cut form page with brief store, API persistence, and 3 form sections (storyline, visual style, narrative beats)
+- [x] 02-03-PLAN.md — Creative Director agent analysis producing SequencePlan visible in Intelligence Feed
 
 ### Phase 3: Asset Initialization
 **Goal**: Users can assemble named collections of assets that define the visual building blocks of their narrative
@@ -163,8 +164,8 @@ Note: Phase 3 can execute in parallel with Phase 2 (both depend only on Phase 1)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Pipeline Gating | 0/3 | Not started | - |
-| 2. Director's Cut | 0/2 | Not started | - |
+| 1. Foundation and Pipeline Gating | 0/3 | Planning complete | - |
+| 2. Director's Cut | 0/3 | Planning complete | - |
 | 3. Asset Initialization | 0/2 | Not started | - |
 | 4. Pipeline Node Generation | 0/2 | Not started | - |
 | 5. Gap Detection | 0/2 | Not started | - |

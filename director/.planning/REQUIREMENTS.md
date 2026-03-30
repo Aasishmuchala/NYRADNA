@@ -9,22 +9,22 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Pipeline Gating
 
-- [ ] **GATE-01**: Pipeline store exposes `canExecuteStage(stageId)` that returns false if any prior mandatory stage is incomplete
-- [ ] **GATE-02**: `jumpToStage()` refuses to skip mandatory stages (canSkip=false), returning false instead of silently marking them skipped
-- [ ] **GATE-03**: Generate button on Create page checks `canExecuteStage('create')` and shows actionable error with link to incomplete stage when blocked
-- [ ] **GATE-04**: Pipeline stage card shows blocked state with "Complete [stage] first" message and navigation link when prerequisites are incomplete
-- [ ] **GATE-05**: Freestyle generation (no active pipeline run) remains unblocked — `canExecuteStage()` returns true when `currentRun` is null
-- [ ] **GATE-06**: Pipeline orchestrator pauses auto-advance at stage boundaries that require user navigation (awaitUserAdvance flag)
+- [x] **GATE-01**: Pipeline store exposes `canExecuteStage(stageId)` that returns false if any prior mandatory stage is incomplete
+- [x] **GATE-02**: `jumpToStage()` refuses to skip mandatory stages (canSkip=false), returning false instead of silently marking them skipped
+- [x] **GATE-03**: Generate button on Create page checks `canExecuteStage('create')` and shows actionable error with link to incomplete stage when blocked
+- [x] **GATE-04**: Pipeline stage card shows blocked state with "Complete [stage] first" message and navigation link when prerequisites are incomplete
+- [x] **GATE-05**: Freestyle generation (no active pipeline run) remains unblocked — `canExecuteStage()` returns true when `currentRun` is null
+- [x] **GATE-06**: Pipeline orchestrator pauses auto-advance at stage boundaries that require user navigation (awaitUserAdvance flag)
 
 ### Director's Cut
 
-- [ ] **DIR-01**: Director's Cut page exists as a distinct route (/studio/directors-cut) accessible from sidebar navigation
-- [ ] **DIR-02**: User can input overall storyline as structured text (title, synopsis, theme)
-- [ ] **DIR-03**: User can specify tone and visual style (mood, color palette, cinematography references)
-- [ ] **DIR-04**: User can define narrative direction with key transitions and emotional beats per segment
-- [ ] **DIR-05**: Director's Brief is persisted to Supabase (director_cuts table) and survives page refresh
-- [ ] **DIR-06**: Director's Cut stage gates pipeline — pipeline cannot proceed to node generation without a completed brief
-- [ ] **DIR-07**: Creative Director agent analyzes the brief and produces a SequencePlan visible to the user
+- [x] **DIR-01**: Director's Cut page exists as a distinct route (/studio/directors-cut) accessible from sidebar navigation
+- [x] **DIR-02**: User can input overall storyline as structured text (title, synopsis, theme)
+- [x] **DIR-03**: User can specify tone and visual style (mood, color palette, cinematography references)
+- [x] **DIR-04**: User can define narrative direction with key transitions and emotional beats per segment
+- [x] **DIR-05**: Director's Brief is persisted to Supabase (director_cuts table) and survives page refresh
+- [x] **DIR-06**: Director's Cut stage gates pipeline — pipeline cannot proceed to node generation without a completed brief
+- [x] **DIR-07**: Creative Director agent analyzes the brief and produces a SequencePlan visible to the user
 
 ### Asset Initialization
 
@@ -107,19 +107,19 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GATE-01 | Phase 1 | Pending |
-| GATE-02 | Phase 1 | Pending |
-| GATE-03 | Phase 1 | Pending |
-| GATE-04 | Phase 1 | Pending |
-| GATE-05 | Phase 1 | Pending |
-| GATE-06 | Phase 1 | Pending |
-| DIR-01 | Phase 2 | Pending |
-| DIR-02 | Phase 2 | Pending |
-| DIR-03 | Phase 2 | Pending |
-| DIR-04 | Phase 2 | Pending |
-| DIR-05 | Phase 2 | Pending |
-| DIR-06 | Phase 2 | Pending |
-| DIR-07 | Phase 2 | Pending |
+| GATE-01 | Phase 1 | Complete |
+| GATE-02 | Phase 1 | Complete |
+| GATE-03 | Phase 1 | Complete |
+| GATE-04 | Phase 1 | Complete |
+| GATE-05 | Phase 1 | Complete |
+| GATE-06 | Phase 1 | Complete |
+| DIR-01 | Phase 2 | Complete |
+| DIR-02 | Phase 2 | Complete |
+| DIR-03 | Phase 2 | Complete |
+| DIR-04 | Phase 2 | Complete |
+| DIR-05 | Phase 2 | Complete |
+| DIR-06 | Phase 2 | Complete |
+| DIR-07 | Phase 2 | Complete |
 | ASSET-01 | Phase 3 | Pending |
 | ASSET-02 | Phase 3 | Pending |
 | ASSET-03 | Phase 3 | Pending |
