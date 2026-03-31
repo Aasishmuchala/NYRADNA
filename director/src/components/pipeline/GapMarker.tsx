@@ -11,7 +11,7 @@ interface GapMarkerProps {
 const severityStyles: Record<GapSeverity, string> = {
   critical: 'bg-red-500/20 border-red-500 text-red-400',
   moderate: 'bg-amber-500/20 border-amber-500 text-amber-400',
-  minor:    'bg-[#555]/20 border-[#555] text-[#A0A0B8]',
+  minor:    'bg-[#555]/20 border-[#555] text-[#c8c4d6]',
 };
 
 function highestSeverity(gaps: PipelineGap[]): GapSeverity {

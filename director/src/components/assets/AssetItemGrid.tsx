@@ -62,10 +62,10 @@ function SortableItem({ item, onRemove }: SortableItemProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className="group relative cursor-grab rounded-lg bg-[#1A1A2E] p-2 transition-colors hover:bg-[#1A1A2E] active:cursor-grabbing"
+      className="group relative cursor-grab rounded-lg bg-[#1f1f24] p-2 transition-colors hover:bg-[#1f1f24] active:cursor-grabbing"
     >
       {/* Thumbnail */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-[#0A0A0F]">
+      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-[#050507]">
         {item.type === 'image' ? (
           <img
             src={item.thumbnailUrl || item.url}
@@ -74,7 +74,7 @@ function SortableItem({ item, onRemove }: SortableItemProps) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="material-symbols-outlined text-4xl text-[#6B6B80]">
+            <span className="material-symbols-outlined text-4xl text-[#928f9f]">
               {typeIcon[item.type] || 'insert_drive_file'}
             </span>
           </div>
@@ -82,12 +82,12 @@ function SortableItem({ item, onRemove }: SortableItemProps) {
       </div>
 
       {/* Item name */}
-      <p className="mt-1.5 truncate text-xs text-[#A0A0B8]">{item.name}</p>
+      <p className="mt-1.5 truncate text-xs text-[#c8c4d6]">{item.name}</p>
 
       {/* Type badge */}
       <span
         className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${
-          typeBadgeColor[item.type] || 'bg-[#1A1A2E] text-[#A0A0B8]'
+          typeBadgeColor[item.type] || 'bg-[#1f1f24] text-[#c8c4d6]'
         }`}
       >
         {item.type}
@@ -121,7 +121,7 @@ function SortableItem({ item, onRemove }: SortableItemProps) {
           onRemove(item.id);
         }}
         onPointerDown={(e) => e.stopPropagation()}
-        className="absolute right-1 top-1 rounded-md bg-[#0A0A0F]/80 p-0.5 text-[#6B6B80] opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
+        className="absolute right-1 top-1 rounded-md bg-[#050507]/80 p-0.5 text-[#928f9f] opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
         title="Remove asset"
       >
         <span className="material-symbols-outlined text-[16px]">close</span>
@@ -169,8 +169,8 @@ export default function AssetItemGrid({ items, onReorder, onRemove }: AssetItemG
 
   if (items.length === 0) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-[#7F72F7]/10 p-8">
-        <p className="text-center text-sm text-[#6B6B80]">
+      <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-[#c6bfff]/10 p-8">
+        <p className="text-center text-sm text-[#928f9f]">
           No assets yet. Upload or add assets to get started.
         </p>
       </div>

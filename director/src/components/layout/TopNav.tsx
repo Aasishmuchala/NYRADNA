@@ -26,7 +26,7 @@ export default function TopNav({
     : '?';
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-30 h-16 bg-surface/70 backdrop-blur-xl border-b border-surface-container-high md:left-64">
+    <nav className="fixed top-0 left-0 right-0 z-30 h-16 bg-white/10 backdrop-blur-3xl border-b border-white/10 md:left-64">
       <div className="flex h-full items-center justify-between px-6">
         {/* Left Section - Search */}
         <div className="flex flex-1 items-center gap-4">
@@ -35,7 +35,7 @@ export default function TopNav({
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full rounded-full bg-surface-container px-4 py-2 text-sm text-white placeholder-on-surface-variant ring-1 ring-surface-container-high transition-all focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full rounded-full bg-white/5 backdrop-blur-xl px-4 py-2 text-sm text-on-surface placeholder-on-surface-variant border border-white/10 transition-all focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/30"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant">
                 <span className="material-symbols-outlined text-[18px]">
@@ -53,7 +53,7 @@ export default function TopNav({
           ) : (
             <>
               {/* Notification Bell */}
-              <button className="relative rounded-full p-2 transition-colors hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="Notifications">
+              <button className="relative rounded-full p-2 transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="Notifications">
                 <span className="material-symbols-outlined text-on-surface-variant text-[20px] transition-colors hover:text-white">
                   notifications_none
                 </span>
@@ -64,7 +64,7 @@ export default function TopNav({
               {/* Help Icon */}
               <Link
                 href="/help"
-                className="rounded-full p-2 transition-colors hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="rounded-full p-2 transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 aria-label="Help and support"
               >
                 <span className="material-symbols-outlined text-on-surface-variant text-[20px] transition-colors hover:text-white">
@@ -75,10 +75,10 @@ export default function TopNav({
               {/* User Avatar and Name */}
               <div className="flex items-center gap-3 ml-2">
                 <div className="text-right hidden sm:block">
-                  <p className="text-sm font-medium text-white">{user?.name ?? 'User'}</p>
+                  <p className="text-sm font-medium text-on-surface">{user?.name ?? 'User'}</p>
                   <p className="text-xs text-on-surface-variant">{user?.plan ?? 'Free'}</p>
                 </div>
-                <button className="h-10 w-10 overflow-hidden rounded-full bg-surface-container-high ring-1 ring-surface-bright transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="User profile menu">
+                <button className="h-10 w-10 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/20 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="User profile menu">
                   {user?.avatar ? (
                     <img
                       src={user.avatar}

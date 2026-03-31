@@ -67,13 +67,13 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
   }
 
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-[#12121A] p-3">
+    <div className="flex items-center gap-2 rounded-xl bg-white/5 p-3">
       {/* Remove Node */}
       <button
         type="button"
         onClick={handleRemove}
         disabled={!selectedNodeId}
-        className="flex items-center gap-1.5 rounded-lg bg-[#12121A] px-3 py-2 text-sm text-[#A0A0B8] transition-colors hover:bg-red-900/30 hover:text-red-300 disabled:opacity-40 disabled:hover:bg-[#12121A] disabled:hover:text-[#A0A0B8]"
+        className="flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-sm text-[#c8c4d6] transition-colors hover:bg-red-900/30 hover:text-red-300 disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
       >
         <span className="material-symbols-outlined text-[18px]">delete</span>
         Remove
@@ -84,7 +84,7 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
         type="button"
         onClick={handleMoveUp}
         disabled={!canMoveUp}
-        className="flex items-center gap-1 rounded-lg bg-[#12121A] px-3 py-2 text-sm text-[#A0A0B8] transition-colors hover:bg-[#7F72F7]/10 hover:text-white disabled:opacity-40 disabled:hover:bg-[#12121A] disabled:hover:text-[#A0A0B8]"
+        className="flex items-center gap-1 rounded-lg bg-white/5 px-3 py-2 text-sm text-[#c8c4d6] transition-colors hover:bg-[#c6bfff]/10 hover:text-white disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
       >
         <span className="material-symbols-outlined text-[18px]">arrow_back</span>
       </button>
@@ -94,7 +94,7 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
         type="button"
         onClick={handleMoveDown}
         disabled={!canMoveDown}
-        className="flex items-center gap-1 rounded-lg bg-[#12121A] px-3 py-2 text-sm text-[#A0A0B8] transition-colors hover:bg-[#7F72F7]/10 hover:text-white disabled:opacity-40 disabled:hover:bg-[#12121A] disabled:hover:text-[#A0A0B8]"
+        className="flex items-center gap-1 rounded-lg bg-white/5 px-3 py-2 text-sm text-[#c8c4d6] transition-colors hover:bg-[#c6bfff]/10 hover:text-white disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
       >
         <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
       </button>
@@ -110,7 +110,7 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             placeholder="Node title"
-            className="rounded-lg border border-[#7F72F7]/10 bg-[#1A1A2E] px-3 py-2 text-sm text-white placeholder-[#6B6B80] focus:border-[#7F72F7]/50 focus:outline-none"
+            className="rounded-lg border border-[#c6bfff]/10 bg-[#1f1f24] px-3 py-2 text-sm text-white placeholder-[#928f9f] focus:border-[#c6bfff]/50 focus:outline-none"
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleAdd();
               if (e.key === 'Escape') {
@@ -124,7 +124,7 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
             type="button"
             onClick={handleAdd}
             disabled={!newTitle.trim()}
-            className="rounded-lg bg-[#7F72F7] px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-[#A78BFA] disabled:opacity-50"
+            className="rounded-lg bg-[#c6bfff] px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-[#c6bfff] disabled:opacity-50"
           >
             Add
           </button>
@@ -134,7 +134,7 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
               setShowAddForm(false);
               setNewTitle('');
             }}
-            className="rounded-lg bg-[#12121A] px-3 py-2 text-sm text-[#A0A0B8] transition-colors hover:bg-[#7F72F7]/10"
+            className="rounded-lg bg-white/5 px-3 py-2 text-sm text-[#c8c4d6] transition-colors hover:bg-[#c6bfff]/10"
           >
             Cancel
           </button>
@@ -143,7 +143,7 @@ export default function NodeControls({ selectedNodeId, nodes, assetSetId }: Node
         <button
           type="button"
           onClick={() => setShowAddForm(true)}
-          className="flex items-center gap-1.5 rounded-lg bg-[#7F72F7] px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-[#A78BFA]"
+          className="flex items-center gap-1.5 rounded-lg bg-[#c6bfff] px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-[#c6bfff]"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           Add Node

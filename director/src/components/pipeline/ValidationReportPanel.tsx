@@ -17,7 +17,7 @@ const categoryConfig: Record<IssueCategory, { label: string; icon: string }> = {
 
 const severityColor: Record<string, string> = {
   critical: '#d32f2f',
-  moderate: '#A78BFA',
+  moderate: '#c6bfff',
   minor:    '#ffd54f',
 };
 
@@ -54,7 +54,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
   const grouped = groupByCategory(issues);
 
   return (
-    <div className="w-80 bg-[#1A1A2E] border-l border-[#7F72F7]/10 p-4 overflow-y-auto">
+    <div className="w-80 bg-[#1f1f24] border-l border-[#c6bfff]/10 p-4 overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-white">Validation Report</h3>
@@ -69,7 +69,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
 
       {/* Summary bar */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-xs text-[#A0A0B8]">{issues.length} total</span>
+        <span className="text-xs text-[#c8c4d6]">{issues.length} total</span>
         {criticalCount > 0 && (
           <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 border border-red-500 px-2 py-0.5 text-[10px] font-medium text-red-400">
             {criticalCount} critical
@@ -97,8 +97,8 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
           <div key={category} className="mb-4">
             {/* Category header */}
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="material-symbols-outlined text-sm text-[#A0A0B8]">{config.icon}</span>
-              <h4 className="text-xs font-bold text-[#A0A0B8] uppercase tracking-wide">{config.label}</h4>
+              <span className="material-symbols-outlined text-sm text-[#c8c4d6]">{config.icon}</span>
+              <h4 className="text-xs font-bold text-[#c8c4d6] uppercase tracking-wide">{config.label}</h4>
               <span className="text-[10px] text-[#555]">({categoryIssues.length})</span>
             </div>
 
@@ -110,7 +110,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
                 return (
                   <div
                     key={issue.id}
-                    className="rounded-lg border border-[#7F72F7]/10 bg-[#12121A] p-3"
+                    className="rounded-lg border border-[#c6bfff]/10 bg-white/5 p-3"
                   >
                     {/* Severity dot + Title + Status */}
                     <div className="flex items-start gap-2 mb-1">
@@ -129,7 +129,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-[#A0A0B8] mb-1">{issue.description}</p>
+                    <p className="text-sm text-[#c8c4d6] mb-1">{issue.description}</p>
 
                     {/* Suggestion */}
                     <p className="text-xs text-[#555] italic mb-2">{issue.suggestion}</p>
@@ -184,7 +184,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
 
       {/* Footer: Accept All */}
       {hasUnaccepted && issues.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-[#7F72F7]/10">
+        <div className="mt-4 pt-3 border-t border-[#c6bfff]/10">
           <button
             type="button"
             onClick={() => {

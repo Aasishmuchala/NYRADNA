@@ -345,7 +345,7 @@ export default function ReviewPage() {
         {/* Scene Grid */}
         <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Scene Review</h1>
+            <h1 className="text-3xl font-headline font-light tracking-[-0.03em] mb-2">Scene Review</h1>
             <p className="text-on-surface-variant text-sm mb-4">
               {assetScenes.length > 0 && (
                 <span className="text-primary font-semibold">{assetScenes.length} assets imported</span>

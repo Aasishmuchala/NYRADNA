@@ -811,7 +811,7 @@ export default function CharacterSetupPage() {
       <main className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-headline font-bold">Production Assets</h2>
+            <h2 className="text-3xl font-headline font-light tracking-[-0.03em]">Production Assets</h2>
             <p className="text-gray-400 text-sm mt-1">Characters, locations, wardrobe, props — everything your scenes need</p>
           </div>
         </div>
@@ -837,7 +837,7 @@ export default function CharacterSetupPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-headline font-bold">Production Assets</h2>
+          <h2 className="text-3xl font-headline font-light tracking-[-0.03em]">Production Assets</h2>
           <p className="text-gray-400 text-sm mt-1">Characters, locations, wardrobe, props — everything your scenes need</p>
         </div>
         <div className="flex items-center gap-3">
@@ -892,7 +892,7 @@ export default function CharacterSetupPage() {
       {mode === 'agent' && (
         <div className="grid lg:grid-cols-5 gap-6">
           {/* Chat Panel */}
-          <div className="lg:col-span-3 flex flex-col bg-surface rounded-2xl border border-outline-variant/20 overflow-hidden" style={{ height: 'calc(100vh - 340px)', minHeight: 500 }}>
+          <div className="lg:col-span-3 flex flex-col glass-card rounded-2xl overflow-hidden" style={{ height: 'calc(100vh - 340px)', minHeight: 500 }}>
             <div className="px-5 py-3 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-high/50">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
@@ -912,7 +912,7 @@ export default function CharacterSetupPage() {
                     <span className="material-symbols-outlined text-primary text-3xl">movie_filter</span>
                   </div>
                   <div>
-                    <p className="text-white font-headline font-bold text-lg">Production Designer Agent</p>
+                    <p className="text-white font-headline font-light tracking-[-0.03em] text-lg">Production Designer Agent</p>
                     <p className="text-gray-500 text-sm mt-1 max-w-sm">
                       {state.visionText
                         ? 'Your project concept is loaded. Hit Autopilot to design & generate everything automatically.'
@@ -1028,7 +1028,7 @@ export default function CharacterSetupPage() {
               <>
                 <div className="bg-surface-container-high rounded-2xl border border-primary/30 p-5 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-headline font-bold text-white">Production Package</h3>
+                    <h3 className="font-headline font-light tracking-[-0.03em] text-white">Production Package</h3>
                     <span className="text-xs text-gray-500">{agentAssets.length} assets</span>
                   </div>
 
@@ -1060,7 +1060,7 @@ export default function CharacterSetupPage() {
                   <div className="bg-surface-container-high rounded-2xl border border-processing/30 p-5 space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-processing text-[16px]">palette</span>
-                      <h3 className="font-headline font-bold text-white text-sm">Style DNA — Auto-configured</h3>
+                      <h3 className="font-headline font-light tracking-[-0.03em] text-white text-sm">Style DNA -- Auto-configured</h3>
                     </div>
                     <p className="text-[10px] text-gray-500">These settings will be pre-filled on the Style DNA page.</p>
                     <div className="grid grid-cols-2 gap-2">

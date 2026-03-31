@@ -356,7 +356,7 @@ export default function GeneratingPage() {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold">Video Planning</h1>
+                <h1 className="text-2xl font-headline font-light tracking-[-0.03em]">Video Planning</h1>
                 <button
                   onClick={() => setPipelineMode('node')}
                   className="text-[10px] text-white/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"

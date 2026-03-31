@@ -21,7 +21,7 @@ const statusConfig: Record<NodeStatus, { color: string; label: string; icon?: st
 
 const severityColor: Record<IssueSeverity, string> = {
   critical: '#d32f2f',
-  moderate: '#A78BFA',
+  moderate: '#c6bfff',
   minor: '#ffd54f',
 };
 
@@ -53,12 +53,12 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
 
   return (
     <div
-      className={`relative min-w-[200px] rounded-xl border bg-[#1A1A2E] p-3 transition-colors ${
+      className={`relative min-w-[200px] rounded-xl border bg-[#1f1f24] p-3 transition-colors ${
         isBridge ? 'border-dashed' : ''
-      } ${selected ? 'border-[#7F72F7]' : 'border-[#7F72F7]/10'}`}
+      } ${selected ? 'border-[#c6bfff]' : 'border-[#c6bfff]/10'}`}
     >
       {isBridge && (
-        <div className="absolute -top-2 -right-2 rounded-full bg-[#7F72F7] px-2 py-0.5 text-[9px] font-bold text-white">
+        <div className="absolute -top-2 -right-2 rounded-full bg-[#c6bfff] px-2 py-0.5 text-[9px] font-bold text-white">
           BRIDGE
         </div>
       )}
@@ -75,7 +75,7 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
               className="h-16 w-16 rounded-lg object-cover"
             />
           ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#12121A]">
+            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/5">
               <span className="material-symbols-outlined text-2xl text-[#555]">image</span>
             </div>
           )}
@@ -150,7 +150,7 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
 
           {/* Emotional tone */}
           {node.narrativeContext?.emotionalTone && (
-            <p className="mt-1 truncate text-xs text-[#A0A0B8]">
+            <p className="mt-1 truncate text-xs text-[#c8c4d6]">
               {node.narrativeContext.emotionalTone}
             </p>
           )}

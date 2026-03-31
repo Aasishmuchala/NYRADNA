@@ -66,26 +66,26 @@ export default function FileUploadZone({
       onDrop={handleDrop}
       className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${
         isDragOver
-          ? 'border-[#7F72F7] bg-[#1A1A2E]'
-          : 'border-[#7F72F7]/10 hover:border-[#7F72F7]/30'
+          ? 'border-[#c6bfff] bg-[#1f1f24]'
+          : 'border-[#c6bfff]/10 hover:border-[#c6bfff]/30'
       }`}
     >
       {uploading ? (
         <div className="flex flex-col items-center gap-2">
-          <span className="material-symbols-outlined animate-pulse text-4xl text-[#7F72F7]">
+          <span className="material-symbols-outlined animate-pulse text-4xl text-[#c6bfff]">
             cloud_upload
           </span>
-          <p className="animate-pulse text-sm text-[#7F72F7]">Uploading...</p>
+          <p className="animate-pulse text-sm text-[#c6bfff]">Uploading...</p>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2">
-          <span className="material-symbols-outlined text-4xl text-[#6B6B80]">
+          <span className="material-symbols-outlined text-4xl text-[#928f9f]">
             upload_file
           </span>
-          <p className="text-sm text-[#A0A0B8]">
+          <p className="text-sm text-[#c8c4d6]">
             Drop files here or click to upload
           </p>
-          <p className="text-xs text-[#6B6B80]">
+          <p className="text-xs text-[#928f9f]">
             Images, videos, and audio files accepted
           </p>
         </div>

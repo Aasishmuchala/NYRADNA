@@ -5,13 +5,13 @@ import './globals.css'
 
 const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['700', '800'],
+  weight: ['300', '400', '700'],
   variable: '--font-manrope',
 })
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-inter',
 })
 
@@ -33,7 +33,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
       </head>
-      <body className={`${manrope.variable} ${inter.variable} font-sans bg-surface text-white antialiased`}>
+      <body className={`${manrope.variable} ${inter.variable} font-sans bg-surface text-on-surface antialiased radial-ambient`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

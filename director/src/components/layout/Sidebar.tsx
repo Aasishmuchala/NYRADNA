@@ -35,20 +35,20 @@ export default function Sidebar() {
   const isActive = (href: string) => pathname.startsWith(href);
 
   return (
-    <aside className="fixed left-0 top-0 hidden h-screen w-64 flex-col bg-surface z-40 md:flex">
+    <aside className="fixed left-0 top-0 hidden h-screen w-64 flex-col bg-white/5 backdrop-blur-2xl border-r border-white/10 z-40 md:flex">
       {/* Brand Section */}
       <div className="mb-8 px-6 pt-6">
         <div className="mb-3 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
             <span className="material-symbols-outlined text-[22px] text-on-primary">
               movie_filter
             </span>
           </div>
           <div>
-            <h1 className="font-manrope text-xl font-bold tracking-tight text-white">
+            <h1 className="font-headline text-xl font-light tracking-[-0.03em] text-white">
               DIRECTOR
             </h1>
-            <p className="text-[11px] uppercase tracking-widest text-on-surface-variant">
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-on-surface-variant">
               AI Video Engine
             </p>
           </div>
@@ -63,10 +63,10 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
+              className={`flex items-center gap-3 px-4 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
                 active
-                  ? 'bg-surface-container-high text-primary'
-                  : 'text-on-surface-variant hover:bg-surface-container-low hover:text-white'
+                  ? 'border-r-2 border-indigo-400 bg-gradient-to-r from-indigo-500/10 to-transparent text-primary'
+                  : 'text-on-surface-variant hover:bg-white/5 hover:text-white'
               }`}
             >
               <span
@@ -76,7 +76,7 @@ export default function Sidebar() {
               >
                 {item.icon}
               </span>
-              <span className="text-sm font-medium">{item.label}</span>
+              <span className="text-sm font-medium tracking-wide">{item.label}</span>
             </Link>
           );
         })}
@@ -84,7 +84,7 @@ export default function Sidebar() {
         {/* Create Workflow Section */}
         {pathname.startsWith('/create') && (
           <>
-            <div className="uppercase tracking-widest text-[10px] text-on-surface-variant px-6 mb-2 mt-6">
+            <div className="uppercase tracking-widest text-[10px] text-on-surface-variant font-bold px-6 mb-2 mt-6">
               Workflow
             </div>
             {createSteps.map((item) => {
@@ -93,10 +93,10 @@ export default function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 transition-colors ${
                     active
-                      ? 'bg-surface-container-high text-primary'
-                      : 'text-on-surface-variant hover:bg-surface-container-low hover:text-white'
+                      ? 'border-r-2 border-indigo-400 bg-gradient-to-r from-indigo-500/10 to-transparent text-primary'
+                      : 'text-on-surface-variant hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <span
@@ -106,7 +106,7 @@ export default function Sidebar() {
                   >
                     {item.icon}
                   </span>
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-sm font-medium tracking-wide">{item.label}</span>
                 </Link>
               );
             })}
@@ -118,7 +118,7 @@ export default function Sidebar() {
       <div className="px-4 py-4">
         <Link
           href="/dashboard"
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-container px-4 py-3 font-bold text-on-primary transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-primary to-primary-container px-6 py-3 font-bold text-on-primary shadow-[0_0_30px_rgba(198,191,255,0.2)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           <span className="material-symbols-outlined text-[20px]">add_circle</span>
           <span>New Project</span>
@@ -126,10 +126,10 @@ export default function Sidebar() {
       </div>
 
       {/* Help & Support */}
-      <div className="border-t border-surface-container-high px-4 py-4">
+      <div className="border-t border-white/10 px-4 py-4">
         <Link
           href="/help"
-          className="flex items-center gap-3 rounded-lg px-4 py-2 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="flex items-center gap-3 rounded-lg px-4 py-2 text-on-surface-variant transition-colors hover:bg-white/5 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           <span className="material-symbols-outlined text-[20px]">
             help_outline

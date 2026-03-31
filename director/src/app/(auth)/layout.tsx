@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="min-h-screen bg-surface">
             <Sidebar />
             <TopNav />
-            <div className="md:ml-64 pt-16 min-h-screen">
+            <div className="md:ml-64 pt-32 pb-24 px-16 min-h-screen">
               <EnvBanner />
               <main>
                 {children}

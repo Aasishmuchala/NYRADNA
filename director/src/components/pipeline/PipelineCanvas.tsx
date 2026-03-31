@@ -98,7 +98,7 @@ export default function PipelineCanvas({ nodes, gaps, validationIssues = [], onN
   if (nodes.length === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center text-center">
-        <span className="material-symbols-outlined mb-3 text-5xl text-[#7F72F7]/10">account_tree</span>
+        <span className="material-symbols-outlined mb-3 text-5xl text-[#c6bfff]/10">account_tree</span>
         <p className="text-sm text-[#555]">
           No pipeline nodes yet. Generate from an asset set to get started.
         </p>

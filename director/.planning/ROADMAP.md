@@ -22,6 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 8: Asset Feedback Loop** - Generated assets flow back into the asset library for reuse
 - [ ] **Phase 9: Narrative Validation** - Full-sequence coherence check and final approval workflow
 - [ ] **Phase 10: Atlas Cloud Redesign** - Replace orange theme with purple Atlas Cloud aesthetic across all 30 files
+- [ ] **Phase 11: Cinematic Luxury Redesign** - Replace Atlas Cloud purple (#7F72F7) with soft lavender (#c6bfff) cinematic palette, glassmorphism, Manrope headlines, spacious layouts
 
 ## Phase Details
 
@@ -177,10 +178,34 @@ Plans:
 - [ ] 10-05-PLAN.md — Restyle all 6 pipeline components (SegmentNode, PipelineCanvas, GapMarker, GapDetailPanel, NodeControls, ValidationReportPanel)
 - [ ] 10-06-PLAN.md — Restyle 4 asset components, projects page, landing page, and full codebase audit
 
+### Phase 11: Cinematic Luxury Redesign
+**Goal**: Every page and component uses the cinematic luxury aesthetic with soft lavender (#c6bfff/#8c80ff) palette, glassmorphism (rgba + backdrop-blur), Manrope font-light headlines, spacious layouts, and film-production creative suite feel
+**Depends on**: Phase 10
+**Requirements**: CIN-FOUNDATION, CIN-NAV, CIN-CREATE-PAGES-A, CIN-CREATE-PAGES-B, CIN-PIPELINE-COMPONENTS, CIN-ASSETS-AND-REMAINING, CIN-AUDIT
+**Success Criteria** (what must be TRUE):
+  1. Zero occurrences of #7F72F7, #A78BFA, #0A0A0F, #12121A, #1A1A2E, or #A0A0B8 in any .tsx or .css file
+  2. All CSS custom properties use the cinematic palette (primary #c6bfff, surface #050507, etc.)
+  3. Manrope is the headline font with font-light and tracking-[-0.03em]
+  4. Glass-card class uses rgba(255,255,255,0.05) + backdrop-blur(50px) + lavender border
+  5. Material Symbols use wght 200 (thin)
+  6. All headings use font-light, all labels use text-[10px] tracking-[0.2em+] uppercase font-bold
+  7. Sidebar and TopNav use glassmorphism with white-alpha backgrounds
+  8. App builds without errors
+**Plans**: 7 plans
+
+Plans:
+- [x] 11-01-PLAN.md — Rewrite globals.css with cinematic palette, glass-card/cinematic-glow/radial-ambient classes; update root layout fonts and auth layout spacing
+- [x] 11-02-PLAN.md — Restyle Sidebar (glass bg, border-r-2 active, wide tracking) and TopNav (glass bg, minimal)
+- [ ] 11-03-PLAN.md — Restyle 5 heavy create/* pages (directors-cut, character-setup, generating, review, export)
+- [ ] 11-04-PLAN.md — Restyle 5 lighter create/* pages (intent, brief, style-dna, asset-sets, pipeline)
+- [ ] 11-05-PLAN.md — Restyle all 14 pipeline components
+- [ ] 11-06-PLAN.md — Restyle 4 asset components, Modal, and 6 remaining pages (dashboard, projects, settings, characters, assets, landing)
+- [ ] 11-07-PLAN.md — Full codebase audit for old hex values + build verification + visual spot-check
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11
 Note: Phase 3 can execute in parallel with Phase 2 (both depend only on Phase 1). Phase 4 requires both Phase 2 and Phase 3.
 
 | Phase | Plans Complete | Status | Completed |
@@ -195,3 +220,4 @@ Note: Phase 3 can execute in parallel with Phase 2 (both depend only on Phase 1)
 | 8. Asset Feedback Loop | 0/1 | Planning complete | - |
 | 9. Narrative Validation | 0/2 | Planning complete | - |
 | 10. Atlas Cloud Redesign | 2/6 | In Progress|  |
+| 11. Cinematic Luxury Redesign | 2/7 | In Progress|  |

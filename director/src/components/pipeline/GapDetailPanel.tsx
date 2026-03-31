@@ -11,7 +11,7 @@ interface GapDetailPanelProps {
 const severityBadge: Record<string, string> = {
   critical: 'bg-red-500/20 text-red-400 border-red-500',
   moderate: 'bg-amber-500/20 text-amber-400 border-amber-500',
-  minor:    'bg-[#555]/20 text-[#A0A0B8] border-[#555]',
+  minor:    'bg-[#555]/20 text-[#c8c4d6] border-[#555]',
 };
 
 const typeBadge: Record<string, { label: string; icon: string; color: string }> = {
@@ -27,11 +27,11 @@ function StatusLabel({ status }: { status: string }) {
     return <span className="text-xs font-medium text-[#555] line-through">Dismissed</span>;
   }
   if (status === 'fill-requested') {
-    return <span className="text-xs font-medium text-[#7F72F7] animate-pulse">Fill Requested</span>;
+    return <span className="text-xs font-medium text-[#c6bfff] animate-pulse">Fill Requested</span>;
   }
   if (status === 'generating') {
     return (
-      <span className="text-xs font-medium text-[#7F72F7] flex items-center gap-1">
+      <span className="text-xs font-medium text-[#c6bfff] flex items-center gap-1">
         <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
         Generating bridge scene...
       </span>
@@ -55,7 +55,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
   const filling = useGapStore((s) => s.filling);
 
   return (
-    <div className="w-80 bg-[#1A1A2E] border-l border-[#7F72F7]/10 p-4 overflow-y-auto">
+    <div className="w-80 bg-[#1f1f24] border-l border-[#c6bfff]/10 p-4 overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-white">Gap Analysis</h3>
@@ -78,7 +78,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
           return (
             <div
               key={gap.id}
-              className="rounded-lg border border-[#7F72F7]/10 bg-[#12121A] p-3"
+              className="rounded-lg border border-[#c6bfff]/10 bg-white/5 p-3"
             >
               {/* Badges row */}
               <div className="flex items-center gap-2 mb-2">
@@ -95,10 +95,10 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
               <h4 className="text-sm font-bold text-white mb-1">{gap.title}</h4>
 
               {/* Description */}
-              <p className="text-xs text-[#A0A0B8] mb-1">{gap.description}</p>
+              <p className="text-xs text-[#c8c4d6] mb-1">{gap.description}</p>
 
               {/* Suggestion */}
-              <p className="text-xs text-[#A0A0B8] italic flex items-start gap-1 mb-3">
+              <p className="text-xs text-[#c8c4d6] italic flex items-start gap-1 mb-3">
                 <span className="material-symbols-outlined text-xs mt-0.5 flex-shrink-0">lightbulb</span>
                 {gap.suggestion}
               </p>
@@ -118,7 +118,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
                       <button
                         type="button"
                         onClick={() => dismissGap(gap.id)}
-                        className="rounded-lg border border-[#555] px-3 py-1 text-xs font-medium text-[#A0A0B8] transition-colors hover:bg-[#555]/10"
+                        className="rounded-lg border border-[#555] px-3 py-1 text-xs font-medium text-[#c8c4d6] transition-colors hover:bg-[#555]/10"
                       >
                         Dismiss
                       </button>
@@ -128,7 +128,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
                     type="button"
                     onClick={() => requestFill(gap.id)}
                     disabled={filling}
-                    className={`rounded-lg bg-[#7F72F7] px-3 py-1 text-xs font-bold text-white transition-colors hover:bg-[#A78BFA] disabled:opacity-50${
+                    className={`rounded-lg bg-[#c6bfff] px-3 py-1 text-xs font-bold text-white transition-colors hover:bg-[#c6bfff] disabled:opacity-50${
                       filling ? ' opacity-50' : ''
                     }`}
                   >

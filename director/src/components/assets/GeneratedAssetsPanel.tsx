@@ -78,26 +78,26 @@ export default function GeneratedAssetsPanel({
   };
 
   return (
-    <div className="rounded-xl bg-[#1A1A2E] overflow-hidden">
+    <div className="rounded-xl bg-[#1f1f24] overflow-hidden">
       {/* Collapsible header */}
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-[#1A1A2E]"
+        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-[#1f1f24]"
       >
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[18px] text-[#A0A0B8]">
+          <span className="material-symbols-outlined text-[18px] text-[#c8c4d6]">
             auto_awesome
           </span>
           <span className="text-sm font-semibold text-white">Generated Assets</span>
           {items.length > 0 && (
-            <span className="rounded-full bg-[#7F72F7]/20 px-2 py-0.5 text-[10px] font-medium text-[#7F72F7]">
+            <span className="rounded-full bg-[#c6bfff]/20 px-2 py-0.5 text-[10px] font-medium text-[#c6bfff]">
               {items.length}
             </span>
           )}
         </div>
         <span
-          className={`material-symbols-outlined text-[18px] text-[#6B6B80] transition-transform ${
+          className={`material-symbols-outlined text-[18px] text-[#928f9f] transition-transform ${
             expanded ? 'rotate-180' : ''
           }`}
         >
@@ -109,11 +109,11 @@ export default function GeneratedAssetsPanel({
       {expanded && (
         <div className="border-t border-[#222] px-4 pb-4 pt-3">
           {loading ? (
-            <p className="animate-pulse text-center text-xs text-[#6B6B80]">
+            <p className="animate-pulse text-center text-xs text-[#928f9f]">
               Loading generated assets...
             </p>
           ) : items.length === 0 ? (
-            <p className="text-center text-xs text-[#6B6B80]">
+            <p className="text-center text-xs text-[#928f9f]">
               No generated assets yet. Generate videos or fill gaps to see them here.
             </p>
           ) : (
@@ -124,13 +124,13 @@ export default function GeneratedAssetsPanel({
                 return (
                   <div
                     key={item.id}
-                    className="group rounded-lg bg-[#0A0A0F] p-2 transition-colors hover:bg-[#1A1A2E]"
+                    className="group rounded-lg bg-[#050507] p-2 transition-colors hover:bg-[#1f1f24]"
                   >
                     {/* Thumbnail */}
-                    <div className="relative h-20 w-full overflow-hidden rounded-md bg-[#1A1A2E]">
+                    <div className="relative h-20 w-full overflow-hidden rounded-md bg-[#1f1f24]">
                       {item.type === 'video' ? (
                         <div className="flex h-full w-full items-center justify-center">
-                          <span className="material-symbols-outlined text-3xl text-[#6B6B80]">
+                          <span className="material-symbols-outlined text-3xl text-[#928f9f]">
                             videocam
                           </span>
                         </div>
@@ -144,12 +144,12 @@ export default function GeneratedAssetsPanel({
                     </div>
 
                     {/* Name */}
-                    <p className="mt-1.5 truncate text-[11px] text-[#A0A0B8]">{item.name}</p>
+                    <p className="mt-1.5 truncate text-[11px] text-[#c8c4d6]">{item.name}</p>
 
                     {/* Source badge */}
                     <span
                       className={`mt-1 inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                        sourceColors[source] || 'bg-[#1A1A2E] text-[#A0A0B8]'
+                        sourceColors[source] || 'bg-[#1f1f24] text-[#c8c4d6]'
                       }`}
                     >
                       <span className="material-symbols-outlined text-[12px]">
@@ -163,7 +163,7 @@ export default function GeneratedAssetsPanel({
                       type="button"
                       onClick={() => handleAddToSet(item)}
                       disabled={!activeSetId || addingId === item.id}
-                      className="mt-2 flex w-full items-center justify-center gap-1 rounded-md bg-[#12121A] px-2 py-1.5 text-[11px] font-medium text-[#A0A0B8] transition-colors hover:bg-[#1A1A2E] hover:text-white disabled:opacity-40 disabled:hover:bg-[#12121A] disabled:hover:text-[#A0A0B8]"
+                      className="mt-2 flex w-full items-center justify-center gap-1 rounded-md bg-white/5 px-2 py-1.5 text-[11px] font-medium text-[#c8c4d6] transition-colors hover:bg-[#1f1f24] hover:text-white disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
                       title={
                         !activeSetId
                           ? 'Select an asset set first'
