@@ -1,25 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors - Obsidian Slate / Cinematic Tech Editorial */
-
-  /* Primary (Action Orange) */
-  --color-primary: #ff9064;
-  --color-primary-container: #ff7941;
-  --color-primary-dim: #ff7439;
-  --color-primary-fixed: #ff7941;
-  --color-primary-fixed-dim: #ff5e07;
-  --color-on-primary: #571a00;
-  --color-on-primary-container: #431200;
-  --color-on-primary-fixed: #000000;
+  /* Colors - Atlas Cloud Purple */
+  --color-primary: #7F72F7;
+  --color-primary-container: #6B5CF7;
+  --color-primary-dim: #6B5CF7;
+  --color-primary-fixed: #6B5CF7;
+  --color-primary-fixed-dim: #5B4CD9;
+  --color-on-primary: #FFFFFF;
+  --color-on-primary-container: #1A1A2E;
+  --color-on-primary-fixed: #FFFFFF;
 
   /* Secondary */
-  --color-secondary: #d4c4b0;
-  --color-secondary-container: #3d3228;
-  --color-on-secondary: #392d22;
-  --color-on-secondary-container: #f0dec8;
+  --color-secondary: #A78BFA;
+  --color-secondary-container: #2D2654;
+  --color-on-secondary: #1A1A2E;
+  --color-on-secondary-container: #DDD6FE;
 
-  /* Tertiary (Electric Blue) */
+  /* Tertiary (keep distinct accent) */
   --color-tertiary: #81e9ff;
   --color-tertiary-container: #004d5a;
   --color-tertiary-dim: #00d1ee;
@@ -27,22 +25,22 @@
   --color-on-tertiary-fixed: #001f26;
 
   /* Error */
-  --color-error: #ffb4ab;
+  --color-error: #EF4444;
   --color-error-container: #93000a;
-  --color-error-dim: #ff897d;
-  --color-on-error: #690005;
+  --color-error-dim: #DC2626;
+  --color-on-error: #FFFFFF;
   --color-on-error-container: #ffdad6;
 
-  /* Surface (Obsidian Slate) */
-  --color-surface: #0e0e0e;
-  --color-surface-bright: #3a3a3a;
-  --color-surface-container: #1a1a1a;
-  --color-surface-container-high: #252525;
-  --color-surface-container-highest: #303030;
-  --color-surface-container-low: #141414;
-  --color-surface-container-lowest: #0a0a0a;
-  --color-on-surface: #e6e1dc;
-  --color-on-surface-variant: #adaaaa;
+  /* Surface (Atlas Ultra-Dark) */
+  --color-surface: #0A0A0F;
+  --color-surface-bright: #2A2A3E;
+  --color-surface-container: #1A1A2E;
+  --color-surface-container-high: #1A1A2E;
+  --color-surface-container-highest: #1A1A2E;
+  --color-surface-container-low: #12121A;
+  --color-surface-container-lowest: #0A0A0F;
+  --color-on-surface: #FFFFFF;
+  --color-on-surface-variant: #A0A0B8;
 
   /* Status */
   --color-success: #4caf50;
@@ -54,10 +52,10 @@
   --color-failed-container: #2e1a1a;
 
   /* Outline */
-  --color-outline-variant: #494847;
+  --color-outline-variant: rgba(127, 114, 247, 0.1);
 
   /* Fonts */
-  --font-headline: var(--font-manrope), 'Manrope', sans-serif;
+  --font-headline: var(--font-inter), 'Inter', sans-serif;
   --font-body: var(--font-inter), 'Inter', sans-serif;
   --font-label: var(--font-inter), 'Inter', sans-serif;
 }
@@ -66,18 +64,18 @@
 
 /* Glass / Blur Effects */
 .glass-card {
-  background: rgba(38, 38, 38, 0.4);
-  backdrop-filter: blur(12px);
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(20px);
 }
 
 .glass-panel {
-  background: rgba(38, 38, 38, 0.4);
-  backdrop-filter: blur(12px);
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(20px);
 }
 
 .glass-input {
-  background: rgba(38, 38, 38, 0.4);
-  backdrop-filter: blur(12px);
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(20px);
 }
 
 /* Glow Effects */
@@ -86,12 +84,12 @@
 }
 
 .cinematic-glow-warm {
-  box-shadow: 0 0 40px rgba(255, 144, 100, 0.1);
+  box-shadow: 0 0 40px rgba(127, 114, 247, 0.15);
 }
 
 /* Vignette */
 .hero-vignette {
-  background: radial-gradient(circle at center, transparent 0%, rgba(14, 14, 14, 0.8) 100%);
+  background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.8) 100%);
 }
 
 /* Shimmer Animations */
@@ -126,7 +124,7 @@
 
 /* Text Gradient */
 .text-gradient-primary {
-  background: linear-gradient(135deg, #ff9064, #ff7941);
+  background: linear-gradient(135deg, #7F72F7, #A78BFA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -138,7 +136,7 @@
 
 /* Font utility */
 .headline-font {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -149,7 +147,7 @@
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #262626;
+  background: rgba(127, 114, 247, 0.15);
   border-radius: 10px;
 }
 

@@ -15,12 +15,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Foundation and Pipeline Gating** - Zustand stores, Supabase setup, and pipeline stage enforcement
 - [ ] **Phase 2: Director's Cut** - Creative brief system for storyline, tone, style, and emotional beats
 - [ ] **Phase 3: Asset Initialization** - Asset set creation, management, and persistence
-- [ ] **Phase 4: Pipeline Node Generation** - Auto-generate pipeline nodes from asset sets with sequential narrative flow
+- [x] **Phase 4: Pipeline Node Generation** - Auto-generate pipeline nodes from asset sets with sequential narrative flow (completed 2026-03-30)
 - [ ] **Phase 5: Gap Detection** - Identify narrative and visual gaps between pipeline nodes
 - [ ] **Phase 6: Gap Filling** - Generate bridge scenes and supporting assets for detected gaps
 - [ ] **Phase 7: AI Video Generation** - Produce videos per pipeline node with visual consistency
 - [ ] **Phase 8: Asset Feedback Loop** - Generated assets flow back into the asset library for reuse
 - [ ] **Phase 9: Narrative Validation** - Full-sequence coherence check and final approval workflow
+- [ ] **Phase 10: Atlas Cloud Redesign** - Replace orange theme with purple Atlas Cloud aesthetic across all 30 files
 
 ## Phase Details
 
@@ -65,11 +66,11 @@ Plans:
   1. User can create a named asset set, add existing library assets and upload new assets into it, and reorder assets via drag-and-drop to define narrative sequence
   2. User's asset sets persist to Supabase and remain linked to their project across sessions
   3. User can see all assets within a set displayed in their defined order with thumbnails and metadata
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [x] 03-01-PLAN.md — Define asset set types, SQL migration, Zustand store, and API routes for CRUD + upload
+- [x] 03-02-PLAN.md — Install @dnd-kit, build asset set management page with DnD reorder, upload zone, and sidebar nav
 
 ### Phase 4: Pipeline Node Generation
 **Goal**: Users see their asset set automatically transformed into a connected pipeline of video nodes that follows the narrative structure from the Director's Brief
@@ -80,11 +81,11 @@ Plans:
   2. User can view the pipeline visualization showing all nodes with their status, sequential connections, and associated asset thumbnails
   3. User can manually add, remove, or reorder nodes before triggering generation
   4. Nodes reflect the narrative flow defined in the Director's Brief -- the sequence aligns with the creative plan
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [x] 04-01-PLAN.md — Define PipelineNode types, SQL migration, Zustand store, and API routes for CRUD + auto-generation from asset set + brief
+- [x] 04-02-PLAN.md — Install @xyflow/react, build pipeline canvas with SegmentNode visualization, node CRUD controls, sidebar entry, and generate trigger
 
 ### Phase 5: Gap Detection
 **Goal**: Users receive actionable analysis of narrative and visual gaps between their pipeline nodes before generation starts
@@ -94,11 +95,11 @@ Plans:
   1. User sees gap analysis results after pipeline node creation, with each gap showing its type (visual discontinuity or narrative discontinuity) and severity (critical, moderate, minor)
   2. User can distinguish between visual gaps (style/color/composition drift) and narrative gaps (missing story beats, abrupt transitions) in the gap report
   3. User can accept, dismiss, or request auto-fill for each individual detected gap
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [x] 05-01-PLAN.md — Define PipelineGap types, SQL migration, Zustand gap store, and API routes for CRUD + gap analysis (heuristic + AI dual-mode)
+- [x] 05-02-PLAN.md — Build GapMarker edge component, GapDetailPanel with accept/dismiss/fill actions, integrate into pipeline canvas and page
 
 ### Phase 6: Gap Filling
 **Goal**: Users can fill detected gaps with AI-generated bridge scenes that maintain stylistic and narrative consistency
@@ -108,11 +109,11 @@ Plans:
   1. User who requests auto-fill for a gap sees a generated supporting image or bridge scene inserted as a new node at the correct pipeline position
   2. Generated gap-fill content visually aligns with the Director's Brief style and tone -- it does not look like a foreign insertion
   3. All gap-fill generated assets appear in the asset library tagged as "gap-fill" for easy identification and future reuse
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [x] 06-01-PLAN.md — Extend gap status lifecycle, create fill API route with Replicate image generation (mock default), insert bridge nodes and gap-fill assets
+- [x] 06-02-PLAN.md — Wire GapDetailPanel fill states, add bridge node visual indicator on canvas, auto-reload pipeline after fill
 
 ### Phase 7: AI Video Generation
 **Goal**: Users can generate videos for every pipeline node with visual consistency maintained across the full sequence
@@ -124,11 +125,11 @@ Plans:
   3. Generated videos maintain visual consistency across segments -- reference images from prior segments are used during generation
   4. User can configure batch size (up to 3 concurrent) to manage generation credits, with sequential fallback
   5. Completed videos are stored as assets in the asset library with full pipeline metadata (node ID, brief reference, generation params)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [x] 07-01-PLAN.md — Extend PipelineNode with videoUrl, SQL migration, Replicate video generation API route (mock default), batch generation store action with concurrency control
+- [x] 07-02-PLAN.md — Wire Generate Videos button with batch size config, per-node progress on canvas, progress bar, auto-reload after generation
 
 ### Phase 8: Asset Feedback Loop
 **Goal**: All generated content flows back into the asset library as first-class reusable assets with full provenance
@@ -138,10 +139,10 @@ Plans:
   1. User sees all generated videos (including gap-fills) automatically appear in the asset library without manual import
   2. User can inspect any generated asset and see its provenance -- which pipeline node and Director's Brief produced it
   3. User can add any previously generated asset to a new asset set or future pipeline, completing the creative reuse cycle
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01: TBD
+- [x] 08-01-PLAN.md — Enrich generation metadata with briefId, add provenance badges, create Generated Assets panel with add-to-set reuse
 
 ### Phase 9: Narrative Validation
 **Goal**: Users can verify the coherence of their complete generated sequence and selectively regenerate weak segments before final export
@@ -151,25 +152,46 @@ Plans:
   1. User sees a full-sequence narrative coherence report after all nodes finish generating, flagging inconsistencies in visual style, pacing, or story flow
   2. User can regenerate individual nodes that the validation flagged as problematic without re-running the entire pipeline
   3. User can accept the final sequence, marking it as complete and ready for export
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: TBD
+- [x] 09-01-PLAN.md — Define NarrativeValidation types, SQL migration, Zustand validation store, and dual-mode (heuristic + AI) validate API route
+- [x] 09-02-PLAN.md — Wire validation flags on SegmentNode, ValidationReportPanel, Validate/Accept Sequence buttons, per-node regeneration on pipeline page
+
+### Phase 10: Atlas Cloud Redesign
+**Goal**: Every page and component in the app uses the Atlas Cloud purple (#7F72F7) aesthetic instead of the orange (#ff9064) theme, with ultra-dark backgrounds, glassmorphism panels, Inter font, and professional SaaS styling
+**Depends on**: Phase 9
+**Requirements**: ATLAS-FOUNDATION, ATLAS-LAYOUT, ATLAS-CREATE-PAGES-A, ATLAS-CREATE-PAGES-B, ATLAS-PIPELINE-COMPONENTS, ATLAS-ASSETS-AND-REMAINING
+**Success Criteria** (what must be TRUE):
+  1. Zero occurrences of #ff9064, #0e0e0e, #262626, #131313, or #adaaaa in any .tsx or .css file
+  2. All CSS variables resolve to purple Atlas Cloud palette values
+  3. Inter is the only font family (Manrope completely removed)
+  4. Sidebar, TopNav, all create/* pages, all pipeline components, all asset components, projects page, and landing page use purple accents
+**Plans**: 6 plans
+
+Plans:
+- [x] 10-01-PLAN.md — Replace CSS variables, utility classes, and fonts in globals.css, root layout, auth layout
+- [x] 10-02-PLAN.md — Restyle Sidebar and TopNav with purple accents and atlas-dark backgrounds
+- [ ] 10-03-PLAN.md — Restyle 5 heavy create/* pages (directors-cut, brief, style-dna, character-setup, pipeline)
+- [ ] 10-04-PLAN.md — Restyle 5 remaining create/* pages (review, generating, export, asset-sets, intent)
+- [ ] 10-05-PLAN.md — Restyle all 6 pipeline components (SegmentNode, PipelineCanvas, GapMarker, GapDetailPanel, NodeControls, ValidationReportPanel)
+- [ ] 10-06-PLAN.md — Restyle 4 asset components, projects page, landing page, and full codebase audit
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 Note: Phase 3 can execute in parallel with Phase 2 (both depend only on Phase 1). Phase 4 requires both Phase 2 and Phase 3.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation and Pipeline Gating | 0/3 | Planning complete | - |
 | 2. Director's Cut | 0/3 | Planning complete | - |
-| 3. Asset Initialization | 0/2 | Not started | - |
-| 4. Pipeline Node Generation | 0/2 | Not started | - |
-| 5. Gap Detection | 0/2 | Not started | - |
-| 6. Gap Filling | 0/2 | Not started | - |
-| 7. AI Video Generation | 0/2 | Not started | - |
-| 8. Asset Feedback Loop | 0/1 | Not started | - |
-| 9. Narrative Validation | 0/1 | Not started | - |
+| 3. Asset Initialization | 0/2 | Planning complete | - |
+| 4. Pipeline Node Generation | 2/2 | Complete   | 2026-03-30 |
+| 5. Gap Detection | 0/2 | Planning complete | - |
+| 6. Gap Filling | 0/2 | Planning complete | - |
+| 7. AI Video Generation | 0/2 | Planning complete | - |
+| 8. Asset Feedback Loop | 0/1 | Planning complete | - |
+| 9. Narrative Validation | 0/2 | Planning complete | - |
+| 10. Atlas Cloud Redesign | 2/6 | In Progress|  |

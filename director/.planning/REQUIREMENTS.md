@@ -28,54 +28,54 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Asset Initialization
 
-- [ ] **ASSET-01**: User can create an "asset set" — a named collection of assets representing narrative segments
-- [ ] **ASSET-02**: User can add existing assets from the asset library to an asset set
-- [ ] **ASSET-03**: User can upload new assets directly into an asset set
-- [ ] **ASSET-04**: User can reorder assets within a set to define narrative sequence
-- [ ] **ASSET-05**: Asset sets are persisted to Supabase and linked to a project
+- [x] **ASSET-01**: User can create an "asset set" — a named collection of assets representing narrative segments
+- [x] **ASSET-02**: User can add existing assets from the asset library to an asset set
+- [x] **ASSET-03**: User can upload new assets directly into an asset set
+- [x] **ASSET-04**: User can reorder assets within a set to define narrative sequence
+- [x] **ASSET-05**: Asset sets are persisted to Supabase and linked to a project
 
 ### Pipeline Node Generation
 
-- [ ] **NODE-01**: System auto-generates N pipeline nodes from an asset set of N items
-- [ ] **NODE-02**: Each node represents a single video segment linked to its source asset
-- [ ] **NODE-03**: Nodes connect sequentially to form the narrative flow defined in the Director's Brief
-- [ ] **NODE-04**: Pipeline visualization shows all nodes with their status, connections, and associated assets
-- [ ] **NODE-05**: User can manually add, remove, or reorder nodes before generation
+- [x] **NODE-01**: System auto-generates N pipeline nodes from an asset set of N items
+- [x] **NODE-02**: Each node represents a single video segment linked to its source asset
+- [x] **NODE-03**: Nodes connect sequentially to form the narrative flow defined in the Director's Brief
+- [x] **NODE-04**: Pipeline visualization shows all nodes with their status, connections, and associated assets
+- [x] **NODE-05**: User can manually add, remove, or reorder nodes before generation
 
 ### Gap Detection
 
-- [ ] **GAP-01**: After pipeline node creation, system analyzes adjacent nodes for narrative gaps
-- [ ] **GAP-02**: Gap detection identifies visual discontinuity (style, color, composition drift between segments)
-- [ ] **GAP-03**: Gap detection identifies narrative discontinuity (missing story beats, abrupt transitions)
-- [ ] **GAP-04**: Detected gaps are displayed to user with severity (critical, moderate, minor) and type
-- [ ] **GAP-05**: User can accept, dismiss, or request auto-fill for each detected gap
+- [x] **GAP-01**: After pipeline node creation, system analyzes adjacent nodes for narrative gaps
+- [x] **GAP-02**: Gap detection identifies visual discontinuity (style, color, composition drift between segments)
+- [x] **GAP-03**: Gap detection identifies narrative discontinuity (missing story beats, abrupt transitions)
+- [x] **GAP-04**: Detected gaps are displayed to user with severity (critical, moderate, minor) and type
+- [x] **GAP-05**: User can accept, dismiss, or request auto-fill for each detected gap
 
 ### Gap Filling
 
-- [ ] **FILL-01**: System generates supporting images or bridge scenes for accepted gaps
-- [ ] **FILL-02**: Gap-fill assets are inserted as supplementary nodes in the pipeline at the correct position
-- [ ] **FILL-03**: Gap-fill generation uses Director's Brief context for style/tone consistency
-- [ ] **FILL-04**: All gap-fill generated assets are stored back in the asset library with "gap-fill" tag
+- [x] **FILL-01**: System generates supporting images or bridge scenes for accepted gaps
+- [x] **FILL-02**: Gap-fill assets are inserted as supplementary nodes in the pipeline at the correct position
+- [x] **FILL-03**: Gap-fill generation uses Director's Brief context for style/tone consistency
+- [x] **FILL-04**: All gap-fill generated assets are stored back in the asset library with "gap-fill" tag
 
 ### AI Video Generation
 
-- [ ] **GEN-01**: Generate stage produces a video for each pipeline node using the node's asset + Director's Brief context
-- [ ] **GEN-02**: Generation uses reference images from prior segments to maintain visual consistency
-- [ ] **GEN-03**: Generation proceeds sequentially or in configurable batches (max 3 concurrent) to manage credits
-- [ ] **GEN-04**: Generation progress is visible per-node in the pipeline visualization
-- [ ] **GEN-05**: Completed videos are stored as assets in the asset library with pipeline metadata
+- [x] **GEN-01**: Generate stage produces a video for each pipeline node using the node's asset + Director's Brief context
+- [x] **GEN-02**: Generation uses reference images from prior segments to maintain visual consistency
+- [x] **GEN-03**: Generation proceeds sequentially or in configurable batches (max 3 concurrent) to manage credits
+- [x] **GEN-04**: Generation progress is visible per-node in the pipeline visualization
+- [x] **GEN-05**: Completed videos are stored as assets in the asset library with pipeline metadata
 
 ### Asset Feedback Loop
 
-- [ ] **LOOP-01**: All generated videos (including gap-fills) automatically appear in the asset library
-- [ ] **LOOP-02**: Generated assets retain metadata linking them to their pipeline node and Director's Brief
-- [ ] **LOOP-03**: Generated assets are reusable — can be added to new asset sets or future pipelines
+- [x] **LOOP-01**: All generated videos (including gap-fills) automatically appear in the asset library
+- [x] **LOOP-02**: Generated assets retain metadata linking them to their pipeline node and Director's Brief
+- [x] **LOOP-03**: Generated assets are reusable — can be added to new asset sets or future pipelines
 
 ### Narrative Validation
 
-- [ ] **NAR-01**: After all nodes are generated, system performs narrative coherence check across the full sequence
-- [ ] **NAR-02**: Validation flags inconsistencies in visual style, pacing, or story flow
-- [ ] **NAR-03**: User can regenerate individual nodes or accept the sequence as final
+- [x] **NAR-01**: After all nodes are generated, system performs narrative coherence check across the full sequence
+- [x] **NAR-02**: Validation flags inconsistencies in visual style, pacing, or story flow
+- [x] **NAR-03**: User can regenerate individual nodes or accept the sequence as final
 
 ## v2 Requirements
 
@@ -120,36 +120,36 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | DIR-05 | Phase 2 | Complete |
 | DIR-06 | Phase 2 | Complete |
 | DIR-07 | Phase 2 | Complete |
-| ASSET-01 | Phase 3 | Pending |
-| ASSET-02 | Phase 3 | Pending |
-| ASSET-03 | Phase 3 | Pending |
-| ASSET-04 | Phase 3 | Pending |
-| ASSET-05 | Phase 3 | Pending |
-| NODE-01 | Phase 4 | Pending |
-| NODE-02 | Phase 4 | Pending |
-| NODE-03 | Phase 4 | Pending |
-| NODE-04 | Phase 4 | Pending |
-| NODE-05 | Phase 4 | Pending |
-| GAP-01 | Phase 5 | Pending |
-| GAP-02 | Phase 5 | Pending |
-| GAP-03 | Phase 5 | Pending |
-| GAP-04 | Phase 5 | Pending |
-| GAP-05 | Phase 5 | Pending |
-| FILL-01 | Phase 6 | Pending |
-| FILL-02 | Phase 6 | Pending |
-| FILL-03 | Phase 6 | Pending |
-| FILL-04 | Phase 6 | Pending |
-| GEN-01 | Phase 7 | Pending |
-| GEN-02 | Phase 7 | Pending |
-| GEN-03 | Phase 7 | Pending |
-| GEN-04 | Phase 7 | Pending |
-| GEN-05 | Phase 7 | Pending |
-| LOOP-01 | Phase 8 | Pending |
-| LOOP-02 | Phase 8 | Pending |
-| LOOP-03 | Phase 8 | Pending |
-| NAR-01 | Phase 9 | Pending |
-| NAR-02 | Phase 9 | Pending |
-| NAR-03 | Phase 9 | Pending |
+| ASSET-01 | Phase 3 | Complete |
+| ASSET-02 | Phase 3 | Complete |
+| ASSET-03 | Phase 3 | Complete |
+| ASSET-04 | Phase 3 | Complete |
+| ASSET-05 | Phase 3 | Complete |
+| NODE-01 | Phase 4 | Complete |
+| NODE-02 | Phase 4 | Complete |
+| NODE-03 | Phase 4 | Complete |
+| NODE-04 | Phase 4 | Complete |
+| NODE-05 | Phase 4 | Complete |
+| GAP-01 | Phase 5 | Complete |
+| GAP-02 | Phase 5 | Complete |
+| GAP-03 | Phase 5 | Complete |
+| GAP-04 | Phase 5 | Complete |
+| GAP-05 | Phase 5 | Complete |
+| FILL-01 | Phase 6 | Complete |
+| FILL-02 | Phase 6 | Complete |
+| FILL-03 | Phase 6 | Complete |
+| FILL-04 | Phase 6 | Complete |
+| GEN-01 | Phase 7 | Complete |
+| GEN-02 | Phase 7 | Complete |
+| GEN-03 | Phase 7 | Complete |
+| GEN-04 | Phase 7 | Complete |
+| GEN-05 | Phase 7 | Complete |
+| LOOP-01 | Phase 8 | Complete |
+| LOOP-02 | Phase 8 | Complete |
+| LOOP-03 | Phase 8 | Complete |
+| NAR-01 | Phase 9 | Complete |
+| NAR-02 | Phase 9 | Complete |
+| NAR-03 | Phase 9 | Complete |
 
 **Coverage:**
 - v1 requirements: 39 total
