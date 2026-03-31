@@ -1,17 +1,18 @@
 import type { Metadata } from 'next'
 import { Manrope, Inter } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import './globals.css'
 
 const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['300', '400', '700'],
+  weight: ['200', '300', '400', '700'],
   variable: '--font-manrope',
 })
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-inter',
 })
 
@@ -26,15 +27,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
       </head>
-      <body className={`${manrope.variable} ${inter.variable} font-sans bg-surface text-on-surface antialiased radial-ambient`}>
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`${manrope.variable} ${inter.variable} font-sans bg-surface text-on-surface antialiased radial-ambient min-h-screen`}>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

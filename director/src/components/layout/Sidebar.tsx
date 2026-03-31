@@ -10,11 +10,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/dashboard', icon: 'dashboard' },
+  { label: 'Dashboard', href: '/dashboard', icon: 'space_dashboard' },
   { label: 'Projects', href: '/projects', icon: 'video_library' },
   { label: 'Assets', href: '/assets', icon: 'photo_library' },
   { label: 'Characters', href: '/characters', icon: 'person_search' },
-  { label: 'Settings', href: '/settings', icon: 'settings' },
+  { label: 'Settings', href: '/settings', icon: 'tune' },
 ];
 
 const createSteps: NavItem[] = [
@@ -23,118 +23,63 @@ const createSteps: NavItem[] = [
   { label: 'Characters', href: '/create/character-setup', icon: 'face' },
   { label: 'Assets', href: '/assets', icon: 'photo_library' },
   { label: 'Style DNA', href: '/create/style-dna', icon: 'palette' },
-  { label: 'Review', href: '/create/review', icon: 'movie' },
+  { label: 'Review', href: '/create/review', icon: 'auto_videocam' },
   { label: 'Pipeline', href: '/create/pipeline', icon: 'account_tree' },
   { label: 'Generate', href: '/create/generating', icon: 'auto_awesome' },
-  { label: 'Export', href: '/create/export', icon: 'download' },
+  { label: 'Export', href: '/create/export', icon: 'ios_share' },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const isActive = (href: string) => pathname === href || (href !== '/dashboard' && href !== '/assets' && pathname.startsWith(href));
+  const inCreateFlow = pathname.startsWith('/create');
 
-  const isActive = (href: string) => pathname.startsWith(href);
+  const renderItem = (item: NavItem) => {
+    const active = isActive(item.href);
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={`flex items-center px-4 py-3 transition-all duration-500 group ${
+          active
+            ? 'text-on-surface border-r-2 border-primary bg-primary/5'
+            : 'text-on-surface-variant hover:text-on-surface hover:translate-x-1'
+        }`}
+      >
+        <span className={`material-symbols-outlined mr-4 text-[20px] ${
+          active ? 'text-primary' : 'opacity-70 group-hover:opacity-100'
+        } transition-opacity`}>
+          {item.icon}
+        </span>
+        <span className="text-[10px] tracking-[0.25em] uppercase font-semibold font-label">
+          {item.label}
+        </span>
+      </Link>
+    );
+  };
 
   return (
-    <aside className="fixed left-0 top-0 hidden h-screen w-64 flex-col bg-white/5 backdrop-blur-2xl border-r border-white/10 z-40 md:flex">
-      {/* Brand Section */}
-      <div className="mb-8 px-6 pt-6">
-        <div className="mb-3 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-            <span className="material-symbols-outlined text-[22px] text-on-primary">
-              movie_filter
-            </span>
-          </div>
-          <div>
-            <h1 className="font-headline text-xl font-light tracking-[-0.03em] text-white">
-              DIRECTOR
-            </h1>
-            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-on-surface-variant">
-              AI Video Engine
-            </p>
-          </div>
-        </div>
+    <aside className="fixed left-0 top-0 h-full pt-24 pb-8 flex flex-col z-40 w-64 border-r border-outline-variant/20 bg-surface-container-lowest/80 backdrop-blur-2xl">
+      {/* Project Header */}
+      <div className="px-8 mb-12">
+        <h2 className="text-on-surface text-xs tracking-[0.3em] font-bold uppercase mb-1">
+          {inCreateFlow ? 'New Project' : 'DIRECTOR'}
+        </h2>
+        <p className="text-on-surface-variant text-[9px] tracking-widest uppercase">
+          {inCreateFlow ? 'Creation Phase' : 'AI Video Engine'}
+        </p>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 space-y-1 px-2 overflow-y-auto">
-        {navItems.map((item) => {
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
-                active
-                  ? 'border-r-2 border-indigo-400 bg-gradient-to-r from-indigo-500/10 to-transparent text-primary'
-                  : 'text-on-surface-variant hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <span
-                className={`material-symbols-outlined text-[20px] ${
-                  active ? '[font-variation-settings:"FILL"_1]' : ''
-                }`}
-              >
-                {item.icon}
-              </span>
-              <span className="text-sm font-medium tracking-wide">{item.label}</span>
-            </Link>
-          );
-        })}
-
-        {/* Create Workflow Section */}
-        {pathname.startsWith('/create') && (
-          <>
-            <div className="uppercase tracking-widest text-[10px] text-on-surface-variant font-bold px-6 mb-2 mt-6">
-              Workflow
-            </div>
-            {createSteps.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 transition-colors ${
-                    active
-                      ? 'border-r-2 border-indigo-400 bg-gradient-to-r from-indigo-500/10 to-transparent text-primary'
-                      : 'text-on-surface-variant hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  <span
-                    className={`material-symbols-outlined text-[20px] ${
-                      active ? '[font-variation-settings:"FILL"_1]' : ''
-                    }`}
-                  >
-                    {item.icon}
-                  </span>
-                  <span className="text-sm font-medium tracking-wide">{item.label}</span>
-                </Link>
-              );
-            })}
-          </>
-        )}
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1 px-4 overflow-y-auto">
+        {(inCreateFlow ? createSteps : navItems).map(renderItem)}
       </nav>
 
-      {/* New Project CTA */}
-      <div className="px-4 py-4">
-        <Link
-          href="/dashboard"
-          className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-primary to-primary-container px-6 py-3 font-bold text-on-primary shadow-[0_0_30px_rgba(198,191,255,0.2)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30"
-        >
-          <span className="material-symbols-outlined text-[20px]">add_circle</span>
-          <span>New Project</span>
-        </Link>
-      </div>
-
-      {/* Help & Support */}
-      <div className="border-t border-white/10 px-4 py-4">
-        <Link
-          href="/help"
-          className="flex items-center gap-3 rounded-lg px-4 py-2 text-on-surface-variant transition-colors hover:bg-white/5 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
-        >
-          <span className="material-symbols-outlined text-[20px]">
-            help_outline
-          </span>
-          <span className="text-sm font-medium">Help & Support</span>
+      {/* Bottom */}
+      <div className="px-4 mt-auto space-y-2 pt-8 border-t border-outline-variant/20">
+        <Link href="/settings" className="flex items-center px-4 py-3 text-on-surface-variant hover:text-on-surface transition-all duration-500">
+          <span className="material-symbols-outlined mr-4 text-sm">help_outline</span>
+          <span className="text-[10px] tracking-[0.25em] uppercase font-semibold font-label">Support</span>
         </Link>
       </div>
     </aside>

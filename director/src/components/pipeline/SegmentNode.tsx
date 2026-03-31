@@ -21,7 +21,7 @@ const statusConfig: Record<NodeStatus, { color: string; label: string; icon?: st
 
 const severityColor: Record<IssueSeverity, string> = {
   critical: '#d32f2f',
-  moderate: '#c6bfff',
+  moderate: 'var(--color-primary)',
   minor: '#ffd54f',
 };
 
@@ -53,12 +53,12 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
 
   return (
     <div
-      className={`relative min-w-[200px] rounded-xl border bg-[#1f1f24] p-3 transition-colors ${
+      className={`relative min-w-[200px] rounded-xl border bg-surface-container p-3 transition-colors ${
         isBridge ? 'border-dashed' : ''
-      } ${selected ? 'border-[#c6bfff]' : 'border-[#c6bfff]/10'}`}
+      } ${selected ? 'border-[var(--color-primary)]' : 'border-[var(--color-primary)]/10'}`}
     >
       {isBridge && (
-        <div className="absolute -top-2 -right-2 rounded-full bg-[#c6bfff] px-2 py-0.5 text-[9px] font-bold text-white">
+        <div className="absolute -top-2 -right-2 rounded-full bg-[var(--color-primary)] px-2 py-0.5 text-[9px] font-bold text-on-surface">
           BRIDGE
         </div>
       )}
@@ -82,7 +82,7 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
           {/* Play overlay for completed nodes with video */}
           {hasVideo && (
             <div className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60">
-              <span className="material-symbols-outlined text-xs text-white [font-variation-settings:'FILL'_1]">
+              <span className="material-symbols-outlined text-xs text-on-surface [font-variation-settings:'FILL'_1]">
                 play_circle
               </span>
             </div>
@@ -92,7 +92,7 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
         {/* Content */}
         <div className="min-w-0 flex-1">
           {/* Title */}
-          <h4 className="truncate text-sm font-bold text-white">{node.title}</h4>
+          <h4 className="truncate text-sm font-bold text-on-surface">{node.title}</h4>
 
           {/* Status badge */}
           <div className="mt-1 flex items-center gap-1.5">

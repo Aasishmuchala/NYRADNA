@@ -15,7 +15,7 @@ import { DIRECTOR_PIPELINE } from '@/lib/pipeline/presets';
 
 const NodeCanvas = dynamic(() => import('@/components/pipeline/NodeCanvas').then(m => ({ default: m.NodeCanvas })), {
   ssr: false,
-  loading: () => <div className="flex-1 flex items-center justify-center text-white/20 text-sm">Loading editor...</div>,
+  loading: () => <div className="flex-1 flex items-center justify-center text-on-surface/20 text-sm">Loading editor...</div>,
 });
 
 export default function GeneratingPage() {
@@ -327,7 +327,7 @@ export default function GeneratingPage() {
         <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5 bg-surface-container-low/80">
           <button
             onClick={() => setPipelineMode('simple')}
-            className="text-xs text-white/40 hover:text-white/60 px-2 py-1 rounded"
+            className="text-xs text-on-surface/40 hover:text-on-surface/60 px-2 py-1 rounded"
           >
             Simple
           </button>
@@ -359,24 +359,24 @@ export default function GeneratingPage() {
                 <h1 className="text-2xl font-headline font-light tracking-[-0.03em]">Video Planning</h1>
                 <button
                   onClick={() => setPipelineMode('node')}
-                  className="text-[10px] text-white/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"
+                  className="text-[10px] text-on-surface/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"
                   title="Switch to visual node pipeline editor"
                 >
                   Node Editor
                 </button>
               </div>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-on-surface-variant mt-1">
                 Review and edit the motion prompt for each clip. Only approved clips will be generated.
               </p>
             </div>
             <div className="flex items-center gap-3">
               <div className="text-right text-sm">
-                <span className="text-gray-400">Model:</span>{' '}
-                <span className="text-white font-medium">{selectedModel?.name ?? state.selectedVideoModel}</span>
+                <span className="text-on-surface-variant">Model:</span>{' '}
+                <span className="text-on-surface font-medium">{selectedModel?.name ?? state.selectedVideoModel}</span>
               </div>
               <div className="text-right text-sm">
-                <span className="text-gray-400">Approved:</span>{' '}
-                <span className="text-white font-medium">{approvedCount}/{completedScenes.length}</span>
+                <span className="text-on-surface-variant">Approved:</span>{' '}
+                <span className="text-on-surface font-medium">{approvedCount}/{completedScenes.length}</span>
               </div>
             </div>
           </div>
@@ -403,17 +403,17 @@ export default function GeneratingPage() {
           </button>
           <button
             onClick={handleApproveAll}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-outline-variant text-gray-300 hover:bg-surface-container-high transition"
+            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition"
           >
             Approve All
           </button>
           <button
             onClick={() => update({ scenes: state.scenes.map(s => ({ ...s, videoApproved: false })) })}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-outline-variant text-gray-300 hover:bg-surface-container-high transition"
+            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition"
           >
             Deselect All
           </button>
-          <div className="ml-auto text-sm text-gray-500">
+          <div className="ml-auto text-sm text-on-surface-variant/60">
             Est. Cost: ~${estimateCost(approvedCount, state.selectedImageModel, state.selectedVideoModel).totalCost.toFixed(2)}
           </div>
         </section>
@@ -434,7 +434,7 @@ export default function GeneratingPage() {
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-sm text-amber-400">lock</span>
               <span className="text-xs font-semibold text-amber-400 uppercase">Style Lock — sent as reference to every video</span>
-              <span className="text-xs text-gray-500">({state.styleLockImages.length}/4)</span>
+              <span className="text-xs text-on-surface-variant/60">({state.styleLockImages.length}/4)</span>
             </div>
             <div className="flex gap-2">
               {state.styleLockImages.map((url, i) => (
@@ -442,7 +442,7 @@ export default function GeneratingPage() {
                   <img src={url} alt="" className="w-full h-full object-cover" />
                   <button
                     onClick={() => handleToggleStyleLock(url)}
-                    className="absolute top-1 right-1 w-5 h-5 bg-black/60 rounded-full text-white text-xs opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+                    className="absolute top-1 right-1 w-5 h-5 bg-black/60 rounded-full text-on-surface text-xs opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
                   >
                     ×
                   </button>
@@ -508,7 +508,7 @@ export default function GeneratingPage() {
                         ) : (
                           <button
                             onClick={() => handleToggleStyleLock(scene.imageUrl!)}
-                            className="absolute top-1 left-1 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center text-white text-xs opacity-0 group-hover/thumb:opacity-100 transition"
+                            className="absolute top-1 left-1 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center text-on-surface text-xs opacity-0 group-hover/thumb:opacity-100 transition"
                             title="Pin as style reference (max 4)"
                           >
                             <span className="material-symbols-outlined text-sm">push_pin</span>
@@ -521,14 +521,14 @@ export default function GeneratingPage() {
                   {/* Prompt editor */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-semibold text-gray-400 uppercase">Clip {idx + 1}</span>
+                      <span className="text-xs font-semibold text-on-surface-variant uppercase">Clip {idx + 1}</span>
                       {scene.assetCategory && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-surface-container text-gray-400">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">
                           {scene.assetCategory}
                         </span>
                       )}
                       {scene.imageModelId && (
-                        <span className="text-xs text-gray-500">{scene.imageModelId}</span>
+                        <span className="text-xs text-on-surface-variant/60">{scene.imageModelId}</span>
                       )}
                     </div>
                     <textarea
@@ -536,11 +536,11 @@ export default function GeneratingPage() {
                       onChange={(e) => handleUpdatePrompt(scene.id, e.target.value)}
                       placeholder="Describe the motion, camera movement, and action for this video clip..."
                       rows={3}
-                      className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 resize-none focus:outline-none focus:border-primary transition"
+                      className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface placeholder-gray-500 resize-none focus:outline-none focus:border-primary transition"
                     />
                     <div className="flex items-center gap-2 mt-2">
-                      <span className="text-xs text-gray-500">Original:</span>
-                      <span className="text-xs text-gray-600 truncate">{scene.prompt}</span>
+                      <span className="text-xs text-on-surface-variant/60">Original:</span>
+                      <span className="text-xs text-on-surface-variant/40 truncate">{scene.prompt}</span>
                     </div>
                   </div>
                 </div>
@@ -551,13 +551,13 @@ export default function GeneratingPage() {
 
         {/* Footer */}
         <div className="border-t border-outline-variant mt-auto pt-6 flex justify-between items-center gap-4">
-          <Link href="/create/review" className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95">
+          <Link href="/create/review" className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95">
             Back
           </Link>
           {videos.length > 0 && (
             <button
               onClick={() => setPhase('production')}
-              className="px-6 py-3 rounded-xl border border-outline-variant text-white font-medium hover:bg-surface-container-high transition"
+              className="px-6 py-3 rounded-xl border border-outline-variant text-on-surface font-medium hover:bg-surface-container-high transition"
             >
               View Production
             </button>
@@ -584,12 +584,12 @@ export default function GeneratingPage() {
       <section className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">
+            <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide">
               ACT STRUCTURE
             </h2>
             <button
               onClick={() => setPipelineMode('node')}
-              className="text-[10px] text-white/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"
+              className="text-[10px] text-on-surface/30 hover:text-primary border border-white/10 hover:border-primary/30 px-2 py-1 rounded-lg transition-colors"
               title="Switch to visual node pipeline editor"
             >
               Node Editor
@@ -632,8 +632,8 @@ export default function GeneratingPage() {
             <div className="bg-surface-container-high rounded-lg overflow-hidden">
               <div className="h-2 bg-gradient-to-r from-success to-success-dim" style={{ width: `${Math.max(0, Math.min((progress - 66) * 3, 100))}%` }}></div>
               <div className="p-4">
-                <div className={`text-sm font-medium ${progress > 66 ? 'text-white' : 'text-gray-600'}`}>Act 3</div>
-                <div className={`text-2xl font-bold mt-1 ${progress > 66 ? 'text-success' : 'text-gray-600'}`}>{Math.max(0, Math.min(Math.round((progress - 66) * 3), 100))}%</div>
+                <div className={`text-sm font-medium ${progress > 66 ? 'text-on-surface' : 'text-on-surface-variant/40'}`}>Act 3</div>
+                <div className={`text-2xl font-bold mt-1 ${progress > 66 ? 'text-success' : 'text-on-surface-variant/40'}`}>{Math.max(0, Math.min(Math.round((progress - 66) * 3), 100))}%</div>
               </div>
             </div>
           </div>
@@ -642,35 +642,35 @@ export default function GeneratingPage() {
 
       {/* Global Progress Section */}
       <section className="mb-8">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-4">
           Global Progress
         </h2>
         <div className="bg-surface-container-high rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <div className="text-2xl font-bold">{completedVideos.length} of {videos.length || approvedCount} videos complete</div>
-              <div className="text-sm text-gray-500 mt-1">
+              <div className="text-sm text-on-surface-variant/60 mt-1">
                 {allDone ? 'Ready to export' : isGenerating ? currentBatchLabel || 'Processing...' : videos.length === 0 ? 'Go to Planning to start' : 'Generation paused'}
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <div className="text-sm text-gray-400">Est. Cost</div>
-                <div className="text-lg font-bold text-white">
+                <div className="text-sm text-on-surface-variant">Est. Cost</div>
+                <div className="text-lg font-bold text-on-surface">
                   ~${estimateCost(approvedCount, state.selectedImageModel, state.selectedVideoModel).totalCost.toFixed(2)}
                 </div>
               </div>
               {totalDuration > 0 && (
                 <div className="text-right">
                   <div className="text-lg font-bold text-primary">{formatDuration(totalDuration)}</div>
-                  <div className="text-xs text-gray-500">Est. Duration</div>
+                  <div className="text-xs text-on-surface-variant/60">Est. Duration</div>
                 </div>
               )}
               <div className="flex gap-3">
                 {allDone ? (
                   <Link
                     href="/create/export"
-                    className="px-4 py-2 border border-surface-bright rounded-lg transition font-medium bg-surface-container text-white hover:bg-surface-container-high"
+                    className="px-4 py-2 border border-surface-bright rounded-lg transition font-medium bg-surface-container text-on-surface hover:bg-surface-container-high"
                   >
                     Preview Film
                   </Link>
@@ -686,7 +686,7 @@ export default function GeneratingPage() {
                 {isGenerating && (
                   <button
                     onClick={() => { stopAll(); update({ isPaused: true }); }}
-                    className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg hover:opacity-90 transition font-medium"
+                    className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-on-surface rounded-lg hover:opacity-90 transition font-medium"
                   >
                     Pause
                   </button>
@@ -712,7 +712,7 @@ export default function GeneratingPage() {
       {/* Batch Pipeline Section */}
       {batches.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-4">
             Continuity Batches
           </h2>
           <div className="flex gap-3 overflow-x-auto pb-2">
@@ -734,7 +734,7 @@ export default function GeneratingPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold uppercase text-gray-400">Batch {idx + 1}</span>
+                    <span className="text-xs font-semibold uppercase text-on-surface-variant">Batch {idx + 1}</span>
                     {batch.status === 'completed' && <span className="text-success text-sm">Done</span>}
                     {(batch.status === 'generating' || isActive) && (
                       <span className="inline-block w-3 h-3 border border-processing/30 border-t-processing rounded-full animate-spin"></span>
@@ -742,12 +742,12 @@ export default function GeneratingPage() {
                     {batch.status === 'failed' && <span className="text-red-400 text-sm">Failed</span>}
                   </div>
                   <div className="text-sm font-medium">{clipCount} clip{clipCount > 1 ? 's' : ''}</div>
-                  <div className="text-xs text-gray-500 mt-1">Scenes {start + 1}–{end + 1}</div>
+                  <div className="text-xs text-on-surface-variant/60 mt-1">Scenes {start + 1}–{end + 1}</div>
                   {batch.anchorFrameUrl && (
                     <div className="text-xs text-success mt-2">Anchor frame linked</div>
                   )}
                   {batch.referenceImageUrls.length > 0 && (
-                    <div className="text-xs text-gray-500 mt-1">{batch.referenceImageUrls.length} ref images</div>
+                    <div className="text-xs text-on-surface-variant/60 mt-1">{batch.referenceImageUrls.length} ref images</div>
                   )}
                 </div>
               );
@@ -758,7 +758,7 @@ export default function GeneratingPage() {
 
       {/* Video Pipeline Section */}
       <section className="mb-8">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-4">
           Video Pipeline
         </h2>
         {videos.length === 0 ? (
@@ -798,17 +798,17 @@ export default function GeneratingPage() {
                           href={video.videoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition bg-black/60 rounded-lg px-2 py-1 text-xs text-white hover:bg-black/80"
+                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition bg-black/60 rounded-lg px-2 py-1 text-xs text-on-surface hover:bg-black/80"
                         >
                           Open ↗
                         </a>
                       </div>
                       <div className="p-4">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs text-gray-500">Clip {idx + 1}</span>
+                          <span className="text-xs text-on-surface-variant/60">Clip {idx + 1}</span>
                           <span className="text-sm font-semibold text-success">Complete</span>
                         </div>
-                        <p className="text-xs text-gray-500 line-clamp-2">{videoPrompt}</p>
+                        <p className="text-xs text-on-surface-variant/60 line-clamp-2">{videoPrompt}</p>
                       </div>
                     </>
                   ) : video.status === 'generating' ? (
@@ -820,7 +820,7 @@ export default function GeneratingPage() {
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="text-center">
                             <div className="inline-block w-8 h-8 border-2 border-processing/30 border-t-processing rounded-full animate-spin mb-2"></div>
-                            <div className="text-xs text-gray-300">Generating clip {idx + 1}</div>
+                            <div className="text-xs text-on-surface-variant">Generating clip {idx + 1}</div>
                           </div>
                         </div>
                       </div>
@@ -828,7 +828,7 @@ export default function GeneratingPage() {
                         <div className="w-full bg-surface-container rounded-full h-2 mb-2">
                           <div className="bg-gradient-to-r from-processing to-processing-dim h-full rounded-full animate-pulse w-1/2"></div>
                         </div>
-                        <p className="text-xs text-gray-500 line-clamp-2">{videoPrompt}</p>
+                        <p className="text-xs text-on-surface-variant/60 line-clamp-2">{videoPrompt}</p>
                       </div>
                     </>
                   ) : video.status === 'failed' ? (
@@ -846,7 +846,7 @@ export default function GeneratingPage() {
                       </div>
                       <div className="p-4">
                         <p className="text-xs text-red-400 truncate mb-1">{video.error ?? 'Unknown error'}</p>
-                        <p className="text-xs text-gray-500 line-clamp-1 mb-2">{videoPrompt}</p>
+                        <p className="text-xs text-on-surface-variant/60 line-clamp-1 mb-2">{videoPrompt}</p>
                         <button
                           onClick={() => retryVideo(video.id)}
                           disabled={isGenerating}
@@ -863,11 +863,11 @@ export default function GeneratingPage() {
                           <img src={video.inputImageUrl} alt="" className="w-full h-full object-cover opacity-30" />
                         )}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="text-xs text-gray-500">Clip {idx + 1} — Queued</div>
+                          <div className="text-xs text-on-surface-variant/60">Clip {idx + 1} — Queued</div>
                         </div>
                       </div>
                       <div className="p-4">
-                        <p className="text-xs text-gray-500 line-clamp-2">{videoPrompt}</p>
+                        <p className="text-xs text-on-surface-variant/60 line-clamp-2">{videoPrompt}</p>
                       </div>
                     </>
                   )}
@@ -880,7 +880,7 @@ export default function GeneratingPage() {
 
       {/* Footer Navigation */}
       <div className="border-t border-outline-variant mt-auto pt-6 flex justify-between items-center gap-4">
-        <Link href="/create/review" className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95">
+        <Link href="/create/review" className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95">
           Back
         </Link>
         {allDone ? (

@@ -78,20 +78,20 @@ export default function GeneratedAssetsPanel({
   };
 
   return (
-    <div className="rounded-xl bg-[#1f1f24] overflow-hidden">
+    <div className="rounded-xl bg-surface-container overflow-hidden">
       {/* Collapsible header */}
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-[#1f1f24]"
+        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-surface-container"
       >
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[18px] text-[#c8c4d6]">
             auto_awesome
           </span>
-          <span className="text-sm font-semibold text-white">Generated Assets</span>
+          <span className="text-sm font-semibold text-on-surface">Generated Assets</span>
           {items.length > 0 && (
-            <span className="rounded-full bg-[#c6bfff]/20 px-2 py-0.5 text-[10px] font-medium text-[#c6bfff]">
+            <span className="rounded-full bg-[var(--color-primary)]/20 px-2 py-0.5 text-[10px] font-medium text-[var(--color-primary)]">
               {items.length}
             </span>
           )}
@@ -124,10 +124,10 @@ export default function GeneratedAssetsPanel({
                 return (
                   <div
                     key={item.id}
-                    className="group rounded-lg bg-[#050507] p-2 transition-colors hover:bg-[#1f1f24]"
+                    className="group rounded-lg bg-surface p-2 transition-colors hover:bg-surface-container"
                   >
                     {/* Thumbnail */}
-                    <div className="relative h-20 w-full overflow-hidden rounded-md bg-[#1f1f24]">
+                    <div className="relative h-20 w-full overflow-hidden rounded-md bg-surface-container">
                       {item.type === 'video' ? (
                         <div className="flex h-full w-full items-center justify-center">
                           <span className="material-symbols-outlined text-3xl text-[#928f9f]">
@@ -149,7 +149,7 @@ export default function GeneratedAssetsPanel({
                     {/* Source badge */}
                     <span
                       className={`mt-1 inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                        sourceColors[source] || 'bg-[#1f1f24] text-[#c8c4d6]'
+                        sourceColors[source] || 'bg-surface-container text-[#c8c4d6]'
                       }`}
                     >
                       <span className="material-symbols-outlined text-[12px]">
@@ -163,7 +163,7 @@ export default function GeneratedAssetsPanel({
                       type="button"
                       onClick={() => handleAddToSet(item)}
                       disabled={!activeSetId || addingId === item.id}
-                      className="mt-2 flex w-full items-center justify-center gap-1 rounded-md bg-white/5 px-2 py-1.5 text-[11px] font-medium text-[#c8c4d6] transition-colors hover:bg-[#1f1f24] hover:text-white disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
+                      className="mt-2 flex w-full items-center justify-center gap-1 rounded-md bg-white/5 px-2 py-1.5 text-[11px] font-medium text-[#c8c4d6] transition-colors hover:bg-surface-container hover:text-on-surface disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
                       title={
                         !activeSetId
                           ? 'Select an asset set first'

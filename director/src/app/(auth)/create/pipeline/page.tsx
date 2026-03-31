@@ -43,8 +43,8 @@ export default function PipelinePage() {
   if (!selectedPreset) {
     return (
       <main className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
-        <h1 className="text-xl font-semibold text-white/80">Pipeline Editor</h1>
-        <p className="text-sm text-white/40 max-w-md text-center">
+        <h1 className="text-xl font-semibold text-on-surface/80">Pipeline Editor</h1>
+        <p className="text-sm text-on-surface/40 max-w-md text-center">
           Build custom video generation pipelines with quality gates. Drag nodes, connect ports, and run.
         </p>
 
@@ -55,9 +55,9 @@ export default function PipelinePage() {
               onClick={() => setSelectedPreset(preset)}
               className="bg-surface-container/80 border border-white/10 rounded-xl p-4 text-left hover:border-primary/30 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
-              <h3 className="text-sm font-medium text-white/80 mb-1">{preset.name}</h3>
-              <p className="text-[10px] text-white/30">{preset.description}</p>
-              <span className="text-[10px] text-white/20 mt-2 block">
+              <h3 className="text-sm font-medium text-on-surface/80 mb-1">{preset.name}</h3>
+              <p className="text-[10px] text-on-surface/30">{preset.description}</p>
+              <span className="text-[10px] text-on-surface/20 mt-2 block">
                 {preset.nodes.length} nodes, {preset.edges.length} edges
               </span>
             </button>
@@ -66,12 +66,12 @@ export default function PipelinePage() {
 
         {savedPipelines.length > 0 && (
           <div className="mt-4">
-            <h2 className="text-xs font-medium text-white/40 mb-2">Saved Pipelines</h2>
+            <h2 className="text-xs font-medium text-on-surface/40 mb-2">Saved Pipelines</h2>
             {savedPipelines.map((entry) => (
               <button
                 key={entry.id}
                 onClick={() => handleLoadSaved(entry.id)}
-                className="block w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-xs text-white/60"
+                className="block w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-xs text-on-surface/60"
               >
                 {entry.name}
               </button>
@@ -81,7 +81,7 @@ export default function PipelinePage() {
 
         <Link
           href="/create/generating"
-          className="text-xs text-white/30 hover:text-white/50 mt-4"
+          className="text-xs text-on-surface/30 hover:text-on-surface/50 mt-4"
         >
           Back to Simple Mode
         </Link>

@@ -408,10 +408,10 @@ export default function AssetsPage() {
                           )}
                           {asset.status === 'succeeded' && (
                             <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-green-600/90 flex items-center justify-center">
-                              <span className="material-symbols-outlined text-[14px] text-white">check</span>
+                              <span className="material-symbols-outlined text-[14px] text-on-surface">check</span>
                             </div>
                           )}
-                          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-white">
+                          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-on-surface">
                             {asset.category}
                           </div>
                         </div>

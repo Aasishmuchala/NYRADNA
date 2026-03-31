@@ -38,7 +38,7 @@ export default function ProjectsPage() {
       case 'Drafting':
         return 'bg-surface-container-highest text-on-surface-variant';
       case 'Exported':
-        return 'bg-surface-container-high text-white';
+        return 'bg-surface-container-high text-on-surface';
       default:
         return 'bg-surface-container-highest text-on-surface-variant';
     }
@@ -86,7 +86,7 @@ export default function ProjectsPage() {
               className={`px-5 py-2 rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/30 ${
                 selectedFilter === filter.toLowerCase()
                   ? 'bg-surface-bright text-primary font-bold'
-                  : 'text-on-surface-variant hover:text-white'
+                  : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
               {filter}
@@ -98,14 +98,14 @@ export default function ProjectsPage() {
             <button
               onClick={() => setViewMode('grid')}
               aria-label="Grid view"
-              className={`p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 ${viewMode === 'grid' ? 'bg-surface-bright text-primary' : 'text-on-surface-variant hover:text-white'}`}
+              className={`p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 ${viewMode === 'grid' ? 'bg-surface-bright text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
             >
               <span className="material-symbols-outlined">grid_view</span>
             </button>
             <button
               onClick={() => setViewMode('list')}
               aria-label="List view"
-              className={`p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 ${viewMode === 'list' ? 'bg-surface-bright text-primary' : 'text-on-surface-variant hover:text-white'}`}
+              className={`p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 ${viewMode === 'list' ? 'bg-surface-bright text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
             >
               <span className="material-symbols-outlined">format_list_bulleted</span>
             </button>
@@ -114,7 +114,7 @@ export default function ProjectsPage() {
           <button
             onClick={() => setSortOrder(sortOrder === 'recent' ? 'oldest' : 'recent')}
             aria-label={`Sort by ${sortOrder === 'recent' ? 'oldest first' : 'last edited'}`}
-            className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-white transition-colors bg-surface-container-low px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container-low px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             <span className="material-symbols-outlined text-sm">sort</span>
             Sort: {sortOrder === 'recent' ? 'Last edited' : 'Oldest first'}
@@ -139,7 +139,7 @@ export default function ProjectsPage() {
             <button
               onClick={() => handleBulkAction('Duplicate')}
               aria-label="Duplicate selected projects"
-              className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg"
+              className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg"
             >
               <span className="material-symbols-outlined text-lg">content_copy</span>
               Duplicate
@@ -147,7 +147,7 @@ export default function ProjectsPage() {
             <button
               onClick={() => handleBulkAction('Export')}
               aria-label="Export selected projects"
-              className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg"
+              className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg"
             >
               <span className="material-symbols-outlined text-lg">ios_share</span>
               Export
@@ -215,7 +215,7 @@ export default function ProjectsPage() {
                 </div>
               )}
               {project.duration && (
-                <div className="absolute bottom-3 left-3 flex items-center gap-2 text-[10px] font-medium text-white/90">
+                <div className="absolute bottom-3 left-3 flex items-center gap-2 text-[10px] font-medium text-on-surface/90">
                   <span className="material-symbols-outlined text-sm">schedule</span> {project.duration}
                 </div>
               )}
@@ -229,7 +229,7 @@ export default function ProjectsPage() {
                 <button
                   onClick={() => setOpenMenuId(openMenuId === project.id ? null : project.id)}
                   aria-label={`More options for ${project.title}`}
-                  className="text-on-surface-variant hover:text-white relative focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg"
+                  className="text-on-surface-variant hover:text-on-surface relative focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg"
                 >
                   <span className="material-symbols-outlined">more_vert</span>
                   {openMenuId === project.id && (
@@ -240,7 +240,7 @@ export default function ProjectsPage() {
                           setAlertModal({ open: true, title: 'Open Project', message: `Opening ${project.title}` });
                           setOpenMenuId(null);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-on-surface-variant hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:bg-surface-container"
+                        className="block w-full text-left px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors focus:outline-none focus:bg-surface-container"
                       >
                         Open
                       </button>
@@ -250,7 +250,7 @@ export default function ProjectsPage() {
                           setAlertModal({ open: true, title: 'Duplicate Project', message: `Duplicating ${project.title}` });
                           setOpenMenuId(null);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-on-surface-variant hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:bg-surface-container"
+                        className="block w-full text-left px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors focus:outline-none focus:bg-surface-container"
                       >
                         Duplicate
                       </button>

@@ -181,7 +181,7 @@ export default function DirectorsCutPage() {
                 value={brief?.storyline.title ?? ''}
                 onChange={(e) => updateStoryline({ title: e.target.value })}
                 placeholder="Working title for your project"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-on-surface placeholder-outline focus:border-primary/30 focus:outline-none transition"
               />
             </div>
             <div className="space-y-1">
@@ -191,7 +191,7 @@ export default function DirectorsCutPage() {
                 value={brief?.storyline.synopsis ?? ''}
                 onChange={(e) => updateStoryline({ synopsis: e.target.value })}
                 placeholder="Describe the core narrative arc..."
-                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-outline focus:border-primary/30 focus:outline-none transition resize-none"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-on-surface placeholder-outline focus:border-primary/30 focus:outline-none transition resize-none"
               />
             </div>
             <div className="space-y-1">
@@ -201,7 +201,7 @@ export default function DirectorsCutPage() {
                 value={brief?.storyline.theme ?? ''}
                 onChange={(e) => updateStoryline({ theme: e.target.value })}
                 placeholder="e.g., transformation, discovery, resilience"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-on-surface placeholder-outline focus:border-primary/30 focus:outline-none transition"
               />
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function DirectorsCutPage() {
                 value={brief?.visualStyle.mood ?? ''}
                 onChange={(e) => updateVisualStyle({ mood: e.target.value })}
                 placeholder="e.g., contemplative, energetic, mysterious"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-on-surface placeholder-outline focus:border-primary/30 focus:outline-none transition"
               />
             </div>
 
@@ -232,7 +232,7 @@ export default function DirectorsCutPage() {
                 {brief?.visualStyle.colorPalette.map((color, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 text-xs text-white"
+                    className="inline-flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 text-xs text-on-surface"
                   >
                     <span
                       className="w-3 h-3 rounded-full border border-white/20"
@@ -241,7 +241,7 @@ export default function DirectorsCutPage() {
                     {color}
                     <button
                       onClick={() => removeColorFromPalette(i)}
-                      className="text-on-surface-variant hover:text-white transition"
+                      className="text-on-surface-variant hover:text-on-surface transition"
                       aria-label={`Remove ${color}`}
                     >
                       <span className="material-symbols-outlined text-[14px]">close</span>
@@ -256,8 +256,8 @@ export default function DirectorsCutPage() {
                     value={newColor}
                     onChange={(e) => setNewColor(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddColor()}
-                    placeholder="e.g., #c6bfff or warm gold"
-                    className="flex-grow bg-white/[0.03] border border-white/10 rounded-lg px-4 py-2 text-white text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                    placeholder="e.g., var(--color-primary) or warm gold"
+                    className="flex-grow bg-white/[0.03] border border-white/10 rounded-lg px-4 py-2 text-on-surface text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
                   />
                   <button
                     onClick={handleAddColor}
@@ -276,13 +276,13 @@ export default function DirectorsCutPage() {
                 {brief?.visualStyle.cinematographyRefs.map((ref, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 text-xs text-white"
+                    className="inline-flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 text-xs text-on-surface"
                   >
                     <span className="material-symbols-outlined text-[14px] text-primary">movie</span>
                     {ref}
                     <button
                       onClick={() => removeCinematographyRef(i)}
-                      className="text-on-surface-variant hover:text-white transition"
+                      className="text-on-surface-variant hover:text-on-surface transition"
                       aria-label={`Remove ${ref}`}
                     >
                       <span className="material-symbols-outlined text-[14px]">close</span>
@@ -298,7 +298,7 @@ export default function DirectorsCutPage() {
                     onChange={(e) => setNewCinRef(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddCinRef()}
                     placeholder="e.g., Blade Runner, Wes Anderson symmetry"
-                    className="flex-grow bg-white/[0.03] border border-white/10 rounded-lg px-4 py-2 text-white text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                    className="flex-grow bg-white/[0.03] border border-white/10 rounded-lg px-4 py-2 text-on-surface text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
                   />
                   <button
                     onClick={handleAddCinRef}
@@ -334,7 +334,7 @@ export default function DirectorsCutPage() {
                       value={beat.label}
                       onChange={(e) => updateBeat(i, { label: e.target.value })}
                       placeholder="e.g., Opening hook"
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-on-surface text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
                     />
                   </div>
                   <div className="space-y-1">
@@ -344,7 +344,7 @@ export default function DirectorsCutPage() {
                       value={beat.emotion}
                       onChange={(e) => updateBeat(i, { emotion: e.target.value })}
                       placeholder="e.g., curiosity"
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-on-surface text-sm placeholder-outline focus:border-primary/30 focus:outline-none transition"
                     />
                   </div>
                   <div className="space-y-1">
@@ -352,7 +352,7 @@ export default function DirectorsCutPage() {
                     <select
                       value={beat.transition}
                       onChange={(e) => updateBeat(i, { transition: e.target.value })}
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-primary/30 focus:outline-none transition appearance-none"
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-on-surface text-sm focus:border-primary/30 focus:outline-none transition appearance-none"
                     >
                       {TRANSITION_OPTIONS.map((opt) => (
                         <option key={opt} value={opt}>{opt}</option>
@@ -391,7 +391,7 @@ export default function DirectorsCutPage() {
         <div className="flex justify-between items-center pt-8">
           <Link
             href="/create/brief"
-            className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95"
+            className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95"
           >
             Back
           </Link>
@@ -435,7 +435,7 @@ export default function DirectorsCutPage() {
                   <span className="material-symbols-outlined text-xs text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Story Foundation</span>
                 </div>
-                <p className="text-xs text-white leading-relaxed">
+                <p className="text-xs text-on-surface leading-relaxed">
                   {brief.storyline.title && <><strong>{brief.storyline.title}</strong><br /></>}
                   {brief.storyline.theme && <span className="text-on-surface-variant">Theme: {brief.storyline.theme}</span>}
                 </p>
@@ -456,7 +456,7 @@ export default function DirectorsCutPage() {
                 </div>
                 <div className="space-y-1">
                   {brief?.visualStyle.mood && (
-                    <p className="text-xs text-white">Mood: {brief.visualStyle.mood}</p>
+                    <p className="text-xs text-on-surface">Mood: {brief.visualStyle.mood}</p>
                   )}
                   {(brief?.visualStyle.colorPalette.length ?? 0) > 0 && (
                     <div className="flex gap-1">
@@ -486,7 +486,7 @@ export default function DirectorsCutPage() {
                   <span className="material-symbols-outlined text-xs text-[#c9ff81]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Beat Map</span>
                 </div>
-                <p className="text-xs text-white leading-relaxed">
+                <p className="text-xs text-on-surface leading-relaxed">
                   {brief!.narrativeBeats.beats.length} beat{brief!.narrativeBeats.beats.length !== 1 ? 's' : ''} mapped
                   {brief!.narrativeBeats.beats[0]?.label && (
                     <> &middot; First: &quot;{brief!.narrativeBeats.beats[0].label}&quot;</>
@@ -517,14 +517,14 @@ export default function DirectorsCutPage() {
                   <span className="material-symbols-outlined text-xs text-[#4cb150]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Sequence Plan</span>
                 </div>
-                <p className="text-xs text-white font-bold mb-2">{sequencePlan.overallArc}</p>
+                <p className="text-xs text-on-surface font-bold mb-2">{sequencePlan.overallArc}</p>
                 <p className="text-[10px] text-on-surface-variant mb-3">Est. {sequencePlan.estimatedTotalDuration}</p>
                 <div className="space-y-2">
                   {sequencePlan.segments.map((seg) => (
                     <div key={seg.index} className="flex items-start gap-2">
                       <span className="text-[10px] font-mono text-primary mt-0.5 shrink-0">{String(seg.index + 1).padStart(2, '0')}</span>
                       <div>
-                        <p className="text-xs text-white font-medium">{seg.title}</p>
+                        <p className="text-xs text-on-surface font-medium">{seg.title}</p>
                         <p className="text-[10px] text-on-surface-variant">{seg.visualDescription}</p>
                         {seg.transitionFromPrevious && (
                           <p className="text-[10px] text-outline italic">via {seg.transitionFromPrevious}</p>

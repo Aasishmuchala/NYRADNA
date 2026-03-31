@@ -19,7 +19,7 @@ const COLOR_PALETTES = [
 const LIGHTING_OPTIONS = [
   { id: 'warm' as const, label: 'Warm', icon: 'light_mode', iconColor: 'text-orange-400', tokens: 'Soft diffused key light, warm practicals, golden bounce fill' },
   { id: 'cool' as const, label: 'Cool', icon: 'ac_unit', iconColor: 'text-cyan-400', tokens: 'Blue steel key, cool fluorescent fill, tungsten edge' },
-  { id: 'high-contrast' as const, label: 'High Contrast', icon: 'exposure', iconColor: 'text-white', tokens: 'Hard chiaroscuro lighting, deep shadows, single-source key' },
+  { id: 'high-contrast' as const, label: 'High Contrast', icon: 'exposure', iconColor: 'text-on-surface', tokens: 'Hard chiaroscuro lighting, deep shadows, single-source key' },
   { id: 'mood' as const, label: 'Mood', icon: 'wb_twilight', iconColor: 'text-purple-400', tokens: 'Available light, neon spill, motivated sources, atmospheric haze' },
 ];
 
@@ -161,7 +161,7 @@ export default function StyleDnaPage() {
                   >
                     {state.colorIndex === index && (
                       <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-white text-sm drop-shadow-lg" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                        <span className="material-symbols-outlined text-on-surface text-sm drop-shadow-lg" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                       </span>
                     )}
                   </button>
@@ -551,7 +551,7 @@ function AssetGalleryGrouped({
                     {/* Status */}
                     {asset.status === 'succeeded' && (
                       <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-green-600/90 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[10px] text-white">check</span>
+                        <span className="material-symbols-outlined text-[10px] text-on-surface">check</span>
                       </div>
                     )}
                     {asset.status === 'failed' && (

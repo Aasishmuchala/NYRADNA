@@ -23,8 +23,8 @@ export default function AssetSetCard({ set, isActive, onSelect, onDelete }: Asse
       }}
       className={`group relative cursor-pointer rounded-xl border-l-4 p-4 transition-colors ${
         isActive
-          ? 'border-[#c6bfff] bg-[#1f1f24]'
-          : 'border-transparent bg-[#1f1f24] hover:bg-[#1f1f24]'
+          ? 'border-[var(--color-primary)] bg-surface-container'
+          : 'border-transparent bg-surface-container hover:bg-surface-container'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -32,11 +32,11 @@ export default function AssetSetCard({ set, isActive, onSelect, onDelete }: Asse
           photo_library
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-sm font-semibold text-white">{set.name}</h3>
+          <h3 className="truncate text-sm font-semibold text-on-surface">{set.name}</h3>
           {set.description && (
             <p className="mt-0.5 truncate text-xs text-[#c8c4d6]">{set.description}</p>
           )}
-          <p className="mt-1 text-xs font-medium text-[#c6bfff]">
+          <p className="mt-1 text-xs font-medium text-[var(--color-primary)]">
             {set.items.length} {set.items.length === 1 ? 'asset' : 'assets'}
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function AssetSetCard({ set, isActive, onSelect, onDelete }: Asse
           e.stopPropagation();
           onDelete(set.id);
         }}
-        className="absolute right-2 top-2 rounded-md p-1 text-[#928f9f] opacity-0 transition-opacity hover:bg-[#1f1f24] hover:text-red-400 group-hover:opacity-100"
+        className="absolute right-2 top-2 rounded-md p-1 text-[#928f9f] opacity-0 transition-opacity hover:bg-surface-container hover:text-red-400 group-hover:opacity-100"
         title="Delete set"
       >
         <span className="material-symbols-outlined text-[16px]">delete</span>

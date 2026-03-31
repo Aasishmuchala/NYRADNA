@@ -1,37 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors - Cinematic Luxury Palette */
-  --color-primary: #c6bfff;
-  --color-primary-container: #8c80ff;
-  --color-primary-dim: #8c80ff;
-  --color-primary-fixed: #8c80ff;
-  --color-primary-fixed-dim: #6b5cf7;
-  --color-on-primary: #1a1a2e;
-  --color-on-primary-container: #e4e1e8;
-  --color-on-primary-fixed: #1a1a2e;
+  /* Primary Palette */
+  --color-primary: #8c80ff;
+  --color-primary-container: #c6bfff;
+  --color-primary-dim: #6b5cf7;
+  --color-on-primary: #ffffff;
+  --color-on-primary-fixed: #160066;
 
   /* Secondary */
   --color-secondary: #fface8;
-  --color-secondary-container: #3d2a3a;
-  --color-on-secondary: #1a1a2e;
-  --color-on-secondary-container: #ffd6f0;
+  --color-secondary-container: #7e1770;
+  --color-on-secondary: #3a0033;
 
-  /* Tertiary (keep distinct accent) */
+  /* Tertiary */
   --color-tertiary: #81e9ff;
-  --color-tertiary-container: #004d5a;
-  --color-tertiary-dim: #00d1ee;
-  --color-on-tertiary-container: #c0f0ff;
-  --color-on-tertiary-fixed: #001f26;
 
   /* Error */
   --color-error: #ffb4ab;
   --color-error-container: #93000a;
-  --color-error-dim: #ff897d;
   --color-on-error: #690005;
   --color-on-error-container: #ffdad6;
 
-  /* Surface (Cinematic True Black) */
+  /* Success */
+  --color-success: #4caf50;
+
+  /* Outline */
+  --color-outline: #928f9f;
+  --color-outline-variant: #474554;
+
+  /* Surface — dark defaults */
   --color-surface: #050507;
   --color-surface-bright: #35343a;
   --color-surface-container: #1f1f24;
@@ -42,18 +40,10 @@
   --color-on-surface: #e4e1e8;
   --color-on-surface-variant: #c8c4d6;
 
-  /* Status */
-  --color-success: #4caf50;
-  --color-success-dim: #45a049;
-  --color-success-container: #1a2e1a;
-  --color-processing: #9c27b0;
-  --color-processing-dim: #7b1fa2;
-  --color-processing-container: #2a1a2e;
-  --color-failed-container: #2e1a1a;
-
-  /* Outline */
-  --color-outline: #928f9f;
-  --color-outline-variant: #474554;
+  /* Inverse */
+  --color-inverse-surface: #e4e1e8;
+  --color-inverse-on-surface: #303035;
+  --color-inverse-primary: #5849cd;
 
   /* Fonts */
   --font-headline: var(--font-manrope), 'Manrope', sans-serif;
@@ -61,13 +51,41 @@
   --font-label: var(--font-inter), 'Inter', sans-serif;
 }
 
-/* ── Shared utility classes (extracted from inline <style> blocks) ── */
+/* ─── Light Mode Overrides ─── */
+:root[data-theme="light"] {
+  --color-surface: #faf8ff;
+  --color-surface-bright: #faf8ff;
+  --color-surface-container: #f0eef6;
+  --color-surface-container-high: #eae8f0;
+  --color-surface-container-highest: #e4e2ea;
+  --color-surface-container-low: #f5f3fb;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #1b1b21;
+  --color-on-surface-variant: #47464f;
+  --color-outline: #78767f;
+  --color-outline-variant: #c8c5d0;
+  --color-primary: #5849cd;
+  --color-primary-container: #e4dfff;
+  --color-on-primary: #ffffff;
+  --color-on-primary-fixed: #160066;
+  --color-inverse-surface: #303035;
+  --color-inverse-on-surface: #f3f0f7;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+}
 
-/* Glass / Blur Effects */
+/* ─── Glass / Blur Effects ─── */
 .glass-card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(50px);
   border: 1px solid rgba(198, 191, 255, 0.25);
+}
+
+:root[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(50px);
+  border: 1px solid rgba(88, 73, 205, 0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .glass-panel {
@@ -76,43 +94,39 @@
   border: 1px solid rgba(198, 191, 255, 0.25);
 }
 
-.glass-input {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(50px);
-  border: 1px solid rgba(198, 191, 255, 0.15);
+:root[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(88, 73, 205, 0.08);
 }
 
-/* Glow Effects */
+/* ─── Glow Effects ─── */
 .cinematic-glow {
   box-shadow: inset 0 0 40px rgba(198, 191, 255, 0.08), 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
-.cinematic-glow-warm {
-  box-shadow: inset 0 0 40px rgba(198, 191, 255, 0.12), 0 20px 50px rgba(0, 0, 0, 0.5);
+:root[data-theme="light"] .cinematic-glow {
+  box-shadow: 0 4px 24px rgba(88, 73, 205, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
-/* Vignette */
-.hero-vignette {
-  background: radial-gradient(circle at center, transparent 0%, rgba(5, 5, 7, 0.8) 100%);
-}
-
-/* Radial Ambient Body Background */
+/* ─── Radial Ambient Background ─── */
 .radial-ambient {
   background:
     radial-gradient(ellipse 600px 400px at 20% 50%, rgba(140, 128, 255, 0.08) 0%, transparent 70%),
     radial-gradient(ellipse 500px 350px at 80% 30%, rgba(255, 172, 232, 0.05) 0%, transparent 70%),
-    #050507;
+    var(--color-surface);
 }
 
-/* Shimmer Animations */
-.shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  background-size: 200% 100%;
+:root[data-theme="light"] .radial-ambient {
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 50%, rgba(88, 73, 205, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 350px at 80% 30%, rgba(198, 191, 255, 0.06) 0%, transparent 70%),
+    var(--color-surface);
 }
 
-.cinematic-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  background-size: 200% 100%;
+/* ─── Shimmer ─── */
+@keyframes shimmerAnimation {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .shimmer-active {
@@ -121,9 +135,9 @@
   animation: shimmerAnimation 2s infinite;
 }
 
-@keyframes shimmerAnimation {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+:root[data-theme="light"] .shimmer-active {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(88, 73, 205, 0.04) 50%, rgba(0, 0, 0, 0) 100%);
+  background-size: 200% 100%;
 }
 
 @keyframes slideUp {
@@ -134,36 +148,34 @@
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Text Gradient */
+/* ─── Text Gradient ─── */
 .text-gradient-primary {
   background: linear-gradient(135deg, #c6bfff, #8c80ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Persona Card Hover */
-.persona-card:hover .persona-overlay {
-  opacity: 1;
+:root[data-theme="light"] .text-gradient-primary {
+  background: linear-gradient(135deg, #5849cd, #8c80ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Font utility */
+/* ─── Font utility ─── */
 .headline-font {
   font-family: 'Manrope', sans-serif;
 }
 
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(198, 191, 255, 0.15);
-  border-radius: 10px;
+/* ─── Custom Scrollbar ─── */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(198, 191, 255, 0.15); border-radius: 10px; }
+
+:root[data-theme="light"] .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(88, 73, 205, 0.15);
 }
 
-/* Material Symbols base */
+/* ─── Material Symbols ─── */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;

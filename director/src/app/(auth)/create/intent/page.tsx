@@ -341,7 +341,7 @@ export default function IntentPage() {
         <span className="text-primary font-headline font-bold text-xs uppercase tracking-[0.2em]">
           Director AI Agent
         </span>
-        <h1 className="font-headline font-extrabold text-2xl md:text-3xl tracking-tight text-white mt-1">
+        <h1 className="font-headline font-extrabold text-2xl md:text-3xl tracking-tight text-on-surface mt-1">
           What&apos;s the <span className="text-gradient-primary">Vision?</span>
         </h1>
         <p className="text-on-surface-variant text-sm mt-1">
@@ -397,7 +397,7 @@ export default function IntentPage() {
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="bg-surface-container-highest text-on-surface-variant hover:text-white hover:bg-surface-bright px-4 py-2 rounded-full text-sm font-medium transition-all border border-outline-variant/10"
+                    className="bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright px-4 py-2 rounded-full text-sm font-medium transition-all border border-outline-variant/10"
                   >
                     &quot;{s}&quot;
                   </button>
@@ -453,7 +453,7 @@ export default function IntentPage() {
                   </span>
                 </div>
                 <div>
-                  <h3 className="font-headline font-bold text-white">{brief.title}</h3>
+                  <h3 className="font-headline font-bold text-on-surface">{brief.title}</h3>
                   <p className="text-xs text-on-surface-variant">{brief.contentType} &middot; {brief.targetAudience}</p>
                 </div>
               </div>
@@ -464,19 +464,19 @@ export default function IntentPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 <div className="bg-surface-container-highest rounded-lg p-2 text-center">
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant/60 block">Mood</span>
-                  <span className="text-xs font-bold text-white">{brief.mood}</span>
+                  <span className="text-xs font-bold text-on-surface">{brief.mood}</span>
                 </div>
                 <div className="bg-surface-container-highest rounded-lg p-2 text-center">
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant/60 block">Color</span>
-                  <span className="text-xs font-bold text-white">{COLOR_NAMES[brief.colorIndex]}</span>
+                  <span className="text-xs font-bold text-on-surface">{COLOR_NAMES[brief.colorIndex]}</span>
                 </div>
                 <div className="bg-surface-container-highest rounded-lg p-2 text-center">
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant/60 block">Pacing</span>
-                  <span className="text-xs font-bold text-white capitalize">{brief.pacing}</span>
+                  <span className="text-xs font-bold text-on-surface capitalize">{brief.pacing}</span>
                 </div>
                 <div className="bg-surface-container-highest rounded-lg p-2 text-center">
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant/60 block">Persona</span>
-                  <span className="text-xs font-bold text-white">{PERSONA_NAMES[brief.persona]}</span>
+                  <span className="text-xs font-bold text-on-surface">{PERSONA_NAMES[brief.persona]}</span>
                 </div>
               </div>
 
@@ -495,7 +495,7 @@ export default function IntentPage() {
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <div className="min-w-0">
-                        <span className="text-xs font-bold text-white block">{scene.title}</span>
+                        <span className="text-xs font-bold text-on-surface block">{scene.title}</span>
                         <span className="text-[11px] text-on-surface-variant/70 line-clamp-2">
                           {scene.description}
                         </span>
@@ -551,7 +551,7 @@ export default function IntentPage() {
             onKeyDown={handleKeyDown}
             placeholder={messages.length === 0 ? 'Describe your vision...' : 'Reply to the Director...'}
             rows={1}
-            className="flex-1 bg-surface-container-highest border border-outline-variant/20 rounded-xl text-sm px-4 py-3 text-white placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 resize-none max-h-32 overflow-y-auto"
+            className="flex-1 bg-surface-container-highest border border-outline-variant/20 rounded-xl text-sm px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 resize-none max-h-32 overflow-y-auto"
             style={{ minHeight: '48px' }}
             disabled={isStreaming}
           />
@@ -559,7 +559,7 @@ export default function IntentPage() {
             <button
               type="button"
               onClick={() => abortRef.current?.abort()}
-              className="shrink-0 bg-error/80 hover:bg-error text-white p-3 rounded-xl transition-colors"
+              className="shrink-0 bg-error/80 hover:bg-error text-on-surface p-3 rounded-xl transition-colors"
             >
               <span className="material-symbols-outlined text-xl">stop</span>
             </button>

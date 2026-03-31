@@ -164,7 +164,7 @@ export default function BriefPage() {
 
         {/* Heading */}
         <div className="space-y-2">
-          <h1 className="text-4xl md:text-5xl font-headline font-black tracking-tighter text-white">Who is this for?</h1>
+          <h1 className="text-4xl md:text-5xl font-headline font-black tracking-tighter text-on-surface">Who is this for?</h1>
           <p className="text-on-surface-variant font-body text-lg">Define the protagonist of your brand&apos;s story.</p>
         </div>
 
@@ -183,7 +183,7 @@ export default function BriefPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-surface/40"></div>
               <div className="relative h-full p-5 flex flex-col justify-end">
                 <span className="material-symbols-outlined mb-2 text-[28px]" style={{ color: persona.iconColor }}>{persona.icon}</span>
-                <h3 className="font-headline text-lg font-bold text-white">{persona.title}</h3>
+                <h3 className="font-headline text-lg font-bold text-on-surface">{persona.title}</h3>
                 <p className="text-on-surface-variant text-xs mt-1 line-clamp-2">{persona.description}</p>
               </div>
             </button>
@@ -207,7 +207,7 @@ export default function BriefPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-surface/40"></div>
             <div className="relative h-full p-5 flex flex-col justify-end">
               <span className="material-symbols-outlined mb-2 text-[28px] text-primary">smart_toy</span>
-              <h3 className="font-headline text-lg font-bold text-white">
+              <h3 className="font-headline text-lg font-bold text-on-surface">
                 {customGenerated ? state.customPersonaTitle : 'Custom Persona'}
               </h3>
               <p className="text-on-surface-variant text-xs mt-1">
@@ -236,7 +236,7 @@ export default function BriefPage() {
                 onChange={(e) => setCustomInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleGenerateCustom()}
                 placeholder="e.g. Millennial parents who love outdoor adventures"
-                className="flex-1 bg-surface border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                className="flex-1 bg-surface border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
               />
               <button
                 onClick={handleGenerateCustom}
@@ -261,7 +261,7 @@ export default function BriefPage() {
             {customGenerated && state.customPersonaTitle && (
               <div className="mt-4 p-4 rounded-xl bg-surface-bright/40 border-l-2 border-primary space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-headline font-bold text-white">{state.customPersonaTitle}</h4>
+                  <h4 className="font-headline font-bold text-on-surface">{state.customPersonaTitle}</h4>
                   <button
                     onClick={() => {
                       setCustomGenerated(false);
@@ -273,7 +273,7 @@ export default function BriefPage() {
                         customPersonaAtmosphere: '',
                       });
                     }}
-                    className="text-xs text-on-surface-variant hover:text-white transition-colors"
+                    className="text-xs text-on-surface-variant hover:text-on-surface transition-colors"
                   >
                     Reset
                   </button>
@@ -295,7 +295,7 @@ export default function BriefPage() {
 
         {/* Footer */}
         <div className="flex justify-between items-center pt-8">
-          <Link href="/create/intent" className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95">Back</Link>
+          <Link href="/create/intent" className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95">Back</Link>
           {canContinue ? (
             <Link href="/create/character-setup" className="px-10 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-headline font-black cinematic-glow transition-all hover:scale-105 active:scale-95">CONTINUE</Link>
           ) : (
@@ -309,7 +309,7 @@ export default function BriefPage() {
         <div className="sticky top-24 bg-surface-container-low/50 backdrop-blur-md border border-outline-variant/10 rounded-2xl p-6 space-y-6">
           <div className="space-y-1">
             <h2 className="text-xs font-label uppercase tracking-widest text-primary">Intelligence Feed</h2>
-            <p className="text-sm font-headline font-bold text-white">What DIRECTOR understands so far</p>
+            <p className="text-sm font-headline font-bold text-on-surface">What DIRECTOR understands so far</p>
           </div>
           <div className="space-y-4">
             {/* Core Concept */}
@@ -318,7 +318,7 @@ export default function BriefPage() {
                 <span className="material-symbols-outlined text-xs text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                 <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Core Concept</span>
               </div>
-              <p className="text-xs text-white leading-relaxed">{state.visionText || 'Your concept will appear here once defined.'}</p>
+              <p className="text-xs text-on-surface leading-relaxed">{state.visionText || 'Your concept will appear here once defined.'}</p>
             </div>
 
             {/* Persona Info */}
@@ -328,7 +328,7 @@ export default function BriefPage() {
                   <span className="material-symbols-outlined text-xs text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                   <span className="text-[10px] uppercase tracking-wider text-on-surface-variant">Target Audience</span>
                 </div>
-                <p className="text-xs text-white leading-relaxed">{selectedPersonaData.feedDescription}</p>
+                <p className="text-xs text-on-surface leading-relaxed">{selectedPersonaData.feedDescription}</p>
               </div>
             ) : (
               <div className="p-4 rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant/20 flex flex-col items-center justify-center text-center py-8">

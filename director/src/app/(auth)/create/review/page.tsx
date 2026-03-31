@@ -361,21 +361,21 @@ export default function ReviewPage() {
                 className={`px-4 py-2 rounded-lg text-sm transition ${
                   filterReady
                     ? 'bg-primary text-on-primary'
-                    : 'bg-surface-container-high text-gray-300 hover:bg-surface-container-highest'
+                    : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
                 }`}
               >
                 Filter {filterReady && '(Ready Only)'}
               </button>
               <button
                 onClick={() => setGridSize(gridSize === 4 ? 2 : 4)}
-                className="px-4 py-2 bg-surface-container-high text-gray-300 rounded-lg text-sm hover:bg-surface-container-highest"
+                className="px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-lg text-sm hover:bg-surface-container-highest"
               >
                 Grid ({gridSize}-col)
               </button>
               <button
                 onClick={handleQuickGenerate}
                 disabled={isGenerating}
-                className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg text-sm hover:opacity-90 transition disabled:opacity-50"
+                className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-on-surface rounded-lg text-sm hover:opacity-90 transition disabled:opacity-50"
               >
                 {isGenerating
                   ? `Generating ${generatingIndex + 1}/${generatingTotal}...`
@@ -384,13 +384,13 @@ export default function ReviewPage() {
               <button
                 onClick={handleAnalyzeContinuity}
                 disabled={isGenerating || !!analysisProgress}
-                className="px-4 py-2 bg-surface-container-high text-gray-300 rounded-lg text-sm hover:bg-surface-container-highest border border-outline-variant/30 transition disabled:opacity-50 flex items-center gap-2 ml-auto"
+                className="px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-lg text-sm hover:bg-surface-container-highest border border-outline-variant/30 transition disabled:opacity-50 flex items-center gap-2 ml-auto"
               >
                 <span className="material-symbols-outlined text-base">psychology</span>
                 {analysisProgress ? 'Analyzing...' : analysisComplete ? 'Re-Analyze' : 'Analyze Continuity'}
               </button>
               {!isGenerating && (
-                <span className="text-xs text-gray-400 self-center">
+                <span className="text-xs text-on-surface-variant self-center">
                   Est. ~${estimateCost(generateSceneStructure(state.pacing).length, state.selectedImageModel).imageCost.toFixed(2)} for images
                 </span>
               )}
@@ -402,8 +402,8 @@ export default function ReviewPage() {
             <div className="mb-6 bg-surface-container border border-outline-variant rounded-lg p-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                <span className="text-sm text-white font-medium">Cinematic Analysis</span>
-                <span className="text-xs text-gray-400 ml-auto">
+                <span className="text-sm text-on-surface font-medium">Cinematic Analysis</span>
+                <span className="text-xs text-on-surface-variant ml-auto">
                   {analysisProgress.current}/{analysisProgress.total}
                 </span>
               </div>
@@ -413,7 +413,7 @@ export default function ReviewPage() {
                   style={{ width: `${Math.round((analysisProgress.current / analysisProgress.total) * 100)}%` }}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1.5">{analysisProgress.label}</p>
+              <p className="text-xs text-on-surface-variant/60 mt-1.5">{analysisProgress.label}</p>
             </div>
           )}
 
@@ -425,12 +425,12 @@ export default function ReviewPage() {
               onChange={(e) => setPromptInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleGenerateScene()}
               placeholder="Describe a scene to generate..."
-              className="flex-1 px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-white placeholder-gray-500 focus:border-primary outline-none transition"
+              className="flex-1 px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder-gray-500 focus:border-primary outline-none transition"
             />
             <button
               onClick={handleGenerateScene}
               disabled={isGenerating || !promptInput.trim()}
-              className="px-6 py-3 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+              className="px-6 py-3 bg-gradient-to-br from-primary to-primary-container text-on-surface rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
             >
               Generate
             </button>
@@ -458,7 +458,7 @@ export default function ReviewPage() {
                   }
                 }}
                 disabled={isGenerating || !!regeneratingId}
-                className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-500 transition disabled:opacity-50 whitespace-nowrap"
+                className="px-4 py-2 bg-red-600 text-on-surface text-xs font-bold rounded-lg hover:bg-red-500 transition disabled:opacity-50 whitespace-nowrap"
               >
                 Regenerate All ({rejectedScenes.length})
               </button>
@@ -496,7 +496,7 @@ export default function ReviewPage() {
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                        <p className="text-white text-xs truncate">{scene.prompt}</p>
+                        <p className="text-on-surface text-xs truncate">{scene.prompt}</p>
                       </div>
 
                       {/* Asset badge */}
@@ -509,7 +509,7 @@ export default function ReviewPage() {
 
                       {/* Model badge */}
                       {scene.imageModelId && (
-                        <span className="absolute top-2 right-24 bg-black/60 text-white/70 text-[10px] px-1.5 py-0.5 rounded pointer-events-none">
+                        <span className="absolute top-2 right-24 bg-black/60 text-on-surface/70 text-[10px] px-1.5 py-0.5 rounded pointer-events-none">
                           {scene.imageModelId}
                         </span>
                       )}
@@ -518,7 +518,7 @@ export default function ReviewPage() {
                       {!isAssetScene && (
                         <button
                           onClick={(e) => { e.stopPropagation(); generateVariants(scene.id, 2); }}
-                          className="absolute top-8 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded hover:bg-black/80 transition"
+                          className="absolute top-8 left-2 bg-black/60 text-on-surface text-xs px-2 py-1 rounded hover:bg-black/80 transition"
                         >
                           A/B
                         </button>
@@ -526,14 +526,14 @@ export default function ReviewPage() {
                       {!isAssetScene && (
                         <button
                           onClick={(e) => { e.stopPropagation(); setEditingScene(scene.id); setEditPrompt(''); }}
-                          className="absolute top-2 right-12 bg-black/60 text-white text-xs px-2 py-1 rounded hover:bg-black/80 transition"
+                          className="absolute top-2 right-12 bg-black/60 text-on-surface text-xs px-2 py-1 rounded hover:bg-black/80 transition"
                         >
                           Edit
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); handleRemoveScene(scene.id); }}
-                        className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded hover:bg-red-600/80 transition"
+                        className="absolute top-2 right-2 bg-black/60 text-on-surface text-xs px-2 py-1 rounded hover:bg-red-600/80 transition"
                         title="Remove from film"
                       >
                         <span className="material-symbols-outlined text-[14px]">close</span>
@@ -545,7 +545,7 @@ export default function ReviewPage() {
                           <span className="material-symbols-outlined text-red-300 text-2xl">warning</span>
                           <button
                             onClick={(e) => { e.stopPropagation(); handleRegenerate(scene.id); }}
-                            className="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-500 transition"
+                            className="px-3 py-1.5 bg-red-600 text-on-surface text-xs font-bold rounded-lg hover:bg-red-500 transition"
                           >
                             Regenerate
                           </button>
@@ -556,7 +556,7 @@ export default function ReviewPage() {
                       {isRegenerating && (
                         <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2">
                           <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                          <span className="text-xs text-white/80">Regenerating...</span>
+                          <span className="text-xs text-on-surface/80">Regenerating...</span>
                         </div>
                       )}
                     </div>
@@ -610,7 +610,7 @@ export default function ReviewPage() {
                                 />
                                 <button
                                   onClick={() => pickVariant(variant.id)}
-                                  className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-success text-white text-[10px] px-2 py-0.5 rounded hover:bg-success-dim transition whitespace-nowrap"
+                                  className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-success text-on-surface text-[10px] px-2 py-0.5 rounded hover:bg-success-dim transition whitespace-nowrap"
                                 >
                                   Pick this
                                 </button>
@@ -638,9 +638,9 @@ export default function ReviewPage() {
                   >
                     <div className="text-center">
                       <div className="inline-block w-8 h-8 border-2 border-processing/30 border-t-processing rounded-full animate-spin mb-2"></div>
-                      <div className="text-xs text-gray-500">Generating</div>
+                      <div className="text-xs text-on-surface-variant/60">Generating</div>
                     </div>
-                    <div className="absolute bottom-2 left-2 right-2 text-gray-400 text-xs truncate">
+                    <div className="absolute bottom-2 left-2 right-2 text-on-surface-variant text-xs truncate">
                       {scene.prompt}
                     </div>
                   </div>
@@ -652,7 +652,7 @@ export default function ReviewPage() {
                     className="relative aspect-video rounded-lg border-2 border-red-500/40 bg-surface-container flex flex-col items-center justify-center p-4"
                   >
                     <span className="text-red-400 text-sm mb-2">Failed</span>
-                    <p className="text-xs text-gray-500 text-center truncate w-full">{scene.error ?? 'Unknown error'}</p>
+                    <p className="text-xs text-on-surface-variant/60 text-center truncate w-full">{scene.error ?? 'Unknown error'}</p>
                     <button
                       onClick={() => regenerateScene(scene.id)}
                       className="mt-2 text-xs text-primary hover:underline"
@@ -682,8 +682,8 @@ export default function ReviewPage() {
               />
             </div>
             <div className="flex-1 flex flex-col gap-3">
-              <h3 className="text-white font-semibold text-lg">Edit Scene</h3>
-              <p className="text-gray-400 text-xs">
+              <h3 className="text-on-surface font-semibold text-lg">Edit Scene</h3>
+              <p className="text-on-surface-variant text-xs">
                 The entire image will be considered for editing guided by your prompt. Describe what you want to change.
               </p>
               <input
@@ -692,19 +692,19 @@ export default function ReviewPage() {
                 onChange={(e) => setEditPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleApplyEdit()}
                 placeholder="Describe what to change in the selected area..."
-                className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-white placeholder-gray-500 focus:border-primary outline-none transition"
+                className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder-gray-500 focus:border-primary outline-none transition"
               />
               <div className="flex gap-3">
                 <button
                   onClick={handleApplyEdit}
                   disabled={isGenerating || !editPrompt.trim()}
-                  className="px-6 py-2 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
+                  className="px-6 py-2 bg-gradient-to-br from-primary to-primary-container text-on-surface rounded-lg text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
                 >
                   Apply Edit
                 </button>
                 <button
                   onClick={() => { setEditingScene(null); setEditPrompt(''); }}
-                  className="px-6 py-2 bg-surface-container-high text-gray-300 rounded-lg text-sm hover:bg-surface-container-highest transition"
+                  className="px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-lg text-sm hover:bg-surface-container-highest transition"
                 >
                   Cancel
                 </button>
@@ -716,13 +716,13 @@ export default function ReviewPage() {
 
       {/* Footer Navigation */}
       <div className="border-t border-outline-variant px-8 py-6 flex justify-between items-center gap-4 bg-surface">
-        <Link href="/create/style-dna" className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95">
+        <Link href="/create/style-dna" className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95">
           Back
         </Link>
         <div className="flex items-center gap-4">
           <div className="text-sm">
-            <span className="text-gray-400">Scenes ready:</span>
-            <span className="text-white font-bold ml-2">{completedCount}/{parentScenes.length}</span>
+            <span className="text-on-surface-variant">Scenes ready:</span>
+            <span className="text-on-surface font-bold ml-2">{completedCount}/{parentScenes.length}</span>
           </div>
           <Link
             href={completedCount > 0 ? '/create/generating' : '#'}

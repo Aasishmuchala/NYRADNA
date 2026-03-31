@@ -154,7 +154,7 @@ export default function SettingsPage() {
                     className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'profile'
                         ? 'text-primary border-r-2 border-primary font-bold'
-                        : 'text-on-surface-variant hover:text-white'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     Profile
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                     className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'billing'
                         ? 'text-primary border-r-2 border-primary font-bold'
-                        : 'text-on-surface-variant hover:text-white'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     Billing
@@ -178,7 +178,7 @@ export default function SettingsPage() {
                     className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'usage'
                         ? 'text-primary border-r-2 border-primary font-bold'
-                        : 'text-on-surface-variant hover:text-white'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     Usage
@@ -190,7 +190,7 @@ export default function SettingsPage() {
                     className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'notifications'
                         ? 'text-primary border-r-2 border-primary font-bold'
-                        : 'text-on-surface-variant hover:text-white'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     Notifications
@@ -209,7 +209,7 @@ export default function SettingsPage() {
                     className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'api-keys'
                         ? 'text-primary border-r-2 border-primary font-bold'
-                        : 'text-on-surface-variant hover:text-white'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     API Keys
@@ -221,7 +221,7 @@ export default function SettingsPage() {
                     className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
                       activeTab === 'team-access'
                         ? 'text-primary border-r-2 border-primary font-bold'
-                        : 'text-on-surface-variant hover:text-white'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     Team Access
@@ -264,7 +264,7 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-on-surface">Profile Avatar</label>
                 <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-on-surface text-2xl font-bold">
                     {profileForm.name.charAt(0) || '?'}
                   </div>
                   <button className="px-4 py-2 bg-surface-container-highest rounded-lg text-sm font-bold hover:bg-surface-bright transition-colors">
@@ -320,7 +320,7 @@ export default function SettingsPage() {
                         Next billing: Dec 12, 2024
                       </span>
                     </div>
-                    <h3 className="text-4xl font-black font-headline text-white mb-2">
+                    <h3 className="text-4xl font-black font-headline text-on-surface mb-2">
                       Cinematic Pro
                     </h3>
                     <p className="text-on-surface-variant text-sm max-w-md">
@@ -349,7 +349,7 @@ export default function SettingsPage() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <span className="material-symbols-outlined text-tertiary">bolt</span>
-                      <h4 className="text-sm font-bold uppercase tracking-wide text-white">
+                      <h4 className="text-sm font-bold uppercase tracking-wide text-on-surface">
                         Scene Blocks
                       </h4>
                     </div>
@@ -401,7 +401,7 @@ export default function SettingsPage() {
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-white tracking-wide">
+                        <p className="text-sm font-bold text-on-surface tracking-wide">
                           &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242
                         </p>
                         <p className="text-xs text-on-surface-variant">Expires 12/26 — Visa</p>
@@ -428,7 +428,7 @@ export default function SettingsPage() {
                   <h3 className="text-xl font-bold font-headline">Billing History</h3>
                   <button
                     onClick={() => setAlertMsg({ open: true, title: 'Export', message: 'Exporting billing history...' })}
-                    className="text-xs font-medium text-on-surface-variant flex items-center gap-1 hover:text-white"
+                    className="text-xs font-medium text-on-surface-variant flex items-center gap-1 hover:text-on-surface"
                   >
                     <span className="material-symbols-outlined text-sm">download</span>
                     Export CSV
@@ -455,46 +455,46 @@ export default function SettingsPage() {
                     </thead>
                     <tbody className="divide-y divide-outline-variant/5">
                       <tr className="group hover:bg-surface-container-low transition-colors">
-                        <td className="py-5 text-sm font-medium text-white">#DIR-2024-0812</td>
+                        <td className="py-5 text-sm font-medium text-on-surface">#DIR-2024-0812</td>
                         <td className="py-5 text-sm text-on-surface-variant">Nov 12, 2024</td>
                         <td className="py-5">
                           <span className="px-2 py-0.5 bg-primary-container/10 text-primary text-[10px] font-bold rounded-full">
                             Paid
                           </span>
                         </td>
-                        <td className="py-5 text-sm font-bold text-white">$49.00</td>
+                        <td className="py-5 text-sm font-bold text-on-surface">$49.00</td>
                         <td className="py-5 text-right">
-                          <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-white">
+                          <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface">
                             visibility
                           </span>
                         </td>
                       </tr>
                       <tr className="group hover:bg-surface-container-low transition-colors">
-                        <td className="py-5 text-sm font-medium text-white">#DIR-2024-0712</td>
+                        <td className="py-5 text-sm font-medium text-on-surface">#DIR-2024-0712</td>
                         <td className="py-5 text-sm text-on-surface-variant">Oct 12, 2024</td>
                         <td className="py-5">
                           <span className="px-2 py-0.5 bg-primary-container/10 text-primary text-[10px] font-bold rounded-full">
                             Paid
                           </span>
                         </td>
-                        <td className="py-5 text-sm font-bold text-white">$49.00</td>
+                        <td className="py-5 text-sm font-bold text-on-surface">$49.00</td>
                         <td className="py-5 text-right">
-                          <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-white">
+                          <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface">
                             visibility
                           </span>
                         </td>
                       </tr>
                       <tr className="group hover:bg-surface-container-low transition-colors">
-                        <td className="py-5 text-sm font-medium text-white">#DIR-2024-0612</td>
+                        <td className="py-5 text-sm font-medium text-on-surface">#DIR-2024-0612</td>
                         <td className="py-5 text-sm text-on-surface-variant">Sep 12, 2024</td>
                         <td className="py-5">
                           <span className="px-2 py-0.5 bg-primary-container/10 text-primary text-[10px] font-bold rounded-full">
                             Paid
                           </span>
                         </td>
-                        <td className="py-5 text-sm font-bold text-white">$49.00</td>
+                        <td className="py-5 text-sm font-bold text-on-surface">$49.00</td>
                         <td className="py-5 text-right">
-                          <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-white">download</span>
+                          <span className="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface">download</span>
                         </td>
                       </tr>
                     </tbody>
@@ -637,7 +637,7 @@ export default function SettingsPage() {
                       <span className="material-symbols-outlined text-blue-400">image</span>
                     </div>
                     <div>
-                      <h3 className="font-bold text-white">Replicate</h3>
+                      <h3 className="font-bold text-on-surface">Replicate</h3>
                       <p className="text-xs text-on-surface-variant">Powers: Image Gen, Video Gen, LoRA Training</p>
                     </div>
                   </div>
@@ -662,7 +662,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => setShowReplicateKey(!showReplicateKey)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
                   >
                     <span className="material-symbols-outlined text-lg">
                       {showReplicateKey ? 'visibility_off' : 'visibility'}
@@ -673,7 +673,7 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleTestKey('replicate', replicateKey, setReplicateStatus)}
                     disabled={!replicateKey.trim() || replicateStatus === 'testing'}
-                    className="px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-white hover:bg-surface-bright transition-colors disabled:opacity-30"
+                    className="px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors disabled:opacity-30"
                   >
                     {replicateStatus === 'testing' ? (
                       <span className="flex items-center gap-2">
@@ -700,7 +700,7 @@ export default function SettingsPage() {
                       <span className="material-symbols-outlined text-purple-400">route</span>
                     </div>
                     <div>
-                      <h3 className="font-bold text-white">OpenRouter</h3>
+                      <h3 className="font-bold text-on-surface">OpenRouter</h3>
                       <p className="text-xs text-on-surface-variant">Powers: Director AI Chat, Persona Generation (multi-model)</p>
                     </div>
                   </div>
@@ -725,7 +725,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => setShowOpenrouterKey(!showOpenrouterKey)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
                   >
                     <span className="material-symbols-outlined text-lg">
                       {showOpenrouterKey ? 'visibility_off' : 'visibility'}
@@ -753,7 +753,7 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleTestKey('openrouter', openrouterKey, setOpenrouterStatus)}
                     disabled={!openrouterKey.trim() || openrouterStatus === 'testing'}
-                    className="px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-white hover:bg-surface-bright transition-colors disabled:opacity-30"
+                    className="px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors disabled:opacity-30"
                   >
                     {openrouterStatus === 'testing' ? (
                       <span className="flex items-center gap-2">
@@ -800,11 +800,11 @@ export default function SettingsPage() {
                 {teamMembers.map((member) => (
                   <div key={member.id} className="bg-surface-container-low p-5 rounded-lg border border-outline-variant/30 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-surface font-bold text-sm">
                         {member.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-bold text-white">{member.name}</p>
+                        <p className="font-bold text-on-surface">{member.name}</p>
                         <p className="text-xs text-on-surface-variant">{member.email}</p>
                       </div>
                     </div>
@@ -848,7 +848,7 @@ export default function SettingsPage() {
                       <span className="material-symbols-outlined text-red-400 text-2xl">delete_forever</span>
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-lg mb-1">Reset All Project Data</h3>
+                      <h3 className="font-bold text-on-surface text-lg mb-1">Reset All Project Data</h3>
                       <p className="text-sm text-on-surface-variant leading-relaxed">
                         This will permanently delete all projects, scenes, generated images, video results,
                         production assets, training data, and wizard state from your browser.

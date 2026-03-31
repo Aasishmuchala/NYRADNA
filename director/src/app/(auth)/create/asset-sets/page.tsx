@@ -111,7 +111,7 @@ export default function AssetSetsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Page header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Asset Sets</h1>
+        <h1 className="text-2xl font-bold text-on-surface">Asset Sets</h1>
         <p className="mt-1 text-sm text-[#c8c4d6]">
           Organize your media assets into narrative sequences
         </p>
@@ -120,13 +120,13 @@ export default function AssetSetsPage() {
       <div className="grid grid-cols-12 gap-6">
         {/* Left panel: Set list */}
         <div className="col-span-12 lg:col-span-4">
-          <div className="rounded-xl bg-[#1f1f24] p-4">
+          <div className="rounded-xl bg-surface-container p-4">
             {/* Create new set button */}
             {!showCreateForm && (
               <button
                 type="button"
                 onClick={() => setShowCreateForm(true)}
-                className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[#c6bfff] px-4 py-2 font-bold text-white transition-colors hover:bg-[#c6bfff]"
+                className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2 font-bold text-on-surface transition-colors hover:bg-[var(--color-primary)]"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 New Asset Set
@@ -136,13 +136,13 @@ export default function AssetSetsPage() {
             {/* Create form */}
             {showCreateForm && (
               <div className="mb-4 rounded-lg bg-[#1a1a1a] p-4">
-                <h3 className="mb-3 text-sm font-semibold text-white">Create Asset Set</h3>
+                <h3 className="mb-3 text-sm font-semibold text-on-surface">Create Asset Set</h3>
                 <input
                   type="text"
                   value={newSetName}
                   onChange={(e) => setNewSetName(e.target.value)}
                   placeholder="Set name"
-                  className="mb-2 w-full rounded-lg border border-[rgba(127,114,247,0.1)] bg-[#1f1f24] px-3 py-2 text-sm text-white placeholder-[#555] focus:border-[#c6bfff] focus:outline-none"
+                  className="mb-2 w-full rounded-lg border border-[rgba(127,114,247,0.1)] bg-surface-container px-3 py-2 text-sm text-on-surface placeholder-[#555] focus:border-primary focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleCreateSet();
                   }}
@@ -152,14 +152,14 @@ export default function AssetSetsPage() {
                   onChange={(e) => setNewSetDescription(e.target.value)}
                   placeholder="Description (optional)"
                   rows={2}
-                  className="mb-3 w-full resize-none rounded-lg border border-[rgba(127,114,247,0.1)] bg-[#1f1f24] px-3 py-2 text-sm text-white placeholder-[#555] focus:border-[#c6bfff] focus:outline-none"
+                  className="mb-3 w-full resize-none rounded-lg border border-[rgba(127,114,247,0.1)] bg-surface-container px-3 py-2 text-sm text-on-surface placeholder-[#555] focus:border-primary focus:outline-none"
                 />
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={handleCreateSet}
                     disabled={!newSetName.trim() || saving}
-                    className="flex-1 rounded-lg bg-[#c6bfff] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#c6bfff] disabled:opacity-50"
+                    className="flex-1 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-bold text-on-surface transition-colors hover:bg-[var(--color-primary)] disabled:opacity-50"
                   >
                     {saving ? 'Creating...' : 'Create'}
                   </button>
@@ -213,8 +213,8 @@ export default function AssetSetsPage() {
           {activeSet ? (
             <div className="space-y-6">
               {/* Set header */}
-              <div className="rounded-xl bg-[#1f1f24] p-4">
-                <h2 className="text-lg font-bold text-white">{activeSet.name}</h2>
+              <div className="rounded-xl bg-surface-container p-4">
+                <h2 className="text-lg font-bold text-on-surface">{activeSet.name}</h2>
                 {activeSet.description && (
                   <p className="mt-1 text-sm text-[#c8c4d6]">{activeSet.description}</p>
                 )}
@@ -227,7 +227,7 @@ export default function AssetSetsPage() {
                   type="button"
                   onClick={handleGeneratePipeline}
                   disabled={!activeSet || activeSet.items.length === 0 || generatingPipeline}
-                  className="mt-3 flex items-center gap-2 rounded-lg bg-[#c6bfff] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#c6bfff] disabled:opacity-50"
+                  className="mt-3 flex items-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-bold text-on-surface transition-colors hover:bg-[var(--color-primary)] disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined text-[18px]">account_tree</span>
                   {generatingPipeline ? 'Generating...' : 'Generate Pipeline'}
@@ -255,7 +255,7 @@ export default function AssetSetsPage() {
               />
             </div>
           ) : (
-            <div className="flex min-h-[400px] items-center justify-center rounded-xl bg-[#1f1f24]">
+            <div className="flex min-h-[400px] items-center justify-center rounded-xl bg-surface-container">
               <div className="text-center">
                 <span className="material-symbols-outlined mb-3 text-5xl text-[rgba(127,114,247,0.1)]">
                   collections

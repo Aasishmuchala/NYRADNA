@@ -186,24 +186,24 @@ export default function ExportPage() {
               <button
                 onClick={() => setCurrentClipIndex(Math.max(0, currentClipIndex - 1))}
                 disabled={currentClipIndex === 0}
-                className="text-white/70 hover:text-white disabled:text-white/30 text-sm"
+                className="text-on-surface/70 hover:text-on-surface disabled:text-on-surface/30 text-sm"
               >
                 Prev
               </button>
-              <span className="text-xs text-white/90 font-mono px-2">
+              <span className="text-xs text-on-surface/90 font-mono px-2">
                 Clip {currentClipIndex + 1} / {completedVideos.length}
               </span>
               <button
                 onClick={() => setCurrentClipIndex(Math.min(completedVideos.length - 1, currentClipIndex + 1))}
                 disabled={currentClipIndex >= completedVideos.length - 1}
-                className="text-white/70 hover:text-white disabled:text-white/30 text-sm"
+                className="text-on-surface/70 hover:text-on-surface disabled:text-on-surface/30 text-sm"
               >
                 Next
               </button>
             </div>
           )}
           {(stitching.filmUrl || state.finalVideoUrl) && (
-            <div className="absolute top-4 left-4 bg-success/90 text-white text-xs font-bold px-3 py-1 rounded-full">
+            <div className="absolute top-4 left-4 bg-success/90 text-on-surface text-xs font-bold px-3 py-1 rounded-full">
               {stitching.filmUrl ? 'STITCHED FILM' : 'PIPELINE OUTPUT'}
             </div>
           )}
@@ -257,7 +257,7 @@ export default function ExportPage() {
                 <select
                   value={state.exportFormat}
                   onChange={(e) => update({ exportFormat: e.target.value })}
-                  className="bg-surface-container-highest border-none rounded-lg text-sm px-4 py-2 focus:ring-1 focus:ring-primary/50 text-white"
+                  className="bg-surface-container-highest border-none rounded-lg text-sm px-4 py-2 focus:ring-1 focus:ring-primary/50 text-on-surface"
                 >
                   <option value="mp4">MP4 (H.264)</option>
                   <option value="mov">MOV (ProRes)</option>
@@ -349,7 +349,7 @@ export default function ExportPage() {
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">{track.name}</span>
+                      <span className="text-sm font-medium text-on-surface">{track.name}</span>
                       {track.mood && (
                         <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/60 bg-surface-container-highest px-1.5 py-0.5 rounded">
                           {track.mood}
@@ -374,7 +374,7 @@ export default function ExportPage() {
               onChange={(e) => update({ voiceoverScript: e.target.value })}
               placeholder="Write your narration script here... The AI will generate a voiceover from this text."
               rows={4}
-              className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg text-sm px-4 py-3 text-white placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 resize-none"
+              className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg text-sm px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 resize-none"
             />
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs text-on-surface-variant/60">
@@ -579,23 +579,23 @@ export default function ExportPage() {
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-on-surface-variant">Videos</span>
-              <span className="text-white font-mono">{completedVideos.length}</span>
+              <span className="text-on-surface font-mono">{completedVideos.length}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-on-surface-variant">Scene Images</span>
-              <span className="text-white font-mono">{completedScenes.length}</span>
+              <span className="text-on-surface font-mono">{completedScenes.length}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-on-surface-variant">Est. Duration</span>
-              <span className="text-white font-mono">{completedVideos.length * 5}s</span>
+              <span className="text-on-surface font-mono">{completedVideos.length * 5}s</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-on-surface-variant">Format</span>
-              <span className="text-white font-mono">{state.exportFormat.toUpperCase()}</span>
+              <span className="text-on-surface font-mono">{state.exportFormat.toUpperCase()}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-on-surface-variant">Resolution</span>
-              <span className="text-white font-mono">{state.exportResolution}</span>
+              <span className="text-on-surface font-mono">{state.exportResolution}</span>
             </div>
             {voiceover.voiceoverUrl && (
               <div className="flex justify-between text-sm">
@@ -606,7 +606,7 @@ export default function ExportPage() {
             {state.selectedSoundtrack !== 'none' && (
               <div className="flex justify-between text-sm">
                 <span className="text-on-surface-variant">Soundtrack</span>
-                <span className="text-white font-mono">{SOUNDTRACKS.find(s => s.id === state.selectedSoundtrack)?.name}</span>
+                <span className="text-on-surface font-mono">{SOUNDTRACKS.find(s => s.id === state.selectedSoundtrack)?.name}</span>
               </div>
             )}
           </div>
@@ -615,7 +615,7 @@ export default function ExportPage() {
 
       {/* Footer Navigation */}
       <div className="col-span-full border-t border-outline-variant/15 pt-6 flex justify-between items-center gap-4">
-        <Link href="/create/generating" className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95">
+        <Link href="/create/generating" className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95">
           Back
         </Link>
         <Link href="/dashboard" className="px-10 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-headline font-black transition-all hover:scale-105 active:scale-95">

@@ -812,15 +812,15 @@ export default function CharacterSetupPage() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-headline font-light tracking-[-0.03em]">Production Assets</h2>
-            <p className="text-gray-400 text-sm mt-1">Characters, locations, wardrobe, props — everything your scenes need</p>
+            <p className="text-on-surface-variant text-sm mt-1">Characters, locations, wardrobe, props — everything your scenes need</p>
           </div>
         </div>
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex gap-2 p-1 bg-surface-container-high rounded-xl border border-outline-variant">
-            <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium bg-gradient-to-br from-primary to-primary-container text-white shadow-lg">
+            <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium bg-gradient-to-br from-primary to-primary-container text-on-surface shadow-lg">
               <span className="material-symbols-outlined text-[18px]">smart_toy</span>AI Agent
             </div>
-            <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400">
+            <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-on-surface-variant">
               <span className="material-symbols-outlined text-[18px]">tune</span>Manual
             </div>
           </div>
@@ -838,12 +838,12 @@ export default function CharacterSetupPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-headline font-light tracking-[-0.03em]">Production Assets</h2>
-          <p className="text-gray-400 text-sm mt-1">Characters, locations, wardrobe, props — everything your scenes need</p>
+          <p className="text-on-surface-variant text-sm mt-1">Characters, locations, wardrobe, props — everything your scenes need</p>
         </div>
         <div className="flex items-center gap-3">
           {totalAssets > 0 && (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high border border-outline-variant">
-              <span className="text-xs text-gray-400">{completedAssets}/{totalAssets} generated</span>
+              <span className="text-xs text-on-surface-variant">{completedAssets}/{totalAssets} generated</span>
               {generatingAssets > 0 && <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />}
             </div>
           )}
@@ -859,10 +859,10 @@ export default function CharacterSetupPage() {
       {/* Mode Toggle + Autopilot */}
       <div className="flex items-center gap-4 flex-wrap">
         <div className="flex gap-2 p-1 bg-surface-container-high rounded-xl border border-outline-variant">
-          <button onClick={() => setMode('agent')} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === 'agent' ? 'bg-gradient-to-br from-primary to-primary-container text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}>
+          <button onClick={() => setMode('agent')} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === 'agent' ? 'bg-gradient-to-br from-primary to-primary-container text-on-surface shadow-lg' : 'text-on-surface-variant hover:text-on-surface'}`}>
             <span className="material-symbols-outlined text-[18px]">smart_toy</span>AI Agent
           </button>
-          <button onClick={() => setMode('manual')} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === 'manual' ? 'bg-gradient-to-br from-primary to-primary-container text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}>
+          <button onClick={() => setMode('manual')} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === 'manual' ? 'bg-gradient-to-br from-primary to-primary-container text-on-surface shadow-lg' : 'text-on-surface-variant hover:text-on-surface'}`}>
             <span className="material-symbols-outlined text-[18px]">tune</span>Manual
           </button>
         </div>
@@ -871,7 +871,7 @@ export default function CharacterSetupPage() {
           <button
             onClick={runAutopilot}
             disabled={isStreaming}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white font-headline font-bold text-sm hover:scale-105 transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-primary/20 animate-pulse hover:animate-none"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-surface font-headline font-bold text-sm hover:scale-105 transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-primary/20 animate-pulse hover:animate-none"
           >
             <span className="material-symbols-outlined text-[18px]">rocket_launch</span>
             Autopilot
@@ -896,11 +896,11 @@ export default function CharacterSetupPage() {
             <div className="px-5 py-3 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-high/50">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
-                  <span className="material-symbols-outlined text-white text-[16px]">movie_filter</span>
+                  <span className="material-symbols-outlined text-on-surface text-[16px]">movie_filter</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">Production Designer</p>
-                  <p className="text-[10px] text-gray-500">Powered by {providerName}</p>
+                  <p className="text-sm font-bold text-on-surface">Production Designer</p>
+                  <p className="text-[10px] text-on-surface-variant/60">Powered by {providerName}</p>
                 </div>
               </div>
             </div>
@@ -912,8 +912,8 @@ export default function CharacterSetupPage() {
                     <span className="material-symbols-outlined text-primary text-3xl">movie_filter</span>
                   </div>
                   <div>
-                    <p className="text-white font-headline font-light tracking-[-0.03em] text-lg">Production Designer Agent</p>
-                    <p className="text-gray-500 text-sm mt-1 max-w-sm">
+                    <p className="text-on-surface font-headline font-light tracking-[-0.03em] text-lg">Production Designer Agent</p>
+                    <p className="text-on-surface-variant/60 text-sm mt-1 max-w-sm">
                       {state.visionText
                         ? 'Your project concept is loaded. Hit Autopilot to design & generate everything automatically.'
                         : 'Describe your project and I\'ll design characters, sets, wardrobe, props — the full production package.'}
@@ -925,7 +925,7 @@ export default function CharacterSetupPage() {
                     <button
                       onClick={runAutopilot}
                       disabled={isStreaming || autopilotPhase !== 'idle'}
-                      className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-br from-primary to-primary-container text-white font-headline font-bold text-base hover:scale-105 transition-all active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-primary/20"
+                      className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-br from-primary to-primary-container text-on-surface font-headline font-bold text-base hover:scale-105 transition-all active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-primary/20"
                     >
                       <span className="material-symbols-outlined text-[22px]">rocket_launch</span>
                       Autopilot — Design & Generate Everything
@@ -939,7 +939,7 @@ export default function CharacterSetupPage() {
                       'Create assets for a luxury product launch',
                       'Sci-fi setting with futuristic props',
                     ].map((chip) => (
-                      <button key={chip} onClick={() => sendAgentMessage(chip)} className="px-3 py-1.5 rounded-full border border-outline-variant/30 text-xs text-gray-400 hover:text-white hover:border-primary/40 transition">{chip}</button>
+                      <button key={chip} onClick={() => sendAgentMessage(chip)} className="px-3 py-1.5 rounded-full border border-outline-variant/30 text-xs text-on-surface-variant hover:text-on-surface hover:border-primary/40 transition">{chip}</button>
                     ))}
                   </div>
                 </div>
@@ -947,7 +947,7 @@ export default function CharacterSetupPage() {
 
               {agentMessages.map((msg) => (
                 <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user' ? 'bg-primary/20 text-white' : 'bg-surface-container text-gray-300 border border-outline-variant/10'}`}>
+                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user' ? 'bg-primary/20 text-on-surface' : 'bg-surface-container text-on-surface-variant border border-outline-variant/10'}`}>
                     <div className="whitespace-pre-wrap">{msg.role === 'assistant' ? stripAssetBlock(msg.content) : msg.content}</div>
                   </div>
                 </div>
@@ -971,7 +971,7 @@ export default function CharacterSetupPage() {
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAgentMessage(agentInput); } }}
                   placeholder="Describe what you need..."
                   rows={1}
-                  className="flex-1 bg-surface border border-outline-variant/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/40 resize-none"
+                  className="flex-1 bg-surface border border-outline-variant/20 rounded-xl px-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/40 resize-none"
                 />
                 <button onClick={() => sendAgentMessage(agentInput)} disabled={isStreaming || !agentInput.trim()} className="px-4 rounded-xl bg-primary text-on-primary font-bold text-sm disabled:opacity-40 transition hover:opacity-90">
                   <span className="material-symbols-outlined text-[18px]">send</span>
@@ -999,7 +999,7 @@ export default function CharacterSetupPage() {
                   <span className="material-symbols-outlined text-primary animate-spin text-[20px]">progress_activity</span>
                 )}
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-on-surface">
                     {autopilotPhase === 'designing' && 'Agent is designing production assets...'}
                     {autopilotPhase === 'review' && 'Review the production package below, then execute to generate.'}
                     {autopilotPhase === 'applying' && 'Applying production package...'}
@@ -1028,8 +1028,8 @@ export default function CharacterSetupPage() {
               <>
                 <div className="bg-surface-container-high rounded-2xl border border-primary/30 p-5 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-headline font-light tracking-[-0.03em] text-white">Production Package</h3>
-                    <span className="text-xs text-gray-500">{agentAssets.length} assets</span>
+                    <h3 className="font-headline font-light tracking-[-0.03em] text-on-surface">Production Package</h3>
+                    <span className="text-xs text-on-surface-variant/60">{agentAssets.length} assets</span>
                   </div>
 
                   {ASSET_CATEGORIES.map(cat => {
@@ -1039,14 +1039,14 @@ export default function CharacterSetupPage() {
                       <div key={cat.id} className="space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="material-symbols-outlined text-primary text-[14px]">{cat.icon}</span>
-                          <span className="text-[10px] uppercase tracking-widest text-gray-500">{cat.label}</span>
+                          <span className="text-[10px] uppercase tracking-widest text-on-surface-variant/60">{cat.label}</span>
                         </div>
                         {catAssets.map((a, i) => (
                           <div key={i} className="p-3 rounded-lg bg-surface-container border border-outline-variant">
-                            <p className="text-sm font-medium text-white">{a.name}</p>
-                            <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">{a.description}</p>
+                            <p className="text-sm font-medium text-on-surface">{a.name}</p>
+                            <p className="text-[10px] text-on-surface-variant/60 mt-1 line-clamp-2">{a.description}</p>
                             <div className="flex items-center gap-2 mt-2">
-                              <span className="text-[9px] text-gray-600">{AI_MODELS.find(m => m.id === a.model)?.name || a.model}</span>
+                              <span className="text-[9px] text-on-surface-variant/40">{AI_MODELS.find(m => m.id === a.model)?.name || a.model}</span>
                             </div>
                           </div>
                         ))}
@@ -1060,66 +1060,66 @@ export default function CharacterSetupPage() {
                   <div className="bg-surface-container-high rounded-2xl border border-processing/30 p-5 space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-processing text-[16px]">palette</span>
-                      <h3 className="font-headline font-light tracking-[-0.03em] text-white text-sm">Style DNA -- Auto-configured</h3>
+                      <h3 className="font-headline font-light tracking-[-0.03em] text-on-surface text-sm">Style DNA -- Auto-configured</h3>
                     </div>
-                    <p className="text-[10px] text-gray-500">These settings will be pre-filled on the Style DNA page.</p>
+                    <p className="text-[10px] text-on-surface-variant/60">These settings will be pre-filled on the Style DNA page.</p>
                     <div className="grid grid-cols-2 gap-2">
                       {agentStyleDna.colorIndex !== undefined && (
                         <div className="p-2 rounded-lg bg-surface-container border border-outline-variant">
-                          <span className="text-[9px] text-gray-500 uppercase tracking-wider">Color</span>
-                          <p className="text-xs text-white mt-0.5">{['Action Orange', 'Electric Blue', 'Cyber Purple', 'Neon Pink', 'Matrix Green'][agentStyleDna.colorIndex] || 'Custom'}</p>
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">Color</span>
+                          <p className="text-xs text-on-surface mt-0.5">{['Action Orange', 'Electric Blue', 'Cyber Purple', 'Neon Pink', 'Matrix Green'][agentStyleDna.colorIndex] || 'Custom'}</p>
                         </div>
                       )}
                       {agentStyleDna.lighting && (
                         <div className="p-2 rounded-lg bg-surface-container border border-outline-variant">
-                          <span className="text-[9px] text-gray-500 uppercase tracking-wider">Lighting</span>
-                          <p className="text-xs text-white mt-0.5 capitalize">{agentStyleDna.lighting}</p>
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">Lighting</span>
+                          <p className="text-xs text-on-surface mt-0.5 capitalize">{agentStyleDna.lighting}</p>
                         </div>
                       )}
                       {agentStyleDna.cameraMotion && (
                         <div className="p-2 rounded-lg bg-surface-container border border-outline-variant">
-                          <span className="text-[9px] text-gray-500 uppercase tracking-wider">Camera</span>
-                          <p className="text-xs text-white mt-0.5">{agentStyleDna.cameraMotion}</p>
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">Camera</span>
+                          <p className="text-xs text-on-surface mt-0.5">{agentStyleDna.cameraMotion}</p>
                         </div>
                       )}
                       {agentStyleDna.pacing && (
                         <div className="p-2 rounded-lg bg-surface-container border border-outline-variant">
-                          <span className="text-[9px] text-gray-500 uppercase tracking-wider">Pacing</span>
-                          <p className="text-xs text-white mt-0.5 capitalize">{agentStyleDna.pacing}</p>
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">Pacing</span>
+                          <p className="text-xs text-on-surface mt-0.5 capitalize">{agentStyleDna.pacing}</p>
                         </div>
                       )}
                       {agentStyleDna.aspectRatio && (
                         <div className="p-2 rounded-lg bg-surface-container border border-outline-variant">
-                          <span className="text-[9px] text-gray-500 uppercase tracking-wider">Aspect</span>
-                          <p className="text-xs text-white mt-0.5">{agentStyleDna.aspectRatio}</p>
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">Aspect</span>
+                          <p className="text-xs text-on-surface mt-0.5">{agentStyleDna.aspectRatio}</p>
                         </div>
                       )}
                       {agentStyleDna.selectedVideoModel && (
                         <div className="p-2 rounded-lg bg-surface-container border border-outline-variant">
-                          <span className="text-[9px] text-gray-500 uppercase tracking-wider">Video Model</span>
-                          <p className="text-xs text-white mt-0.5">{agentStyleDna.selectedVideoModel}</p>
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">Video Model</span>
+                          <p className="text-xs text-on-surface mt-0.5">{agentStyleDna.selectedVideoModel}</p>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
 
-                <button onClick={applyAndGenerateAll} disabled={generatingAssets > 0} className="w-full py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white font-headline font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3">
+                <button onClick={applyAndGenerateAll} disabled={generatingAssets > 0} className="w-full py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-surface font-headline font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3">
                   {generatingAssets > 0 ? (<><span className="material-symbols-outlined animate-spin">progress_activity</span>Generating {generatingAssets} assets...</>) : (<><span className="material-symbols-outlined">auto_awesome</span>Execute — Generate All Assets</>)}
                 </button>
 
-                <button onClick={() => { applyAgentAssets(); setMode('manual'); }} className="w-full py-3 rounded-xl border border-outline-variant text-gray-400 text-sm hover:text-white hover:border-primary/30 transition flex items-center justify-center gap-2">
+                <button onClick={() => { applyAgentAssets(); setMode('manual'); }} className="w-full py-3 rounded-xl border border-outline-variant text-on-surface-variant text-sm hover:text-on-surface hover:border-primary/30 transition flex items-center justify-center gap-2">
                   <span className="material-symbols-outlined text-[16px]">edit</span>Review in Manual Mode
                 </button>
               </>
             ) : (
               <div className="bg-surface-container-high rounded-2xl border border-outline-variant p-6 flex flex-col items-center justify-center text-center gap-4 min-h-[300px]">
-                <span className="material-symbols-outlined text-5xl text-gray-600">movie_filter</span>
+                <span className="material-symbols-outlined text-5xl text-on-surface-variant/40">movie_filter</span>
                 <div>
-                  <p className="text-white font-headline font-bold">
+                  <p className="text-on-surface font-headline font-bold">
                     {autopilotPhase === 'designing' ? 'Designing...' : 'Agent Ready'}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-on-surface-variant/60 mt-1">
                     {autopilotPhase === 'designing'
                       ? 'The Production Designer is creating your full asset package. Characters, locations, wardrobe, props — all being designed now.'
                       : 'The Production Designer will create characters, locations, wardrobe, props — everything your project needs for visual consistency.'}
@@ -1137,8 +1137,8 @@ export default function CharacterSetupPage() {
                 <div className="w-full grid grid-cols-3 gap-2 mt-2">
                   {ASSET_CATEGORIES.slice(0, 6).map(cat => (
                     <div key={cat.id} className="flex flex-col items-center gap-1 py-2 rounded-lg bg-surface-container border border-outline-variant">
-                      <span className="material-symbols-outlined text-[16px] text-gray-500">{cat.icon}</span>
-                      <span className="text-[9px] text-gray-500">{cat.label}</span>
+                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant/60">{cat.icon}</span>
+                      <span className="text-[9px] text-on-surface-variant/60">{cat.label}</span>
                     </div>
                   ))}
                 </div>
@@ -1148,13 +1148,13 @@ export default function CharacterSetupPage() {
             {/* Already generated assets */}
             {completedAssets > 0 && (
               <div className="space-y-2">
-                <span className="text-[10px] uppercase tracking-widest text-gray-500">Generated Assets</span>
+                <span className="text-[10px] uppercase tracking-widest text-on-surface-variant/60">Generated Assets</span>
                 <div className="grid grid-cols-3 gap-2">
                   {state.productionAssets.filter(a => a.imageUrl).map(a => (
                     <div key={a.id} className="relative aspect-square rounded-lg overflow-hidden border border-outline-variant">
                       <img src={a.imageUrl!} alt={a.name} className="w-full h-full object-cover" />
                       <div className="absolute bottom-0 left-0 right-0 bg-black/70 px-1.5 py-0.5">
-                        <span className="text-[8px] text-white">{a.name}</span>
+                        <span className="text-[8px] text-on-surface">{a.name}</span>
                       </div>
                     </div>
                   ))}
@@ -1179,7 +1179,7 @@ export default function CharacterSetupPage() {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition whitespace-nowrap ${
                   activeCategory === cat.id
                     ? 'bg-primary/15 text-primary border border-primary/30'
-                    : 'text-gray-400 hover:text-white border border-transparent hover:bg-surface-container-high'
+                    : 'text-on-surface-variant hover:text-on-surface border border-transparent hover:bg-surface-container-high'
                 }`}
               >
                 <span className="material-symbols-outlined text-[18px]">{cat.icon}</span>
@@ -1197,7 +1197,7 @@ export default function CharacterSetupPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary">model_training</span>
-                  <h3 className="font-semibold text-white">LoRA Training (Real Person)</h3>
+                  <h3 className="font-semibold text-on-surface">LoRA Training (Real Person)</h3>
                 </div>
                 {loraUrl && <span className="flex items-center gap-1 text-xs text-green-400"><CheckCircle2 className="w-3 h-3" />Trained</span>}
               </div>
@@ -1209,43 +1209,43 @@ export default function CharacterSetupPage() {
                       <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={(e) => {
                         if (e.target.files) { const f = Array.from(e.target.files); setUploadedImages(p => [...p, ...f.map(x => URL.createObjectURL(x))]); setUploadedFiles(p => [...p, ...f]); }
                       }} />
-                      <button onClick={() => fileInputRef.current?.click()} className="w-full py-3 border-2 border-dashed border-outline-variant rounded-lg text-sm text-gray-400 hover:border-primary/40 transition">
+                      <button onClick={() => fileInputRef.current?.click()} className="w-full py-3 border-2 border-dashed border-outline-variant rounded-lg text-sm text-on-surface-variant hover:border-primary/40 transition">
                         Upload {uploadedFiles.length > 0 ? `(${uploadedFiles.length} images)` : 'Photos'}
                       </button>
                     </div>
                     <div className="space-y-2">
-                      <input type="text" value={state.triggerWord} onChange={(e) => update({ triggerWord: e.target.value })} placeholder="Trigger word" className="px-3 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm text-white font-mono w-40 focus:border-primary outline-none" />
+                      <input type="text" value={state.triggerWord} onChange={(e) => update({ triggerWord: e.target.value })} placeholder="Trigger word" className="px-3 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm text-on-surface font-mono w-40 focus:border-primary outline-none" />
                     </div>
-                    <button onClick={handleTrain} disabled={isUploading || uploadedFiles.length < 3} className="px-6 py-2 rounded-lg bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium disabled:opacity-40 transition">
+                    <button onClick={handleTrain} disabled={isUploading || uploadedFiles.length < 3} className="px-6 py-2 rounded-lg bg-gradient-to-br from-primary to-primary-container text-on-surface text-sm font-medium disabled:opacity-40 transition">
                       {isUploading ? 'Uploading...' : 'Train'}
                     </button>
                   </div>
 
                   {/* Advanced Training Config */}
                   <details className="group">
-                    <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-300 transition flex items-center gap-1">
+                    <summary className="text-xs text-on-surface-variant/60 cursor-pointer hover:text-on-surface-variant transition flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px] group-open:rotate-90 transition-transform">chevron_right</span>
                       Advanced Settings
                     </summary>
                     <div className="mt-3 grid grid-cols-3 gap-3">
                       <div className="space-y-1">
-                        <label className="text-[10px] text-gray-500 uppercase tracking-wider">Steps</label>
-                        <input type="number" value={trainingSteps} onChange={(e) => setTrainingSteps(Math.max(100, Math.min(10000, parseInt(e.target.value) || 1000)))} min={100} max={10000} step={100} className="w-full px-3 py-1.5 bg-surface-container border border-outline-variant rounded-lg text-sm text-white font-mono focus:border-primary outline-none" />
-                        <p className="text-[9px] text-gray-600">1000 default. More = better but slower</p>
+                        <label className="text-[10px] text-on-surface-variant/60 uppercase tracking-wider">Steps</label>
+                        <input type="number" value={trainingSteps} onChange={(e) => setTrainingSteps(Math.max(100, Math.min(10000, parseInt(e.target.value) || 1000)))} min={100} max={10000} step={100} className="w-full px-3 py-1.5 bg-surface-container border border-outline-variant rounded-lg text-sm text-on-surface font-mono focus:border-primary outline-none" />
+                        <p className="text-[9px] text-on-surface-variant/40">1000 default. More = better but slower</p>
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[10px] text-gray-500 uppercase tracking-wider">Learning Rate</label>
-                        <input type="number" value={trainingLR} onChange={(e) => setTrainingLR(Math.max(0.0001, Math.min(0.01, parseFloat(e.target.value) || 0.0004)))} min={0.0001} max={0.01} step={0.0001} className="w-full px-3 py-1.5 bg-surface-container border border-outline-variant rounded-lg text-sm text-white font-mono focus:border-primary outline-none" />
-                        <p className="text-[9px] text-gray-600">0.0004 default. Lower = stable</p>
+                        <label className="text-[10px] text-on-surface-variant/60 uppercase tracking-wider">Learning Rate</label>
+                        <input type="number" value={trainingLR} onChange={(e) => setTrainingLR(Math.max(0.0001, Math.min(0.01, parseFloat(e.target.value) || 0.0004)))} min={0.0001} max={0.01} step={0.0001} className="w-full px-3 py-1.5 bg-surface-container border border-outline-variant rounded-lg text-sm text-on-surface font-mono focus:border-primary outline-none" />
+                        <p className="text-[9px] text-on-surface-variant/40">0.0004 default. Lower = stable</p>
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[10px] text-gray-500 uppercase tracking-wider">Resolution</label>
-                        <select value={trainingResolution} onChange={(e) => setTrainingResolution(parseInt(e.target.value))} className="w-full px-3 py-1.5 bg-surface-container border border-outline-variant rounded-lg text-sm text-white focus:border-primary outline-none">
+                        <label className="text-[10px] text-on-surface-variant/60 uppercase tracking-wider">Resolution</label>
+                        <select value={trainingResolution} onChange={(e) => setTrainingResolution(parseInt(e.target.value))} className="w-full px-3 py-1.5 bg-surface-container border border-outline-variant rounded-lg text-sm text-on-surface focus:border-primary outline-none">
                           <option value={512}>512px ($)</option>
                           <option value={768}>768px ($$)</option>
                           <option value={1024}>1024px ($$$)</option>
                         </select>
-                        <p className="text-[9px] text-gray-600">Higher = sharper, costs more</p>
+                        <p className="text-[9px] text-on-surface-variant/40">Higher = sharper, costs more</p>
                       </div>
                     </div>
                   </details>
@@ -1259,7 +1259,7 @@ export default function CharacterSetupPage() {
                 </div>
               )}
 
-              {loraUrl && <p className="text-xs text-gray-400">Trigger: <code className="text-primary font-mono">{state.triggerWord}</code></p>}
+              {loraUrl && <p className="text-xs text-on-surface-variant">Trigger: <code className="text-primary font-mono">{state.triggerWord}</code></p>}
 
               {uploadedImages.length > 0 && !loraUrl && (
                 <div className="flex gap-2 overflow-x-auto">
@@ -1277,7 +1277,7 @@ export default function CharacterSetupPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-tertiary">movie</span>
-                  <h3 className="font-semibold text-white">Video LoRA Training</h3>
+                  <h3 className="font-semibold text-on-surface">Video LoRA Training</h3>
                   <span className="text-[9px] px-1.5 py-0.5 rounded bg-processing/20 text-processing-dim font-medium uppercase">Experimental</span>
                 </div>
                 {state.videoLoraUrl && <span className="flex items-center gap-1 text-xs text-green-400"><CheckCircle2 className="w-3 h-3" />Trained</span>}
@@ -1285,14 +1285,14 @@ export default function CharacterSetupPage() {
 
               {!videoLoraUnlocked && (
                 <div className="space-y-3">
-                  <p className="text-xs text-gray-500">Train CogVideoX-5B or Hunyuan Video with your character for consistent video generation. Requires authorization.</p>
+                  <p className="text-xs text-on-surface-variant/60">Train CogVideoX-5B or Hunyuan Video with your character for consistent video generation. Requires authorization.</p>
                   <div className="flex gap-2">
                     <input
                       type="password"
                       value={videoLoraPassword}
                       onChange={(e) => setVideoLoraPassword(e.target.value)}
                       placeholder="Enter password"
-                      className="flex-1 px-3 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm text-white font-mono focus:border-tertiary outline-none"
+                      className="flex-1 px-3 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm text-on-surface font-mono focus:border-tertiary outline-none"
                       onKeyDown={(e) => { if (e.key === 'Enter') handleVideoLoraUnlock(); }}
                     />
                     <button onClick={handleVideoLoraUnlock} className="px-4 py-2 rounded-lg bg-tertiary/10 border border-tertiary/30 text-tertiary text-sm font-medium hover:bg-tertiary/20 transition">
@@ -1310,11 +1310,11 @@ export default function CharacterSetupPage() {
                       <input ref={videoFileInputRef} type="file" multiple accept="video/*" className="hidden" onChange={(e) => {
                         if (e.target.files) setVideoTrainingFiles(Array.from(e.target.files));
                       }} />
-                      <button onClick={() => videoFileInputRef.current?.click()} className="w-full py-3 border-2 border-dashed border-outline-variant rounded-lg text-sm text-gray-400 hover:border-tertiary/40 transition">
+                      <button onClick={() => videoFileInputRef.current?.click()} className="w-full py-3 border-2 border-dashed border-outline-variant rounded-lg text-sm text-on-surface-variant hover:border-tertiary/40 transition">
                         Upload {videoTrainingFiles.length > 0 ? `(${videoTrainingFiles.length} videos)` : 'Video Clips'}
                       </button>
                     </div>
-                    <select value={videoTrainingTarget} onChange={(e) => setVideoTrainingTarget(e.target.value as 'cogvideox-5b' | 'hunyuan-video')} className="px-3 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm text-white focus:border-tertiary outline-none">
+                    <select value={videoTrainingTarget} onChange={(e) => setVideoTrainingTarget(e.target.value as 'cogvideox-5b' | 'hunyuan-video')} className="px-3 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm text-on-surface focus:border-tertiary outline-none">
                       <option value="cogvideox-5b">CogVideoX-5B (~$0.32/vid)</option>
                       <option value="hunyuan-video">Hunyuan Video (~$1.27/vid)</option>
                     </select>
@@ -1322,7 +1322,7 @@ export default function CharacterSetupPage() {
                       {videoTraining.isUploading ? 'Uploading...' : 'Train'}
                     </button>
                   </div>
-                  <p className="text-[10px] text-gray-600">Upload 3-25 video clips (5-15s each) of your character. Training costs ~$11-71 depending on model and duration.</p>
+                  <p className="text-[10px] text-on-surface-variant/40">Upload 3-25 video clips (5-15s each) of your character. Training costs ~$11-71 depending on model and duration.</p>
                 </>
               )}
 
@@ -1333,7 +1333,7 @@ export default function CharacterSetupPage() {
                 </div>
               )}
 
-              {state.videoLoraUrl && <p className="text-xs text-gray-400">Video LoRA ready. Select CogVideoX-5B or Hunyuan as your video model to use it.</p>}
+              {state.videoLoraUrl && <p className="text-xs text-on-surface-variant">Video LoRA ready. Select CogVideoX-5B or Hunyuan as your video model to use it.</p>}
             </div>
           )}
 
@@ -1341,26 +1341,26 @@ export default function CharacterSetupPage() {
           <div className="bg-surface-container-high rounded-xl border border-outline-variant p-5 space-y-4">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary">{ASSET_CATEGORIES.find(c => c.id === activeCategory)?.icon}</span>
-              <h3 className="font-semibold text-white">Add {ASSET_CATEGORIES.find(c => c.id === activeCategory)?.label.slice(0, -1)}</h3>
+              <h3 className="font-semibold text-on-surface">Add {ASSET_CATEGORIES.find(c => c.id === activeCategory)?.label.slice(0, -1)}</h3>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-xs text-gray-400">Name</label>
-                <input type="text" value={assetName} onChange={(e) => setAssetName(e.target.value)} placeholder={`e.g. ${activeCategory === 'character' ? 'Detective Noir' : activeCategory === 'location' ? 'Rain-Soaked Alley' : 'Item Name'}`} className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg text-white placeholder-gray-500 focus:border-primary outline-none transition text-sm" />
+                <label className="text-xs text-on-surface-variant">Name</label>
+                <input type="text" value={assetName} onChange={(e) => setAssetName(e.target.value)} placeholder={`e.g. ${activeCategory === 'character' ? 'Detective Noir' : activeCategory === 'location' ? 'Rain-Soaked Alley' : 'Item Name'}`} className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder-gray-500 focus:border-primary outline-none transition text-sm" />
               </div>
               <div className="space-y-2">
-                <label className="text-xs text-gray-400">Model</label>
+                <label className="text-xs text-on-surface-variant">Model</label>
                 <div className="relative">
-                  <button onClick={() => setShowModelPicker(!showModelPicker)} className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg text-white text-sm text-left flex items-center justify-between">
+                  <button onClick={() => setShowModelPicker(!showModelPicker)} className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg text-on-surface text-sm text-left flex items-center justify-between">
                     <span>{selectedModelDef.name}</span>
-                    <span className="material-symbols-outlined text-[16px] text-gray-500">expand_more</span>
+                    <span className="material-symbols-outlined text-[16px] text-on-surface-variant/60">expand_more</span>
                   </button>
                   {showModelPicker && (
                     <div className="absolute top-full mt-1 left-0 right-0 bg-surface-container-high border border-outline-variant rounded-lg shadow-xl z-20 max-h-48 overflow-y-auto">
                       {AI_MODELS.map(m => (
-                        <button key={m.id} onClick={() => { setAssetModel(m.id); setShowModelPicker(false); }} className={`w-full px-4 py-2 text-left text-sm hover:bg-surface-container transition ${assetModel === m.id ? 'text-primary' : 'text-gray-400'}`}>
-                          {m.name} <span className="text-[10px] text-gray-600">({m.speed})</span>
+                        <button key={m.id} onClick={() => { setAssetModel(m.id); setShowModelPicker(false); }} className={`w-full px-4 py-2 text-left text-sm hover:bg-surface-container transition ${assetModel === m.id ? 'text-primary' : 'text-on-surface-variant'}`}>
+                          {m.name} <span className="text-[10px] text-on-surface-variant/40">({m.speed})</span>
                         </button>
                       ))}
                     </div>
@@ -1370,16 +1370,16 @@ export default function CharacterSetupPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs text-gray-400">Description (detailed for AI generation)</label>
+              <label className="text-xs text-on-surface-variant">Description (detailed for AI generation)</label>
               <textarea
                 value={assetDescription}
                 onChange={(e) => setAssetDescription(e.target.value)}
                 placeholder={ASSET_CATEGORIES.find(c => c.id === activeCategory)?.placeholder}
-                className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-white placeholder-gray-500 focus:border-primary outline-none transition resize-none h-24 text-sm"
+                className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder-gray-500 focus:border-primary outline-none transition resize-none h-24 text-sm"
               />
             </div>
 
-            <button onClick={addManualAsset} disabled={!assetName.trim() || !assetDescription.trim()} className="px-6 py-2.5 rounded-lg bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium disabled:opacity-40 transition flex items-center gap-2">
+            <button onClick={addManualAsset} disabled={!assetName.trim() || !assetDescription.trim()} className="px-6 py-2.5 rounded-lg bg-gradient-to-br from-primary to-primary-container text-on-surface text-sm font-medium disabled:opacity-40 transition flex items-center gap-2">
               <Plus className="w-4 h-4" />Add {ASSET_CATEGORIES.find(c => c.id === activeCategory)?.label.slice(0, -1)}
             </button>
           </div>
@@ -1388,7 +1388,7 @@ export default function CharacterSetupPage() {
           {categoryAssets.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-white">{ASSET_CATEGORIES.find(c => c.id === activeCategory)?.label} ({categoryAssets.length})</h3>
+                <h3 className="text-sm font-semibold text-on-surface">{ASSET_CATEGORIES.find(c => c.id === activeCategory)?.label} ({categoryAssets.length})</h3>
                 <button onClick={generateAllPending} disabled={generatingAssets > 0 || categoryAssets.every(a => a.status === 'succeeded')} className="text-xs text-primary hover:text-primary/80 transition disabled:opacity-40">
                   Generate All Pending
                 </button>
@@ -1403,13 +1403,13 @@ export default function CharacterSetupPage() {
                         <>
                           <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
                           <button onClick={() => generateAsset(asset)} className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
-                            <span className="material-symbols-outlined text-white">refresh</span>
+                            <span className="material-symbols-outlined text-on-surface">refresh</span>
                           </button>
                         </>
                       ) : asset.status === 'generating' ? (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-2">
                           <div className="w-8 h-8 border-3 border-primary/30 border-t-primary rounded-full animate-spin" />
-                          <span className="text-[10px] text-gray-500">Generating...</span>
+                          <span className="text-[10px] text-on-surface-variant/60">Generating...</span>
                         </div>
                       ) : asset.status === 'failed' ? (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-2 p-3">
@@ -1418,7 +1418,7 @@ export default function CharacterSetupPage() {
                         </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <button onClick={() => generateAsset(asset)} className="flex flex-col items-center gap-2 text-gray-500 hover:text-primary transition">
+                          <button onClick={() => generateAsset(asset)} className="flex flex-col items-center gap-2 text-on-surface-variant/60 hover:text-primary transition">
                             <span className="material-symbols-outlined text-3xl">auto_awesome</span>
                             <span className="text-[10px]">Generate</span>
                           </button>
@@ -1429,10 +1429,10 @@ export default function CharacterSetupPage() {
                     {/* Info */}
                     <div className="p-3 space-y-1">
                       <div className="flex items-center justify-between">
-                        <p className="text-xs font-medium text-white truncate">{asset.name}</p>
-                        <button onClick={() => removeAsset(asset.id)} className="opacity-0 group-hover:opacity-100 transition"><Trash2 className="w-3 h-3 text-gray-600 hover:text-red-400" /></button>
+                        <p className="text-xs font-medium text-on-surface truncate">{asset.name}</p>
+                        <button onClick={() => removeAsset(asset.id)} className="opacity-0 group-hover:opacity-100 transition"><Trash2 className="w-3 h-3 text-on-surface-variant/40 hover:text-red-400" /></button>
                       </div>
-                      <p className="text-[10px] text-gray-500 line-clamp-2">{asset.description}</p>
+                      <p className="text-[10px] text-on-surface-variant/60 line-clamp-2">{asset.description}</p>
                     </div>
                   </div>
                 ))}
@@ -1441,10 +1441,10 @@ export default function CharacterSetupPage() {
           )}
 
           {categoryAssets.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-on-surface-variant/60">
               <span className="material-symbols-outlined text-4xl mb-2">{ASSET_CATEGORIES.find(c => c.id === activeCategory)?.icon}</span>
               <p className="text-sm">No {ASSET_CATEGORIES.find(c => c.id === activeCategory)?.label.toLowerCase()} yet</p>
-              <p className="text-xs text-gray-600 mt-1">Add one above or use the AI Agent to generate everything</p>
+              <p className="text-xs text-on-surface-variant/40 mt-1">Add one above or use the AI Agent to generate everything</p>
             </div>
           )}
         </div>
@@ -1452,7 +1452,7 @@ export default function CharacterSetupPage() {
 
       {/* Navigation */}
       <div className="flex justify-between items-center gap-4 pt-8 border-t border-outline-variant">
-        <Link href="/create/brief" className="px-8 py-3 rounded-xl bg-surface-container-highest text-white font-headline font-bold transition-all hover:scale-105 active:scale-95">Back</Link>
+        <Link href="/create/brief" className="px-8 py-3 rounded-xl bg-surface-container-highest text-on-surface font-headline font-bold transition-all hover:scale-105 active:scale-95">Back</Link>
         <Link href="/create/style-dna" className="px-10 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-headline font-black transition-all hover:scale-105 active:scale-95">CONTINUE</Link>
       </div>
 
@@ -1465,10 +1465,10 @@ export default function CharacterSetupPage() {
             <div className="bg-surface-container-low/95 backdrop-blur-xl border border-primary/30 rounded-2xl p-5 shadow-2xl shadow-primary/10 flex items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-white text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                  <span className="material-symbols-outlined text-on-surface text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                 </div>
                 <div>
-                  <p className="text-sm font-headline font-bold text-white">Production package ready</p>
+                  <p className="text-sm font-headline font-bold text-on-surface">Production package ready</p>
                   <p className="text-xs text-on-surface-variant mt-0.5">
                     {completedAssets > 0
                       ? `${completedAssets} asset${completedAssets !== 1 ? 's' : ''} generated`
@@ -1483,7 +1483,7 @@ export default function CharacterSetupPage() {
               <div className="flex items-center gap-3 shrink-0">
                 <button
                   onClick={() => setShowContinueBanner(false)}
-                  className="px-4 py-2 rounded-lg text-xs font-bold text-on-surface-variant hover:text-white transition-colors"
+                  className="px-4 py-2 rounded-lg text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors"
                 >
                   Dismiss
                 </button>

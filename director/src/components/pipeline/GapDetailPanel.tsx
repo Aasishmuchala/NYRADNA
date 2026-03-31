@@ -27,11 +27,11 @@ function StatusLabel({ status }: { status: string }) {
     return <span className="text-xs font-medium text-[#555] line-through">Dismissed</span>;
   }
   if (status === 'fill-requested') {
-    return <span className="text-xs font-medium text-[#c6bfff] animate-pulse">Fill Requested</span>;
+    return <span className="text-xs font-medium text-[var(--color-primary)] animate-pulse">Fill Requested</span>;
   }
   if (status === 'generating') {
     return (
-      <span className="text-xs font-medium text-[#c6bfff] flex items-center gap-1">
+      <span className="text-xs font-medium text-[var(--color-primary)] flex items-center gap-1">
         <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
         Generating bridge scene...
       </span>
@@ -55,14 +55,14 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
   const filling = useGapStore((s) => s.filling);
 
   return (
-    <div className="w-80 bg-[#1f1f24] border-l border-[#c6bfff]/10 p-4 overflow-y-auto">
+    <div className="w-80 bg-surface-container border-l border-[var(--color-primary)]/10 p-4 overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-white">Gap Analysis</h3>
+        <h3 className="text-sm font-bold text-on-surface">Gap Analysis</h3>
         <button
           type="button"
           onClick={onClose}
-          className="text-[#555] hover:text-white transition-colors"
+          className="text-[#555] hover:text-on-surface transition-colors"
         >
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>
@@ -78,7 +78,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
           return (
             <div
               key={gap.id}
-              className="rounded-lg border border-[#c6bfff]/10 bg-white/5 p-3"
+              className="rounded-lg border border-[var(--color-primary)]/10 bg-white/5 p-3"
             >
               {/* Badges row */}
               <div className="flex items-center gap-2 mb-2">
@@ -92,7 +92,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
               </div>
 
               {/* Title */}
-              <h4 className="text-sm font-bold text-white mb-1">{gap.title}</h4>
+              <h4 className="text-sm font-bold text-on-surface mb-1">{gap.title}</h4>
 
               {/* Description */}
               <p className="text-xs text-[#c8c4d6] mb-1">{gap.description}</p>
@@ -128,7 +128,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
                     type="button"
                     onClick={() => requestFill(gap.id)}
                     disabled={filling}
-                    className={`rounded-lg bg-[#c6bfff] px-3 py-1 text-xs font-bold text-white transition-colors hover:bg-[#c6bfff] disabled:opacity-50${
+                    className={`rounded-lg bg-[var(--color-primary)] px-3 py-1 text-xs font-bold text-on-surface transition-colors hover:bg-[var(--color-primary)] disabled:opacity-50${
                       filling ? ' opacity-50' : ''
                     }`}
                   >

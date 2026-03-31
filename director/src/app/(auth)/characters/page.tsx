@@ -146,7 +146,7 @@ export default function CharactersPage() {
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-5 z-10 space-y-3">
                   <div>
-                    <h4 className="text-xl font-bold font-headline text-white">{character.name}</h4>
+                    <h4 className="text-xl font-bold font-headline text-on-surface">{character.name}</h4>
                     <div className="flex items-center gap-3 mt-1">
                       <span className="text-[11px] text-on-surface-variant flex items-center gap-1">
                         <span className="material-symbols-outlined text-[14px]">movie</span>
@@ -161,7 +161,7 @@ export default function CharactersPage() {
                   <div className="pt-2 border-t border-outline-variant/20 flex gap-2">
                     <button
                       onClick={() => handleRename(character.id, character.name)}
-                      className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white text-xs font-bold py-2 rounded-lg transition-all"
+                      className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-md text-on-surface text-xs font-bold py-2 rounded-lg transition-all"
                     >
                       Rename
                     </button>

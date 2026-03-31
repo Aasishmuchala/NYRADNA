@@ -66,16 +66,16 @@ export default function FileUploadZone({
       onDrop={handleDrop}
       className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${
         isDragOver
-          ? 'border-[#c6bfff] bg-[#1f1f24]'
-          : 'border-[#c6bfff]/10 hover:border-[#c6bfff]/30'
+          ? 'border-[var(--color-primary)] bg-surface-container'
+          : 'border-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/30'
       }`}
     >
       {uploading ? (
         <div className="flex flex-col items-center gap-2">
-          <span className="material-symbols-outlined animate-pulse text-4xl text-[#c6bfff]">
+          <span className="material-symbols-outlined animate-pulse text-4xl text-[var(--color-primary)]">
             cloud_upload
           </span>
-          <p className="animate-pulse text-sm text-[#c6bfff]">Uploading...</p>
+          <p className="animate-pulse text-sm text-[var(--color-primary)]">Uploading...</p>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2">
