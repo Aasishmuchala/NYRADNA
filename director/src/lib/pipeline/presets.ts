@@ -139,11 +139,150 @@ export const KLING_MULTIPROMPT_PIPELINE: PipelineGraph = {
 };
 
 /**
+ * Ultra Pipeline — film-grade flow with control estimation, identity lock,
+ * ControlNet generation, quality gate, progressive refinement, and VACE video.
+ *
+ * Flow:
+ * References ──┬──> ControlEstimator ──> ControlPreview ──> ControlNetGen ──> IdentityLock ──> QualityGate ──> ProgressiveRefine ──> VACEVideoGen ──> Stitch ──> Export
+ * ScenePrompt ─┘         │                                     ▲                  ▲
+ *                    IPAdapterLock ──────────────────────────────┘                  │
+ *                                                                                  │
+ * (References refset feeds into QualityGate reference)                             │
+ */
+export const ULTRA_PIPELINE: PipelineGraph = {
+  id: 'preset-ultra',
+  name: 'Ultra Pipeline',
+  description: 'Film-grade flow: AI control estimation, identity lock, ControlNet, quality gate, progressive refinement, VACE video.',
+  nodes: [
+    // Source
+    {
+      id: 'u-refs',
+      type: 'ReferenceImages',
+      position: { x: 50, y: 150 },
+      config: {},
+    },
+    {
+      id: 'u-prompt',
+      type: 'ScenePrompt',
+      position: { x: 50, y: 350 },
+      config: { appendStyle: true },
+    },
+    // Control estimation
+    {
+      id: 'u-control-est',
+      type: 'ControlEstimator',
+      position: { x: 300, y: 150 },
+      config: {},
+    },
+    // Control preview
+    {
+      id: 'u-control-preview',
+      type: 'ControlPreview',
+      position: { x: 550, y: 60 },
+      config: { overlayMode: 'side-by-side', opacity: 0.5 },
+    },
+    // Style lock from hero frame
+    {
+      id: 'u-ip-adapter',
+      type: 'IPAdapterLock',
+      position: { x: 300, y: 350 },
+      config: { strength: 0.8 },
+    },
+    // ControlNet generation
+    {
+      id: 'u-controlnet-gen',
+      type: 'ControlNetGen',
+      position: { x: 550, y: 230 },
+      config: { model: 'flux-controlnet', controlType: 'depth', strength: 0.85, aspectRatio: '16:9' },
+    },
+    // Identity lock (PuLID)
+    {
+      id: 'u-identity-lock',
+      type: 'IdentityLock',
+      position: { x: 800, y: 230 },
+      config: { strength: 0.9 },
+    },
+    // Quality gate (CLIP+ArcFace+DreamSim)
+    {
+      id: 'u-quality-gate',
+      type: 'QualityGate',
+      position: { x: 1050, y: 230 },
+      config: { clipThreshold: 0.75, arcfaceThreshold: 0.85, dreamsimThreshold: 0.70, retryOnFail: true, maxRetries: 3 },
+    },
+    // Progressive refinement
+    {
+      id: 'u-progressive',
+      type: 'ProgressiveRefine',
+      position: { x: 1300, y: 230 },
+      config: { targetStage: 'final', model: 'flux-2-pro', strength: 0.6 },
+    },
+    // VACE video generation
+    {
+      id: 'u-vace-video',
+      type: 'VACEVideoGen',
+      position: { x: 1550, y: 230 },
+      config: { model: 'vace-14b', duration: 5, structureStrength: 0.8, aspectRatio: '16:9' },
+    },
+    // Stitch
+    {
+      id: 'u-stitch',
+      type: 'Stitch',
+      position: { x: 1800, y: 230 },
+      config: { transition: 'cut' },
+    },
+    // Export
+    {
+      id: 'u-export',
+      type: 'Export',
+      position: { x: 2050, y: 230 },
+      config: { format: 'mp4' },
+    },
+  ],
+  edges: [
+    // Refs image[0] → ControlEstimator (use first ref image for control estimation)
+    { id: 'ue-1', sourceNodeId: 'u-refs', sourcePortId: 'refset', targetNodeId: 'u-control-est', targetPortId: 'image' },
+    // ControlEstimator → ControlPreview
+    { id: 'ue-2', sourceNodeId: 'u-control-est', sourcePortId: 'control_map', targetNodeId: 'u-control-preview', targetPortId: 'control_map' },
+    // ControlEstimator → ControlNetGen (control map)
+    { id: 'ue-3', sourceNodeId: 'u-control-est', sourcePortId: 'control_map', targetNodeId: 'u-controlnet-gen', targetPortId: 'control_map' },
+    // Prompt → ControlNetGen
+    { id: 'ue-4', sourceNodeId: 'u-prompt', sourcePortId: 'prompt', targetNodeId: 'u-controlnet-gen', targetPortId: 'prompt' },
+    // Prompt → IPAdapterLock
+    { id: 'ue-5', sourceNodeId: 'u-prompt', sourcePortId: 'prompt', targetNodeId: 'u-ip-adapter', targetPortId: 'prompt' },
+    // Refs → IPAdapterLock (hero image for style lock)
+    { id: 'ue-6', sourceNodeId: 'u-refs', sourcePortId: 'refset', targetNodeId: 'u-ip-adapter', targetPortId: 'image' },
+    // ControlNetGen → IdentityLock
+    { id: 'ue-7', sourceNodeId: 'u-controlnet-gen', sourcePortId: 'image', targetNodeId: 'u-identity-lock', targetPortId: 'image' },
+    // Prompt → IdentityLock
+    { id: 'ue-8', sourceNodeId: 'u-prompt', sourcePortId: 'prompt', targetNodeId: 'u-identity-lock', targetPortId: 'prompt' },
+    // IdentityLock → QualityGate
+    { id: 'ue-9', sourceNodeId: 'u-identity-lock', sourcePortId: 'image', targetNodeId: 'u-quality-gate', targetPortId: 'image' },
+    // IPAdapterLock → QualityGate (as reference for scoring)
+    { id: 'ue-10', sourceNodeId: 'u-ip-adapter', sourcePortId: 'image', targetNodeId: 'u-quality-gate', targetPortId: 'reference' },
+    // QualityGate → ProgressiveRefine
+    { id: 'ue-11', sourceNodeId: 'u-quality-gate', sourcePortId: 'image', targetNodeId: 'u-progressive', targetPortId: 'image' },
+    // Prompt → ProgressiveRefine
+    { id: 'ue-12', sourceNodeId: 'u-prompt', sourcePortId: 'prompt', targetNodeId: 'u-progressive', targetPortId: 'prompt' },
+    // ProgressiveRefine → VACEVideoGen (start image)
+    { id: 'ue-13', sourceNodeId: 'u-progressive', sourcePortId: 'image', targetNodeId: 'u-vace-video', targetPortId: 'image' },
+    // Prompt → VACEVideoGen
+    { id: 'ue-14', sourceNodeId: 'u-prompt', sourcePortId: 'prompt', targetNodeId: 'u-vace-video', targetPortId: 'prompt' },
+    // ControlEstimator → VACEVideoGen (control map for structure awareness)
+    { id: 'ue-15', sourceNodeId: 'u-control-est', sourcePortId: 'control_map', targetNodeId: 'u-vace-video', targetPortId: 'control_map' },
+    // VACEVideoGen → Stitch
+    { id: 'ue-16', sourceNodeId: 'u-vace-video', sourcePortId: 'video', targetNodeId: 'u-stitch', targetPortId: 'videos' },
+    // Stitch → Export
+    { id: 'ue-17', sourceNodeId: 'u-stitch', sourcePortId: 'video', targetNodeId: 'u-export', targetPortId: 'video' },
+  ],
+};
+
+/**
  * All available presets
  */
 export const PIPELINE_PRESETS: PipelineGraph[] = [
   DIRECTOR_PIPELINE,
   KLING_MULTIPROMPT_PIPELINE,
+  ULTRA_PIPELINE,
 ];
 
 export function getPreset(id: string): PipelineGraph | undefined {

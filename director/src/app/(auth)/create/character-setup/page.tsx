@@ -668,7 +668,15 @@ export default function CharacterSetupPage() {
           const statusRes = await fetch(`/api/status/${predictionId}`);
           const statusData = await statusRes.json();
           if (statusData.status === 'succeeded') {
-            const output = Array.isArray(statusData.output) ? statusData.output[0] : statusData.output;
+            const rawOutput = Array.isArray(statusData.output) ? statusData.output[0] : statusData.output;
+            // Persist to base64 data URL so it survives Replicate CDN expiry
+            let output = rawOutput;
+            if (rawOutput) {
+              try {
+                const { persistImageUrl } = await import('@/lib/persistImage');
+                output = await persistImageUrl(rawOutput);
+              } catch { /* fallback to raw URL */ }
+            }
             const successUpdate = assetsRef.current.map(x =>
               x.id === a.id ? { ...x, imageUrl: output || null, status: 'succeeded' as const } : x
             );

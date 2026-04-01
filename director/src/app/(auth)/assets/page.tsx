@@ -215,19 +215,22 @@ export default function AssetsPage() {
   }, [projectAssets, selectedProjectId]);
 
   return (
-    <main className="pt-24 pb-12 pl-4 pr-4 md:pl-72 md:pr-8 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <main className="max-w-7xl mx-auto">
+      <div className="space-y-10">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-3xl md:text-4xl font-extrabold headline-font tracking-tighter">Production Assets</h1>
-            <p className="text-on-surface-variant text-sm mt-1">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold block mb-3">Asset Library</span>
+            <h1 className="font-headline font-light text-4xl md:text-5xl tracking-[-0.03em] text-on-surface">
+              Production Assets
+            </h1>
+            <p className="text-on-surface-variant/70 text-sm mt-3 tracking-wide">
               {totalCount} asset{totalCount !== 1 ? 's' : ''} across {projectAssets.length} project{projectAssets.length !== 1 ? 's' : ''}
             </p>
           </div>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary-fixed text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_30px_rgba(198,191,255,0.15)] hover:scale-105 active:scale-95 transition-all"
           >
             <span className="material-symbols-outlined text-sm">add</span>
             Add Asset
@@ -236,8 +239,8 @@ export default function AssetsPage() {
 
         {/* Add Asset Form */}
         {showAddForm && (
-          <div className="p-6 rounded-xl border border-outline-variant/20 bg-surface-container space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">New Asset (Current Project)</h3>
+          <div className="glass-card rounded-xl p-8 space-y-5">
+            <h3 className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant">New Asset (Current Project)</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Category</label>
@@ -298,9 +301,9 @@ export default function AssetsPage() {
         )}
 
         {/* Project Filter + Category Filter */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {/* Project tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <div className="flex items-center gap-3 overflow-x-auto pb-1">
             <button
               onClick={() => setSelectedProjectId(null)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
@@ -379,17 +382,17 @@ export default function AssetsPage() {
                     </div>
                   </div>
 
-                  {/* Asset grid — bigger thumbnails */}
+                  {/* Asset grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projectFiltered.map((asset) => (
                       <div
                         key={asset.id}
                         onClick={() => setSelectedAsset(asset.id === selectedAsset ? null : asset.id)}
-                        className={`group relative rounded-xl overflow-hidden border transition-all cursor-pointer ${
+                        className={`group relative rounded-xl overflow-hidden transition-all duration-500 cursor-pointer ${
                           selectedAsset === asset.id
-                            ? 'border-primary ring-2 ring-primary/20'
-                            : 'border-outline-variant/20 hover:border-outline-variant/40'
-                        } bg-surface-container`}
+                            ? 'ring-2 ring-primary/30 scale-[1.02]'
+                            : 'hover:scale-[1.02]'
+                        } glass-card`}
                       >
                         <div className="aspect-[4/3] relative bg-surface-container-highest">
                           {asset.status === 'generating' ? (
@@ -452,15 +455,13 @@ export default function AssetsPage() {
               const f = filter === 'all' ? pa.assets : pa.assets.filter(a => a.category === filter);
               return f.length === 0;
             }) && (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">image</span>
-                <h3 className="text-lg font-bold mb-2">No assets found</h3>
-                <p className="text-on-surface-variant text-sm mb-6">
-                  Generate production assets in the Characters step.
-                </p>
+              <div className="flex flex-col items-center justify-center py-32 text-center">
+                <span className="material-symbols-outlined text-7xl text-on-surface-variant/15 mb-6">photo_library</span>
+                <p className="text-on-surface-variant/50 text-sm tracking-widest uppercase mb-2">No assets found</p>
+                <p className="text-on-surface-variant/30 text-xs mb-8">Generate production assets in the Characters step</p>
                 <Link
                   href="/create/character-setup"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold hover:bg-primary/90 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary/10 text-primary text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-primary/20 transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm">face</span>
                   Go to Characters
@@ -472,7 +473,7 @@ export default function AssetsPage() {
           {/* Detail Panel */}
           {selectedEntry && (
             <div className="hidden lg:block w-80 shrink-0">
-              <div className="sticky top-24 rounded-xl border border-outline-variant/20 bg-surface-container overflow-hidden">
+              <div className="sticky top-8 glass-card rounded-xl overflow-hidden">
                 <div className="aspect-square bg-surface-container-highest">
                   {selectedEntry.asset.imageUrl ? (
                     <img src={selectedEntry.asset.imageUrl} alt={selectedEntry.asset.name} className="w-full h-full object-cover" />

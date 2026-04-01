@@ -119,6 +119,10 @@ export interface WizardState {
   pipelineMode: 'simple' | 'node';
   activePipelineId: string | null;
   finalVideoUrl: string | null;
+
+  // Ultra Mode
+  ultraModeEnabled: boolean;
+  controlSourceType: 'ai-estimate' | '3d-composer' | 'upload';
 }
 
 const defaultState: WizardState = {
@@ -189,6 +193,9 @@ const defaultState: WizardState = {
   pipelineMode: 'simple',
   activePipelineId: null,
   finalVideoUrl: null,
+
+  ultraModeEnabled: false,
+  controlSourceType: 'ai-estimate',
 };
 
 interface WizardContextType {

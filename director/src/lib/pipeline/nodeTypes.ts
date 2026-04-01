@@ -20,6 +20,17 @@ import {
   executeStitch,
   executeExport,
 } from './nodeExecutors';
+import {
+  executeControlEstimator,
+  executeControlNetGen,
+  executeVACEVideoGen,
+  executeIPAdapterLock,
+  executeSceneComposer3D,
+  executeControlPreview,
+  executeIdentityLock,
+  executeQualityGate,
+  executeProgressiveRefine,
+} from './ultraNodeExecutors';
 
 // ─── Source Nodes ───────────────────────────────────────────────────
 
@@ -364,17 +375,323 @@ const Export: NodeTypeDef = {
   execute: executeExport,
 };
 
+// ─── Ultra Mode: Source Nodes ───────────────────────────────────────
+
+const ControlEstimator: NodeTypeDef = {
+  type: 'ControlEstimator',
+  category: 'source',
+  label: 'Control Estimator',
+  description: 'AI-estimates depth + pose control maps from a reference image for structure-aware generation',
+  icon: 'layers',
+  inputs: [
+    { id: 'image', label: 'Reference Image', dataType: 'image', required: true },
+  ],
+  outputs: [
+    { id: 'control_map', label: 'Control Map', dataType: 'control_map', required: false },
+    { id: 'depth_map', label: 'Depth Map', dataType: 'image', required: false },
+    { id: 'pose_map', label: 'Pose Map', dataType: 'image', required: false },
+  ],
+  config: [],
+  execute: executeControlEstimator,
+};
+
+const SceneComposer3D: NodeTypeDef = {
+  type: 'SceneComposer3D',
+  category: 'source',
+  label: '3D Scene Composer',
+  description: 'Placeholder for Phase 3 Three.js-based 3D scene layout and control map export',
+  icon: 'view_in_ar',
+  inputs: [],
+  outputs: [
+    { id: 'control_map', label: 'Control Map', dataType: 'control_map', required: false },
+  ],
+  config: [
+    { id: 'scenePreset', label: 'Scene Preset', type: 'select', options: [
+      { value: 'empty', label: 'Empty Scene' },
+      { value: 'interior', label: 'Interior Room' },
+      { value: 'exterior', label: 'Exterior Street' },
+      { value: 'studio', label: 'Studio Setup' },
+    ], default: 'empty' },
+  ],
+  execute: executeSceneComposer3D,
+};
+
+// ─── Ultra Mode: Generation Nodes ──────────────────────────────────
+
+const ControlNetGen: NodeTypeDef = {
+  type: 'ControlNetGen',
+  category: 'generation',
+  label: 'ControlNet Gen',
+  description: 'Generates image conditioned on control signals (depth, pose, canny) for structure-aware output',
+  icon: 'tune',
+  inputs: [
+    { id: 'prompt', label: 'Prompt', dataType: 'text', required: true },
+    { id: 'control_map', label: 'Control Map', dataType: 'control_map', required: false },
+  ],
+  outputs: [
+    { id: 'image', label: 'Image', dataType: 'image', required: false },
+    { id: 'prediction_id', label: 'Prediction ID', dataType: 'text', required: false },
+  ],
+  config: [
+    {
+      id: 'model',
+      label: 'ControlNet Model',
+      type: 'select',
+      options: [
+        { value: 'flux-controlnet', label: 'FLUX ControlNet' },
+        { value: 'flux-canny-pro', label: 'FLUX Canny Pro' },
+        { value: 'flux-depth-pro', label: 'FLUX Depth Pro' },
+        { value: 'controlnet-union-pro', label: 'ControlNet Union Pro' },
+        { value: 'sdxl-multi-controlnet', label: 'SDXL Multi-ControlNet' },
+      ],
+      default: 'flux-controlnet',
+    },
+    {
+      id: 'controlType',
+      label: 'Control Type',
+      type: 'select',
+      options: [
+        { value: 'depth', label: 'Depth' },
+        { value: 'pose', label: 'Pose' },
+        { value: 'canny', label: 'Canny Edge' },
+      ],
+      default: 'depth',
+    },
+    { id: 'strength', label: 'Control Strength', type: 'slider', default: 0.85, min: 0.1, max: 1.0, step: 0.05 },
+    {
+      id: 'aspectRatio',
+      label: 'Aspect Ratio',
+      type: 'select',
+      options: [
+        { value: '16:9', label: '16:9 (Landscape)' },
+        { value: '9:16', label: '9:16 (Portrait)' },
+        { value: '1:1', label: '1:1 (Square)' },
+      ],
+      default: '16:9',
+    },
+  ],
+  execute: executeControlNetGen,
+};
+
+const VACEVideoGen: NodeTypeDef = {
+  type: 'VACEVideoGen',
+  category: 'generation',
+  label: 'VACE Video Gen',
+  description: 'WAN VACE structure-aware video generation with control signal conditioning',
+  icon: 'slow_motion_video',
+  inputs: [
+    { id: 'image', label: 'Start Image', dataType: 'image', required: true },
+    { id: 'prompt', label: 'Prompt', dataType: 'text', required: false, default: '' },
+    { id: 'control_map', label: 'Control Map', dataType: 'control_map', required: false },
+  ],
+  outputs: [
+    { id: 'video', label: 'Video', dataType: 'video', required: false },
+    { id: 'prediction_id', label: 'Prediction ID', dataType: 'text', required: false },
+  ],
+  config: [
+    {
+      id: 'model',
+      label: 'VACE Model',
+      type: 'select',
+      options: [
+        { value: 'vace-14b', label: 'VACE 14B' },
+      ],
+      default: 'vace-14b',
+    },
+    { id: 'duration', label: 'Duration (s)', type: 'number', default: 5, min: 2, max: 15 },
+    { id: 'structureStrength', label: 'Structure Strength', type: 'slider', default: 0.8, min: 0.1, max: 1.0, step: 0.05 },
+    {
+      id: 'aspectRatio',
+      label: 'Aspect Ratio',
+      type: 'select',
+      options: [
+        { value: '16:9', label: '16:9' },
+        { value: '9:16', label: '9:16' },
+        { value: '1:1', label: '1:1' },
+      ],
+      default: '16:9',
+    },
+  ],
+  forEach: true,
+  execute: executeVACEVideoGen,
+};
+
+// ─── Ultra Mode: Processing Nodes ──────────────────────────────────
+
+const IPAdapterLock: NodeTypeDef = {
+  type: 'IPAdapterLock',
+  category: 'processing',
+  label: 'IP-Adapter Lock',
+  description: 'Style lock from hero frame using IP-Adapter for consistent visual identity',
+  icon: 'style',
+  inputs: [
+    { id: 'image', label: 'Hero Image', dataType: 'image', required: true },
+    { id: 'prompt', label: 'Prompt', dataType: 'text', required: false, default: '' },
+  ],
+  outputs: [
+    { id: 'image', label: 'Locked Image', dataType: 'image', required: false },
+    { id: 'prediction_id', label: 'Prediction ID', dataType: 'text', required: false },
+  ],
+  config: [
+    { id: 'strength', label: 'Lock Strength', type: 'slider', default: 0.8, min: 0.1, max: 1.0, step: 0.05 },
+    {
+      id: 'aspectRatio',
+      label: 'Aspect Ratio',
+      type: 'select',
+      options: [
+        { value: '16:9', label: '16:9' },
+        { value: '9:16', label: '9:16' },
+        { value: '1:1', label: '1:1' },
+      ],
+      default: '16:9',
+    },
+  ],
+  execute: executeIPAdapterLock,
+};
+
+const ControlPreview: NodeTypeDef = {
+  type: 'ControlPreview',
+  category: 'processing',
+  label: 'Control Preview',
+  description: 'Side-by-side overlay preview of control maps against source image',
+  icon: 'compare',
+  inputs: [
+    { id: 'image', label: 'Source Image', dataType: 'image', required: false },
+    { id: 'control_map', label: 'Control Map', dataType: 'control_map', required: false },
+  ],
+  outputs: [
+    { id: 'preview', label: 'Preview', dataType: 'image', required: false },
+    { id: 'control_map', label: 'Control Map', dataType: 'control_map', required: false },
+  ],
+  config: [
+    {
+      id: 'overlayMode',
+      label: 'Overlay Mode',
+      type: 'select',
+      options: [
+        { value: 'side-by-side', label: 'Side by Side' },
+        { value: 'overlay', label: 'Overlay' },
+        { value: 'split', label: 'Split View' },
+      ],
+      default: 'side-by-side',
+    },
+    { id: 'opacity', label: 'Overlay Opacity', type: 'slider', default: 0.5, min: 0.0, max: 1.0, step: 0.1 },
+  ],
+  execute: executeControlPreview,
+};
+
+const IdentityLock: NodeTypeDef = {
+  type: 'IdentityLock',
+  category: 'processing',
+  label: 'Identity Lock',
+  description: 'PuLID face identity preservation -- locks facial features for cross-scene consistency',
+  icon: 'face_retouching_natural',
+  inputs: [
+    { id: 'image', label: 'Face Image', dataType: 'image', required: true },
+    { id: 'prompt', label: 'Prompt', dataType: 'text', required: false, default: '' },
+  ],
+  outputs: [
+    { id: 'image', label: 'Locked Image', dataType: 'image', required: false },
+    { id: 'prediction_id', label: 'Prediction ID', dataType: 'text', required: false },
+  ],
+  config: [
+    { id: 'strength', label: 'Identity Strength', type: 'slider', default: 0.9, min: 0.1, max: 1.0, step: 0.05 },
+    {
+      id: 'aspectRatio',
+      label: 'Aspect Ratio',
+      type: 'select',
+      options: [
+        { value: '16:9', label: '16:9' },
+        { value: '9:16', label: '9:16' },
+        { value: '1:1', label: '1:1' },
+      ],
+      default: '16:9',
+    },
+  ],
+  execute: executeIdentityLock,
+};
+
+const QualityGate: NodeTypeDef = {
+  type: 'QualityGate',
+  category: 'processing',
+  label: 'Quality Gate',
+  description: 'CLIP + ArcFace + DreamSim multi-metric quality scoring against reference',
+  icon: 'verified',
+  inputs: [
+    { id: 'image', label: 'Image', dataType: 'image', required: true },
+    { id: 'reference', label: 'Reference Image', dataType: 'image', required: false },
+  ],
+  outputs: [
+    { id: 'image', label: 'Image', dataType: 'image', required: false },
+    { id: 'pass', label: 'Pass', dataType: 'boolean', required: false },
+    { id: 'scores', label: 'Scores', dataType: 'score', required: false },
+    { id: 'overall', label: 'Overall', dataType: 'number', required: false },
+  ],
+  config: [
+    { id: 'clipThreshold', label: 'CLIP Threshold', type: 'slider', default: 0.75, min: 0.3, max: 1.0, step: 0.05 },
+    { id: 'arcfaceThreshold', label: 'ArcFace Threshold', type: 'slider', default: 0.85, min: 0.3, max: 1.0, step: 0.05 },
+    { id: 'dreamsimThreshold', label: 'DreamSim Threshold', type: 'slider', default: 0.70, min: 0.3, max: 1.0, step: 0.05 },
+    { id: 'retryOnFail', label: 'Auto-Retry on Fail', type: 'boolean', default: true },
+    { id: 'maxRetries', label: 'Max Retries', type: 'number', default: 3, min: 1, max: 5 },
+  ],
+  execute: executeQualityGate,
+};
+
+const ProgressiveRefine: NodeTypeDef = {
+  type: 'ProgressiveRefine',
+  category: 'processing',
+  label: 'Progressive Refine',
+  description: '4-stage quality ladder (draft -> refined -> polished -> final) for iterative improvement',
+  icon: 'auto_awesome',
+  inputs: [
+    { id: 'image', label: 'Image', dataType: 'image', required: true },
+    { id: 'prompt', label: 'Prompt', dataType: 'text', required: false, default: '' },
+  ],
+  outputs: [
+    { id: 'image', label: 'Refined Image', dataType: 'image', required: false },
+    { id: 'prediction_id', label: 'Prediction ID', dataType: 'text', required: false },
+    { id: 'stage', label: 'Stage', dataType: 'text', required: false },
+  ],
+  config: [
+    {
+      id: 'targetStage',
+      label: 'Target Stage',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft (1 pass)' },
+        { value: 'refined', label: 'Refined (2 passes)' },
+        { value: 'polished', label: 'Polished (3 passes)' },
+        { value: 'final', label: 'Final (4 passes)' },
+      ],
+      default: 'final',
+    },
+    {
+      id: 'model',
+      label: 'Refine Model',
+      type: 'select',
+      options: IMAGE_MODELS.map((m) => ({ value: m.id, label: m.name })),
+      default: 'flux-2-pro',
+    },
+    { id: 'strength', label: 'Refine Strength', type: 'slider', default: 0.6, min: 0.1, max: 1.0, step: 0.05 },
+  ],
+  execute: executeProgressiveRefine,
+};
+
 // ─── Registry ───────────────────────────────────────────────────────
 
 const ALL_NODE_TYPES: NodeTypeDef[] = [
   // Source
   ReferenceImages,
   ScenePrompt,
+  ControlEstimator,
+  SceneComposer3D,
   // Generation
   ImageGen,
   VideoGen,
   MultiPromptBatch,
   AudioGen,
+  ControlNetGen,
+  VACEVideoGen,
   // Gate
   FaceGate,
   StyleGate,
@@ -383,6 +700,11 @@ const ALL_NODE_TYPES: NodeTypeDef[] = [
   FrameExtract,
   PromptEnrich,
   Stitch,
+  IPAdapterLock,
+  ControlPreview,
+  IdentityLock,
+  QualityGate,
+  ProgressiveRefine,
   // Output
   Export,
 ];

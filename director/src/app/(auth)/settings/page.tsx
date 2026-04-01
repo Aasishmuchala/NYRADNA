@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
 import { useWizard } from '@/context/WizardContext';
+import { UltraModeToggle } from '@/components/ultra/UltraModeToggle';
+import { isUltraUnlocked, lockUltra } from '@/lib/ultraLock';
 import {
   getApiKeys,
   setApiKey,
@@ -39,7 +41,13 @@ export default function SettingsPage() {
     document.title = 'Settings — DIRECTOR';
   }, []);
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'billing' | 'usage' | 'notifications' | 'api-keys' | 'team-access' | 'danger-zone'>('billing');
+  const [activeTab, setActiveTab] = useState<'profile' | 'billing' | 'usage' | 'notifications' | 'api-keys' | 'team-access' | 'ultra-mode' | 'danger-zone'>('billing');
+  const [ultraUnlocked, setUltraUnlocked] = useState(false);
+
+  // Sync ultra unlock status on mount
+  useEffect(() => {
+    setUltraUnlocked(isUltraUnlocked());
+  }, [activeTab]);
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -125,7 +133,7 @@ export default function SettingsPage() {
   const [alertMsg, setAlertMsg] = useState({ open: false, title: '', message: '' });
 
   // Hard reset
-  const { hardReset } = useWizard();
+  const { hardReset, state: wizardState, update: updateWizard } = useWizard();
   const router = useRouter();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetComplete, setResetComplete] = useState(false);
@@ -135,6 +143,12 @@ export default function SettingsPage() {
     setResetComplete(true);
     setTimeout(() => router.push('/dashboard'), 1500);
   }, [hardReset, router]);
+
+  const handleLockUltra = useCallback(() => {
+    lockUltra();
+    updateWizard({ ultraModeEnabled: false });
+    setUltraUnlocked(false);
+  }, [updateWizard]);
 
   return (
     <div className="max-w-6xl mx-auto px-8 py-12">
@@ -225,6 +239,18 @@ export default function SettingsPage() {
                     }`}
                   >
                     Team Access
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab('ultra-mode')}
+                    className={`flex items-center gap-2 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-l-lg ${
+                      activeTab === 'ultra-mode'
+                        ? 'text-primary border-r-2 border-primary font-bold'
+                        : 'text-on-surface-variant hover:text-on-surface'
+                    }`}
+                  >
+                    Ultra Mode
                   </button>
                 </li>
               </ul>
@@ -821,6 +847,101 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Ultra Mode Tab Content */}
+          {activeTab === 'ultra-mode' && (
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold font-headline mb-2">Ultra Mode</h2>
+                <p className="text-sm text-on-surface-variant">
+                  Film-grade consistency pipeline with ControlNet, identity lock, and progressive refinement.
+                </p>
+              </div>
+
+              {/* Toggle */}
+              <div className="space-y-4">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider block">
+                  Enable / Disable
+                </label>
+                <UltraModeToggle />
+              </div>
+
+              {/* Status */}
+              <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/15 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                      ultraUnlocked ? 'bg-green-500/10' : 'bg-surface-container-highest'
+                    }`}>
+                      <span className={`material-symbols-outlined ${
+                        ultraUnlocked ? 'text-green-400' : 'text-on-surface-variant'
+                      }`}>
+                        {ultraUnlocked ? 'lock_open' : 'lock'}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-on-surface">Session Status</h3>
+                      <p className="text-xs text-on-surface-variant">
+                        {ultraUnlocked ? 'Unlocked for this session' : 'Locked — password required to enable'}
+                      </p>
+                    </div>
+                  </div>
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                    ultraUnlocked
+                      ? 'bg-green-500/10 text-green-400'
+                      : 'bg-surface-container-highest text-on-surface-variant'
+                  }`}>
+                    {ultraUnlocked ? 'Unlocked (session)' : 'Locked'}
+                  </span>
+                </div>
+
+                {/* Lock button */}
+                {ultraUnlocked && (
+                  <button
+                    onClick={handleLockUltra}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-surface-container-highest rounded-lg text-xs font-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">lock</span>
+                    Lock Ultra Mode
+                  </button>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="bg-primary/5 border border-primary/15 rounded-xl p-6 space-y-3">
+                <h4 className="text-sm font-bold text-on-surface flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-lg">info</span>
+                  What is Ultra Mode?
+                </h4>
+                <ul className="text-xs text-on-surface-variant space-y-2 leading-relaxed">
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm text-primary/60 mt-0.5">check</span>
+                    ControlNet-based structural consistency across all scenes
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm text-primary/60 mt-0.5">check</span>
+                    PuLID identity lock for character face preservation
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm text-primary/60 mt-0.5">check</span>
+                    Multi-stage quality gate (CLIP + ArcFace + DreamSim)
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm text-primary/60 mt-0.5">check</span>
+                    Progressive refinement for image upscaling
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm text-primary/60 mt-0.5">check</span>
+                    VACE video generation with structure-aware conditioning
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm text-primary/60 mt-0.5">check</span>
+                    3D Scene Composer for precise camera and depth control
+                  </li>
+                </ul>
               </div>
             </div>
           )}

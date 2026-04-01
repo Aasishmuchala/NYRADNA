@@ -7,20 +7,22 @@
 // ─── Port Data Types ────────────────────────────────────────────────
 
 export type PortDataType =
-  | 'image'      // URL string to an image
-  | 'image[]'    // Array of image URLs
-  | 'video'      // URL string to a video
-  | 'video[]'    // Array of video URLs
-  | 'text'       // String (prompt, description)
-  | 'text[]'     // Array of strings
-  | 'number'     // Numeric value (score, threshold)
-  | 'boolean'    // Gate pass/fail
-  | 'refset'     // ReferenceImageSet object
-  | 'scene'      // SceneImage object
-  | 'scene[]'    // Array of SceneImage
-  | 'frame'      // Extracted frame URL (alias for image, semantic distinction)
-  | 'audio'      // Audio URL
-  | 'any';       // Accepts anything
+  | 'image'        // URL string to an image
+  | 'image[]'      // Array of image URLs
+  | 'video'        // URL string to a video
+  | 'video[]'      // Array of video URLs
+  | 'text'         // String (prompt, description)
+  | 'text[]'       // Array of strings
+  | 'number'       // Numeric value (score, threshold)
+  | 'boolean'      // Gate pass/fail
+  | 'refset'       // ReferenceImageSet object
+  | 'scene'        // SceneImage object
+  | 'scene[]'      // Array of SceneImage
+  | 'frame'        // Extracted frame URL (alias for image, semantic distinction)
+  | 'audio'        // Audio URL
+  | 'control_map'  // Control signal object (depth, pose, canny maps)
+  | 'score'        // Quality score object { clip, arcface, dreamsim, overall }
+  | 'any';         // Accepts anything
 
 /** Port colors for the visual editor (hex values) */
 export const PORT_COLORS: Record<PortDataType, string> = {
@@ -36,8 +38,10 @@ export const PORT_COLORS: Record<PortDataType, string> = {
   'scene':    '#ffb74d',  // warm amber
   'scene[]':  '#ffb74d',
   'frame':    'var(--color-primary)',
-  'audio':    '#ce93d8',  // light purple
-  'any':      '#888888',  // neutral gray
+  'audio':        '#ce93d8',  // light purple
+  'control_map':  '#00bcd4',  // cyan — control signals
+  'score':        '#ffd54f',  // amber — quality scores
+  'any':          '#888888',  // neutral gray
 };
 
 // ─── Port Definition ────────────────────────────────────────────────
