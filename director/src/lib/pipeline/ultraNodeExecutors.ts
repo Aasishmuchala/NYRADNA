@@ -283,11 +283,10 @@ export async function executeIPAdapterLock(
   ctx.onProgress('', 'Locking style with IP-Adapter...');
 
   const body: Record<string, unknown> = {
-    imageUrl,
+    faceImage: imageUrl,
     prompt,
-    model: 'ip-adapter',
-    strength: config.strength ?? 0.8,
-    aspectRatio: config.aspectRatio ?? '16:9',
+    model: 'ip-adapter-faceid',
+    idWeight: config.strength ?? 0.8,
   };
 
   const res = await fetchWithTimeout('/api/identity-lock', {
@@ -372,11 +371,10 @@ export async function executeIdentityLock(
   ctx.onProgress('', 'Locking face identity with PuLID...');
 
   const body: Record<string, unknown> = {
-    imageUrl,
+    faceImage: imageUrl,
     prompt,
-    model: 'pulid-flux',
-    strength: config.strength ?? 0.9,
-    aspectRatio: config.aspectRatio ?? '16:9',
+    model: (config.model as string) ?? 'pulid-flux',
+    idWeight: config.idWeight ?? 0.85,
   };
 
   const res = await fetchWithTimeout('/api/identity-lock', {
@@ -422,13 +420,9 @@ export async function executeQualityGate(
   ctx.onProgress('', 'Scoring quality (CLIP + ArcFace + DreamSim)...');
 
   const body: Record<string, unknown> = {
-    imageUrl,
-    referenceUrl,
-    thresholds: {
-      clip: config.clipThreshold ?? 0.75,
-      arcface: config.arcfaceThreshold ?? 0.85,
-      dreamsim: config.dreamsimThreshold ?? 0.70,
-    },
+    image1: referenceUrl ?? imageUrl,
+    image2: imageUrl,
+    metrics: ['clip', 'dreamsim', 'arcface'],
   };
 
   const res = await fetchWithTimeout('/api/quality-score', {
@@ -488,12 +482,11 @@ export async function executeProgressiveRefine(
   ctx.onProgress('', `Starting progressive refinement (${stageCount} stages)...`);
 
   const body: Record<string, unknown> = {
-    imageUrl,
+    baseImage: imageUrl,
+    controlImage: (inputs.control_image as string) ?? imageUrl,
     prompt,
-    targetStage,
-    stageCount,
-    model: config.model ?? 'flux-2-pro',
-    strength: config.strength ?? 0.6,
+    heroImage: (inputs.hero_image as string) ?? undefined,
+    stages: stageCount,
   };
 
   const res = await fetchWithTimeout('/api/progressive-refine', {
