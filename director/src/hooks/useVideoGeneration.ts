@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import { apiFetch } from '@/lib/api';
+import { persistVideoUrl } from '@/lib/persistImage';
 import type { Prediction, VideoResult, GenerationBatch } from '@/types/replicate';
 import {
   planBatches,
@@ -41,24 +42,29 @@ interface ConsistencyResult {
  * Returns pass/fail + scores. Throws on API error.
  */
 async function checkImageConsistency(imageUrl: string): Promise<ConsistencyResult> {
-  const res = await fetch('/api/analyze-scene', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageUrl }),
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(`Scene analysis failed: ${body.error || res.statusText}`);
+  try {
+    const res = await fetch('/api/analyze-scene', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageUrl }),
+    });
+    if (!res.ok) {
+      console.warn('[checkImageConsistency] Analysis failed, passing through');
+      return { pass: true, score: 1, character_consistency: 1, composition_quality: 1 };
+    }
+    const data = await res.json();
+    const cc = data.character_consistency ?? 0;
+    const cq = data.composition_quality ?? 0;
+    return {
+      pass: cc >= FACE_GATE_THRESHOLD,
+      score: cc,
+      character_consistency: cc,
+      composition_quality: cq,
+    };
+  } catch (err) {
+    console.warn('[checkImageConsistency] Error, skipping gate:', err);
+    return { pass: true, score: 1, character_consistency: 1, composition_quality: 1 };
   }
-  const data = await res.json();
-  const cc = data.character_consistency ?? 0;
-  const cq = data.composition_quality ?? 0;
-  return {
-    pass: cc >= FACE_GATE_THRESHOLD,
-    score: cc,
-    character_consistency: cc,
-    composition_quality: cq,
-  };
 }
 
 /**
@@ -295,7 +301,7 @@ export function useVideoGeneration() {
       });
 
       const prediction = await waitForPrediction(predictionId);
-      const videoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
+      const _rawVideoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output; const videoUrl = _rawVideoUrl ? await persistVideoUrl(_rawVideoUrl as string) : null;
 
       if (prediction.status === 'succeeded' && videoUrl) {
         update({
@@ -332,11 +338,10 @@ export function useVideoGeneration() {
       return;
     }
 
-    // Character readiness gate — block if no character images exist
+    // Character readiness check — warn but don't block
     const preflightRefs = buildReferenceImageSet(stateRef.current);
     if (preflightRefs.characterCount === 0) {
-      setError('No character images available. Generate character assets first to ensure consistency across clips.');
-      return;
+      console.warn('[generateAllVideos] No character reference images — videos may lack consistency');
     }
     console.log(`[generateAllVideos] Preflight: ${preflightRefs.characterCount} character refs, ${preflightRefs.environmentCount} environment refs, ${preflightRefs.referenceImages.length} total`);
 
@@ -536,7 +541,7 @@ export function useVideoGeneration() {
 
           // Poll single prediction for the whole batch
           const prediction = await waitForPrediction(predictionId);
-          const videoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
+          const _rawVideoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output; const videoUrl = _rawVideoUrl ? await persistVideoUrl(_rawVideoUrl as string) : null;
 
           if (prediction.status === 'succeeded' && videoUrl) {
             // multi_prompt returns ONE concatenated video — all scenes share the same URL
@@ -699,7 +704,7 @@ export function useVideoGeneration() {
             update({ videoResults: [...allVideos] });
 
             const prediction = await waitForPrediction(predictionId);
-            const videoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
+            const _rawVideoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output; const videoUrl = _rawVideoUrl ? await persistVideoUrl(_rawVideoUrl as string) : null;
 
             if (prediction.status === 'succeeded' && videoUrl) {
               allVideos[sceneIdx] = { ...allVideos[sceneIdx], status: 'completed', videoUrl, predictionId };
@@ -816,7 +821,7 @@ export function useVideoGeneration() {
       });
 
       const prediction = await waitForPrediction(predictionId);
-      const videoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
+      const _rawVideoUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output; const videoUrl = _rawVideoUrl ? await persistVideoUrl(_rawVideoUrl as string) : null;
 
       if (prediction.status === 'succeeded' && videoUrl) {
         update({

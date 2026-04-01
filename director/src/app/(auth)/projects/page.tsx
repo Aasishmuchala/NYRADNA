@@ -1,8 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
+import { useRouter } from 'next/navigation';
+import Modal, { AlertModal, ConfirmModal } from '@/components/ui/Modal';
+import { useWizard } from '@/context/WizardContext';
+
+const PROJECT_TYPES = [
+  { id: 'commercial', label: 'Commercial / Ad', icon: 'campaign' },
+  { id: 'short-film', label: 'Short Film', icon: 'movie' },
+  { id: 'music-video', label: 'Music Video', icon: 'music_note' },
+  { id: 'social', label: 'Social Content', icon: 'share' },
+  { id: 'explainer', label: 'Explainer / Demo', icon: 'school' },
+  { id: 'other', label: 'Other', icon: 'auto_awesome' },
+] as const;
 
 interface Project {
   id: number;
@@ -16,11 +27,39 @@ interface Project {
 }
 
 export default function ProjectsPage() {
+  const router = useRouter();
+  const { reset, update } = useWizard();
+
   useEffect(() => {
     document.title = 'Projects — DIRECTOR';
   }, []);
 
   const [selectedFilter, setSelectedFilter] = useState('all');
+
+  // New project modal state
+  const [showNewProject, setShowNewProject] = useState(false);
+  const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectConcept, setNewProjectConcept] = useState('');
+  const [newProjectType, setNewProjectType] = useState('');
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const handleNewProject = () => {
+    setNewProjectName(''); setNewProjectConcept(''); setNewProjectType('');
+    setShowNewProject(true);
+    setTimeout(() => nameInputRef.current?.focus(), 100);
+  };
+
+  const handleCreateProject = () => {
+    if (!newProjectName.trim()) return;
+    reset();
+    const parts: string[] = [];
+    if (newProjectConcept.trim()) parts.push(newProjectConcept.trim());
+    const st = PROJECT_TYPES.find(t => t.id === newProjectType);
+    if (st) parts.push(`[Format: ${st.label}]`);
+    update({ visionText: parts.join('\n\n') || '' });
+    setShowNewProject(false);
+    router.push('/create/intent');
+  };
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedProjects, setSelectedProjects] = useState<number[]>([]);
   const [sortOrder, setSortOrder] = useState<'recent' | 'oldest'>('recent');
@@ -285,14 +324,16 @@ export default function ProjectsPage() {
         )}
 
         {/* Add New Project Ghost Card */}
-        <Link href="/create/intent">
-          <button className="group relative flex flex-col items-center justify-center bg-surface-container-low border-2 border-dashed border-outline-variant/30 rounded-xl aspect-video hover:bg-surface-bright transition-all duration-300 w-full h-full focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="Create new project">
-            <div className="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-3xl">add</span>
-            </div>
-            <span className="mt-4 text-sm font-bold uppercase tracking-widest text-on-surface-variant group-hover:text-primary transition-colors">Create New Project</span>
-          </button>
-        </Link>
+        <button
+          onClick={handleNewProject}
+          className="group relative flex flex-col items-center justify-center bg-surface-container-low border-2 border-dashed border-outline-variant/30 rounded-xl aspect-video hover:bg-surface-bright transition-all duration-300 w-full h-full focus:outline-none focus:ring-2 focus:ring-primary/30 cursor-pointer"
+          aria-label="Create new project"
+        >
+          <div className="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-3xl">add</span>
+          </div>
+          <span className="mt-4 text-sm font-bold uppercase tracking-widest text-on-surface-variant group-hover:text-primary transition-colors">Create New Project</span>
+        </button>
       </div>
 
       <AlertModal
@@ -312,6 +353,36 @@ export default function ProjectsPage() {
         confirmLabel="Delete"
         danger
       />
+
+      {/* New Project Modal */}
+      <Modal open={showNewProject} onClose={() => setShowNewProject(false)} title="New Sequence" wide actions={
+        <>
+          <button onClick={() => setShowNewProject(false)} className="px-6 py-3 rounded-full bg-surface-container text-on-surface-variant text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-surface-container-high transition-colors">Cancel</button>
+          <button onClick={handleCreateProject} disabled={!newProjectName.trim()} className="px-8 py-3 rounded-full bg-primary text-on-primary-fixed text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_30px_rgba(198,191,255,0.2)] hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:hover:scale-100">Create</button>
+        </>
+      }>
+        <div className="space-y-6">
+          <div>
+            <label className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant mb-3 block">Project Name</label>
+            <input ref={nameInputRef} type="text" value={newProjectName} onChange={(e) => setNewProjectName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()} placeholder="e.g. Neural Horizons" className="w-full px-4 py-3 bg-surface-container text-on-surface rounded-lg border border-outline-variant/20 focus:border-primary/50 focus:outline-none transition-colors placeholder-on-surface-variant/40" />
+          </div>
+          <div>
+            <label className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant mb-3 block">Type</label>
+            <div className="grid grid-cols-2 gap-2">
+              {PROJECT_TYPES.map((type) => (
+                <button key={type.id} onClick={() => setNewProjectType(newProjectType === type.id ? '' : type.id)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all text-xs border ${newProjectType === type.id ? 'bg-primary/10 border-primary/40 text-on-surface' : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:border-outline-variant/30'}`}>
+                  <span className={`material-symbols-outlined text-[16px] ${newProjectType === type.id ? 'text-primary' : ''}`}>{type.icon}</span>
+                  <span className="font-medium">{type.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant mb-3 block">Brief Concept <span className="text-on-surface-variant/40 font-normal">(optional)</span></label>
+            <textarea value={newProjectConcept} onChange={(e) => setNewProjectConcept(e.target.value)} placeholder="Describe your vision..." rows={3} className="w-full px-4 py-3 bg-surface-container text-on-surface rounded-lg border border-outline-variant/20 focus:border-primary/50 focus:outline-none transition-colors placeholder-on-surface-variant/40 resize-none" />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

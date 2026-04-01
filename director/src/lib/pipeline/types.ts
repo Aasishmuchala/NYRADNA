@@ -24,8 +24,8 @@ export type PortDataType =
 
 /** Port colors for the visual editor (hex values) */
 export const PORT_COLORS: Record<PortDataType, string> = {
-  'image':    '#ff9064',  // primary orange
-  'image[]':  '#ff9064',
+  'image':    'var(--color-primary)',  // primary orange
+  'image[]':  'var(--color-primary)',
   'video':    '#81e9ff',  // tertiary blue
   'video[]':  '#81e9ff',
   'text':     '#d4c4b0',  // secondary beige
@@ -35,7 +35,7 @@ export const PORT_COLORS: Record<PortDataType, string> = {
   'refset':   '#ff7941',  // primary-container orange
   'scene':    '#ffb74d',  // warm amber
   'scene[]':  '#ffb74d',
-  'frame':    '#ff9064',
+  'frame':    'var(--color-primary)',
   'audio':    '#ce93d8',  // light purple
   'any':      '#888888',  // neutral gray
 };

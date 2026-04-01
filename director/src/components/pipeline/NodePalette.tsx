@@ -18,7 +18,7 @@ export function NodePalette() {
   return (
     <div className="w-[200px] bg-surface-container-low/95 backdrop-blur-lg border-r border-white/5 overflow-y-auto custom-scrollbar">
       <div className="p-3 border-b border-white/5">
-        <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider">Nodes</h3>
+        <h3 className="text-xs font-semibold text-on-surface/60 uppercase tracking-wider">Nodes</h3>
       </div>
 
       {CATEGORIES.map((cat) => {
@@ -27,7 +27,7 @@ export function NodePalette() {
 
         return (
           <div key={cat} className="px-2 py-2">
-            <h4 className="text-[10px] font-medium text-white/30 uppercase tracking-wider px-1 mb-1">
+            <h4 className="text-[10px] font-medium text-on-surface/30 uppercase tracking-wider px-1 mb-1">
               {CATEGORY_LABELS[cat]}
             </h4>
             {nodes.map((nodeDef) => (
@@ -40,12 +40,12 @@ export function NodePalette() {
                 aria-label={`Add ${nodeDef.label} node`}
               >
                 <span
-                  className="material-symbols-outlined text-white/40 group-hover:text-white/60"
+                  className="material-symbols-outlined text-on-surface/40 group-hover:text-on-surface/60"
                   style={{ fontSize: '16px' }}
                 >
                   {nodeDef.icon}
                 </span>
-                <span className="text-xs text-white/60 group-hover:text-white/80 truncate">
+                <span className="text-xs text-on-surface/60 group-hover:text-on-surface/80 truncate">
                   {nodeDef.label}
                 </span>
               </button>

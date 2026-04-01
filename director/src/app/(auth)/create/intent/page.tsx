@@ -332,24 +332,24 @@ export default function IntentPage() {
   const PERSONA_NAMES = ['', 'Modern Professional', 'Gen Z Trendsetter', 'Luxury Seeker', 'Small Business Owner'];
 
   return (
-    <main className="flex-grow flex flex-col h-[calc(100vh-64px)] relative overflow-hidden">
+    <main className="flex-grow flex flex-col h-[calc(100vh-12rem)] relative overflow-hidden -mt-8">
       {/* Background ambient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Header */}
-      <div className="text-center py-6 z-10 shrink-0">
-        <span className="text-primary font-headline font-bold text-xs uppercase tracking-[0.2em]">
+      <div className="text-center py-8 z-10 shrink-0">
+        <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold mb-4 block">
           Director AI Agent
         </span>
-        <h1 className="font-headline font-extrabold text-2xl md:text-3xl tracking-tight text-on-surface mt-1">
-          What&apos;s the <span className="text-gradient-primary">Vision?</span>
+        <h1 className="font-headline font-light text-4xl md:text-5xl tracking-[-0.03em] text-on-surface mt-2">
+          What&apos;s the <span className="text-gradient-primary italic font-extralight">Vision?</span>
         </h1>
-        <p className="text-on-surface-variant text-sm mt-1">
+        <p className="text-on-surface-variant/70 text-sm mt-3 font-body tracking-wide">
           Tell me your idea. I&apos;ll develop it into a shootable concept.
         </p>
         {/* Provider indicator */}
-        <div className="mt-2 flex items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400">
+        <div className="mt-4 flex items-center justify-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] bg-primary/10 text-primary">
             <span className="material-symbols-outlined text-xs">route</span>
             {OPENROUTER_MODEL_NAMES[llmModel] || llmModel || 'OpenRouter'}
           </span>
@@ -359,15 +359,15 @@ export default function IntentPage() {
       {/* Missing key warning */}
       {missingKey && (
         <div className="mx-auto max-w-3xl px-4 z-10">
-          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 flex items-start gap-3">
-            <span className="material-symbols-outlined text-yellow-400 mt-0.5">warning</span>
+          <div className="glass-card rounded-xl p-4 flex items-start gap-3 border-error/20">
+            <span className="material-symbols-outlined text-error mt-0.5">warning</span>
             <div>
-              <p className="text-sm font-bold text-yellow-300">
+              <p className="text-sm font-bold text-on-surface">
                 No OpenRouter API key configured
               </p>
-              <p className="text-xs text-yellow-300/70 mt-1">
+              <p className="text-xs text-on-surface-variant mt-1">
                 Add your API key in{' '}
-                <Link href="/settings" className="underline hover:text-yellow-200">
+                <Link href="/settings" className="underline text-primary hover:text-primary/80">
                   Settings &rarr; API Keys
                 </Link>{' '}
                 to start chatting.
@@ -397,7 +397,7 @@ export default function IntentPage() {
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright px-4 py-2 rounded-full text-sm font-medium transition-all border border-outline-variant/10"
+                    className="glass-card px-4 py-2 rounded-full text-sm font-medium transition-all duration-500 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
                   >
                     &quot;{s}&quot;
                   </button>
@@ -416,7 +416,7 @@ export default function IntentPage() {
                 className={`max-w-[85%] rounded-2xl px-5 py-3 ${
                   msg.role === 'user'
                     ? 'bg-primary text-on-primary rounded-br-md'
-                    : 'bg-surface-container-high text-on-surface rounded-bl-md'
+                    : 'glass-card text-on-surface rounded-bl-md'
                 }`}
               >
                 {msg.role === 'assistant' ? (
@@ -442,7 +442,7 @@ export default function IntentPage() {
 
           {/* Brief card — shown when agent produces a brief */}
           {brief && (
-            <div className="bg-surface-container-low border border-primary/20 rounded-2xl p-6 space-y-4">
+            <div className="glass-card cinematic-glow rounded-2xl p-8 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="bg-primary/10 p-2 rounded-lg">
                   <span
@@ -539,7 +539,7 @@ export default function IntentPage() {
       </div>
 
       {/* Input bar */}
-      <div className="shrink-0 border-t border-outline-variant/10 bg-surface/80 backdrop-blur-xl z-10">
+      <div className="shrink-0 border-t border-outline-variant/20 bg-surface-container-lowest/80 backdrop-blur-3xl z-10">
         <form
           onSubmit={handleSubmit}
           className="max-w-3xl mx-auto flex items-end gap-3 px-4 py-4"
@@ -551,7 +551,7 @@ export default function IntentPage() {
             onKeyDown={handleKeyDown}
             placeholder={messages.length === 0 ? 'Describe your vision...' : 'Reply to the Director...'}
             rows={1}
-            className="flex-1 bg-surface-container-highest border border-outline-variant/20 rounded-xl text-sm px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 resize-none max-h-32 overflow-y-auto"
+            className="flex-1 bg-surface-container border border-outline-variant/30 rounded-xl text-sm px-4 py-3 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary/30 focus:border-primary/50 resize-none max-h-32 overflow-y-auto shadow-sm"
             style={{ minHeight: '48px' }}
             disabled={isStreaming}
           />

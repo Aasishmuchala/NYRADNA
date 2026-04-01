@@ -21,15 +21,15 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // In development, auto-login with a mock user after mount (avoids SSR mismatch)
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development' && !user) {
+    if (process.env.NODE_ENV === 'development') {
       setUser({ id: 'dev', name: 'Developer', email: 'dev@local', avatar: '', plan: 'Pro' });
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const [isLoading, setIsLoading] = useState(false);
+    setIsLoading(false);
+  }, []);
 
   const login = useCallback(async (_email: string, _password: string) => {
     setIsLoading(true);

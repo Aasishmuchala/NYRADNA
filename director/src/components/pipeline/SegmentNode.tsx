@@ -62,8 +62,8 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
           BRIDGE
         </div>
       )}
-      <Handle type="target" position={Position.Left} className="!bg-[#555] !w-2 !h-2" />
-      <Handle type="source" position={Position.Right} className="!bg-[#555] !w-2 !h-2" />
+      <Handle type="target" position={Position.Left} className="!bg-outline !w-2 !h-2" />
+      <Handle type="source" position={Position.Right} className="!bg-outline !w-2 !h-2" />
 
       <div className="flex gap-3">
         {/* Thumbnail with video play overlay */}
@@ -76,7 +76,7 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
             />
           ) : (
             <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/5">
-              <span className="material-symbols-outlined text-2xl text-[#555]">image</span>
+              <span className="material-symbols-outlined text-2xl text-outline">image</span>
             </div>
           )}
           {/* Play overlay for completed nodes with video */}
@@ -150,14 +150,14 @@ function SegmentNode({ data, selected }: NodeProps & { data: SegmentNodeData }) 
 
           {/* Emotional tone */}
           {node.narrativeContext?.emotionalTone && (
-            <p className="mt-1 truncate text-xs text-[#c8c4d6]">
+            <p className="mt-1 truncate text-xs text-on-surface-variant">
               {node.narrativeContext.emotionalTone}
             </p>
           )}
 
           {/* Duration hint */}
           {node.narrativeContext?.durationHint && (
-            <p className="mt-0.5 text-xs text-[#555]">{node.narrativeContext.durationHint}</p>
+            <p className="mt-0.5 text-xs text-outline">{node.narrativeContext.durationHint}</p>
           )}
         </div>
       </div>

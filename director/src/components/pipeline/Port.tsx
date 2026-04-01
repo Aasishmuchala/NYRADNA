@@ -40,7 +40,7 @@ export function Port({ port, side, nodeId, onDragStart, onDragEnd }: PortProps) 
         data-port-side={side}
         data-node-id={nodeId}
       />
-      <span className="text-[10px] text-white/50 leading-none whitespace-nowrap">
+      <span className="text-[10px] text-on-surface/50 leading-none whitespace-nowrap">
         {port.label}
       </span>
     </div>

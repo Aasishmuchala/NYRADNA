@@ -52,6 +52,7 @@ export default function AssetsPage() {
   const { state, update } = useWizard();
   const [filter, setFilter] = useState<AssetCategory | 'all'>('all');
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [generatingId, setGeneratingId] = useState<string | null>(null);
 
@@ -97,7 +98,7 @@ export default function AssetsPage() {
 
   // Flatten all assets with project info for counting
   const allAssets = useMemo(() =>
-    projectAssets.flatMap(pa => pa.assets.map(a => ({ ...a, _projectId: pa.project.id }))),
+    projectAssets.flatMap(pa => pa.assets.filter(a => a.imageUrl || a.status === 'generating').map(a => ({ ...a, _projectId: pa.project.id }))),
     [projectAssets]
   );
 
@@ -359,7 +360,8 @@ export default function AssetsPage() {
         <div className="flex gap-8">
           <div className="flex-1 space-y-10">
             {visibleProjects.map((pa) => {
-              const projectFiltered = filter === 'all' ? pa.assets : pa.assets.filter(a => a.category === filter);
+              const projectFiltered = (filter === 'all' ? pa.assets : pa.assets.filter(a => a.category === filter))
+                .filter(a => a.imageUrl || a.status === 'generating');
               if (projectFiltered.length === 0) return null;
               return (
                 <section key={pa.project.id}>
@@ -377,49 +379,68 @@ export default function AssetsPage() {
                     </div>
                   </div>
 
-                  {/* Asset grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {/* Asset grid — bigger thumbnails */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projectFiltered.map((asset) => (
-                      <button
+                      <div
                         key={asset.id}
                         onClick={() => setSelectedAsset(asset.id === selectedAsset ? null : asset.id)}
-                        className={`group relative rounded-xl overflow-hidden border transition-all text-left ${
+                        className={`group relative rounded-xl overflow-hidden border transition-all cursor-pointer ${
                           selectedAsset === asset.id
                             ? 'border-primary ring-2 ring-primary/20'
                             : 'border-outline-variant/20 hover:border-outline-variant/40'
                         } bg-surface-container`}
                       >
-                        <div className="aspect-square relative bg-surface-container-highest">
+                        <div className="aspect-[4/3] relative bg-surface-container-highest">
                           {asset.status === 'generating' ? (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                              <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                             </div>
                           ) : asset.imageUrl ? (
                             <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="material-symbols-outlined text-3xl text-on-surface-variant/30">image</span>
+                              <span className="material-symbols-outlined text-4xl text-on-surface-variant/20">image</span>
                             </div>
                           )}
+
+                          {/* Status badge */}
                           {asset.status === 'failed' && (
-                            <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-error/90 flex items-center justify-center">
-                              <span className="material-symbols-outlined text-[14px] text-on-error">close</span>
-                            </div>
+                            <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-error/90 text-[10px] font-bold text-on-error uppercase tracking-wider">Failed</div>
                           )}
-                          {asset.status === 'succeeded' && (
-                            <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-green-600/90 flex items-center justify-center">
-                              <span className="material-symbols-outlined text-[14px] text-on-surface">check</span>
-                            </div>
-                          )}
-                          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-on-surface">
+
+                          {/* Category badge */}
+                          <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-on-surface">
                             {asset.category}
                           </div>
+
+                          {/* Hover overlay with actions */}
+                          {asset.imageUrl && (
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setLightboxUrl(asset.imageUrl!); }}
+                                className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center hover:bg-white/30 transition-colors"
+                                title="View fullscreen"
+                              >
+                                <span className="material-symbols-outlined text-on-surface text-[20px]">fullscreen</span>
+                              </button>
+                              <a
+                                href={asset.imageUrl}
+                                download={`${asset.name}.png`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center hover:bg-white/30 transition-colors"
+                                title="Download"
+                              >
+                                <span className="material-symbols-outlined text-on-surface text-[20px]">download</span>
+                              </a>
+                            </div>
+                          )}
                         </div>
-                        <div className="p-3">
+                        <div className="p-4">
                           <p className="text-sm font-semibold truncate">{asset.name}</p>
-                          <p className="text-xs text-on-surface-variant line-clamp-1 mt-0.5">{asset.description}</p>
+                          <p className="text-xs text-on-surface-variant line-clamp-2 mt-1">{asset.description}</p>
                         </div>
-                      </button>
+                      </div>
                     ))}
                   </div>
                 </section>
@@ -523,6 +544,40 @@ export default function AssetsPage() {
           )}
         </div>
       </div>
+
+      {/* Fullscreen Lightbox */}
+      {lightboxUrl && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center"
+          onClick={() => setLightboxUrl(null)}
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setLightboxUrl(null)}
+            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center hover:bg-white/20 transition-colors z-10"
+          >
+            <span className="material-symbols-outlined text-on-surface text-2xl">close</span>
+          </button>
+
+          {/* Download button */}
+          <a
+            href={lightboxUrl}
+            download="asset.png"
+            onClick={(e) => e.stopPropagation()}
+            className="absolute top-6 right-22 w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center hover:bg-white/20 transition-colors z-10"
+          >
+            <span className="material-symbols-outlined text-on-surface text-2xl">download</span>
+          </a>
+
+          {/* Image */}
+          <img
+            src={lightboxUrl}
+            alt="Fullscreen preview"
+            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </main>
   );
 }

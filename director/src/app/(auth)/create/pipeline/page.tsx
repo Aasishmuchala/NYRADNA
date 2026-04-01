@@ -1,99 +1,186 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { PipelineProvider } from '@/context/PipelineContext';
-import { NodeCanvas } from '@/components/pipeline/NodeCanvas';
-import { PIPELINE_PRESETS } from '@/lib/pipeline/presets';
-import { listSavedPipelines, loadPipeline } from '@/lib/pipeline/serialization';
-import type { PipelineGraph } from '@/lib/pipeline/graph';
+import { useWizard } from '@/context/WizardContext';
+
+interface PipelineNode {
+  id: string;
+  title: string;
+  imageUrl: string | null;
+  status: 'ready' | 'generating' | 'completed' | 'failed';
+  category?: string;
+  prompt?: string;
+}
 
 export default function PipelinePage() {
-  useEffect(() => {
-    document.title = 'Pipeline — DIRECTOR';
-  }, []);
+  useEffect(() => { document.title = 'Pipeline — DIRECTOR'; }, []);
 
-  const [selectedPreset, setSelectedPreset] = useState<PipelineGraph | null>(null);
+  const { state } = useWizard();
   const [hasMounted, setHasMounted] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
-  useEffect(() => {
-    setHasMounted(true);
-    // Default to the first preset
-    setSelectedPreset(PIPELINE_PRESETS[0] ?? null);
-  }, []);
+  useEffect(() => { setHasMounted(true); }, []);
 
-  const savedPipelines = hasMounted ? listSavedPipelines() : [];
+  // Auto-build pipeline nodes from completed scenes
+  const nodes: PipelineNode[] = useMemo(() => {
+    return state.scenes
+      .filter(s => s.status === 'completed' && s.imageUrl)
+      .map((scene, i) => ({
+        id: scene.id,
+        title: scene.prompt?.slice(0, 40) || `Scene ${i + 1}`,
+        imageUrl: scene.imageUrl,
+        status: 'ready' as const,
+        category: scene.assetCategory,
+        prompt: scene.prompt,
+      }));
+  }, [state.scenes]);
 
-  const handleLoadSaved = (id: string) => {
-    const graph = loadPipeline(id);
-    if (graph) setSelectedPreset(graph);
-  };
+  const selectedNodeData = nodes.find(n => n.id === selectedNode);
 
   if (!hasMounted) {
     return (
       <main className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-          <span className="text-sm text-on-surface-variant">Loading pipeline editor...</span>
+          <span className="text-sm text-on-surface-variant">Loading pipeline...</span>
         </div>
-      </main>
-    );
-  }
-
-  if (!selectedPreset) {
-    return (
-      <main className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
-        <h1 className="text-xl font-semibold text-on-surface/80">Pipeline Editor</h1>
-        <p className="text-sm text-on-surface/40 max-w-md text-center">
-          Build custom video generation pipelines with quality gates. Drag nodes, connect ports, and run.
-        </p>
-
-        <div className="grid grid-cols-2 gap-4 max-w-lg w-full">
-          {PIPELINE_PRESETS.map((preset) => (
-            <button
-              key={preset.id}
-              onClick={() => setSelectedPreset(preset)}
-              className="bg-surface-container/80 border border-white/10 rounded-xl p-4 text-left hover:border-primary/30 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
-            >
-              <h3 className="text-sm font-medium text-on-surface/80 mb-1">{preset.name}</h3>
-              <p className="text-[10px] text-on-surface/30">{preset.description}</p>
-              <span className="text-[10px] text-on-surface/20 mt-2 block">
-                {preset.nodes.length} nodes, {preset.edges.length} edges
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {savedPipelines.length > 0 && (
-          <div className="mt-4">
-            <h2 className="text-xs font-medium text-on-surface/40 mb-2">Saved Pipelines</h2>
-            {savedPipelines.map((entry) => (
-              <button
-                key={entry.id}
-                onClick={() => handleLoadSaved(entry.id)}
-                className="block w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-xs text-on-surface/60"
-              >
-                {entry.name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <Link
-          href="/create/generating"
-          className="text-xs text-on-surface/30 hover:text-on-surface/50 mt-4"
-        >
-          Back to Simple Mode
-        </Link>
       </main>
     );
   }
 
   return (
-    <main className="flex-1 flex flex-col h-full overflow-hidden">
-      <PipelineProvider initialGraph={selectedPreset}>
-        <NodeCanvas />
-      </PipelineProvider>
+    <main className="flex-1 flex flex-col h-[calc(100vh-12rem)] -mt-8 overflow-hidden">
+      {/* Header */}
+      <div className="shrink-0 px-2 py-4 flex items-center justify-between">
+        <div>
+          <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold block">Pipeline</span>
+          <h1 className="font-headline font-light text-2xl tracking-[-0.03em] text-on-surface">
+            {nodes.length} Scene{nodes.length !== 1 ? 's' : ''} Connected
+          </h1>
+        </div>
+        <div className="flex items-center gap-3 text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold">
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-success" />
+            {nodes.filter(n => n.status === 'ready').length} Ready
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            {nodes.filter(n => n.status === 'generating').length} Generating
+          </span>
+        </div>
+      </div>
+
+      {/* Canvas — full width horizontal scroll */}
+      {nodes.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-6">
+          <span className="material-symbols-outlined text-6xl text-on-surface-variant/20">account_tree</span>
+          <p className="text-on-surface-variant/60 text-sm tracking-widest uppercase">No scenes in pipeline</p>
+          <p className="text-on-surface-variant/30 text-xs">Generate scenes in the Review step first</p>
+          <Link href="/create/review" className="mt-4 px-6 py-2.5 rounded-full bg-primary/10 text-primary text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-primary/20 transition-colors">
+            Go to Review
+          </Link>
+        </div>
+      ) : (
+        <div className="flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar">
+          <div className="flex items-center gap-0 min-w-max h-full px-4 py-8">
+            {nodes.map((node, i) => (
+              <React.Fragment key={node.id}>
+                {/* Node card */}
+                <button
+                  onClick={() => setSelectedNode(selectedNode === node.id ? null : node.id)}
+                  className={`shrink-0 w-64 rounded-xl overflow-hidden border transition-all duration-300 cursor-pointer ${
+                    selectedNode === node.id
+                      ? 'border-primary ring-2 ring-primary/20 scale-105'
+                      : 'border-outline-variant/20 hover:border-outline-variant/40 hover:scale-[1.02]'
+                  } bg-surface-container`}
+                >
+                  {/* Thumbnail */}
+                  <div className="relative aspect-video bg-surface-container-highest">
+                    {node.imageUrl ? (
+                      <img src={node.imageUrl} alt={node.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-3xl text-on-surface-variant/20">image</span>
+                      </div>
+                    )}
+                    {/* Node number */}
+                    <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                      <span className="text-[11px] font-bold text-on-surface">{String(i + 1).padStart(2, '0')}</span>
+                    </div>
+                    {/* Status */}
+                    <div className="absolute top-2 right-2">
+                      {node.status === 'ready' && (
+                        <span className="px-2 py-0.5 rounded-full bg-success/80 text-[9px] font-bold uppercase text-on-surface">Ready</span>
+                      )}
+                      {node.status === 'generating' && (
+                        <span className="px-2 py-0.5 rounded-full bg-primary/80 text-[9px] font-bold uppercase text-on-surface animate-pulse">Generating</span>
+                      )}
+                      {node.status === 'completed' && (
+                        <span className="px-2 py-0.5 rounded-full bg-success/80 text-[9px] font-bold uppercase text-on-surface">Done</span>
+                      )}
+                      {node.status === 'failed' && (
+                        <span className="px-2 py-0.5 rounded-full bg-error/80 text-[9px] font-bold uppercase text-on-surface">Failed</span>
+                      )}
+                    </div>
+                  </div>
+                  {/* Info */}
+                  <div className="p-3">
+                    <p className="text-xs font-semibold text-on-surface truncate">{node.title}</p>
+                    {node.category && (
+                      <span className="text-[10px] text-on-surface-variant uppercase tracking-wider">{node.category}</span>
+                    )}
+                  </div>
+                </button>
+
+                {/* Connector arrow */}
+                {i < nodes.length - 1 && (
+                  <div className="shrink-0 flex items-center px-2">
+                    <div className="w-8 h-[2px] bg-outline-variant/30" />
+                    <span className="material-symbols-outlined text-outline-variant/50 text-sm -ml-1">chevron_right</span>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Selected node detail panel */}
+      {selectedNodeData && (
+        <div className="shrink-0 border-t border-outline-variant/20 bg-surface-container-lowest/80 backdrop-blur-xl px-8 py-4">
+          <div className="flex items-start gap-6 max-w-4xl">
+            {selectedNodeData.imageUrl && (
+              <img src={selectedNodeData.imageUrl} alt="" className="w-32 h-20 rounded-lg object-cover shrink-0" />
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-bold text-on-surface">{selectedNodeData.title}</h3>
+              {selectedNodeData.prompt && (
+                <p className="text-xs text-on-surface-variant mt-1 line-clamp-2">{selectedNodeData.prompt}</p>
+              )}
+              {selectedNodeData.category && (
+                <span className="inline-block mt-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">{selectedNodeData.category}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="shrink-0 border-t border-outline-variant/20 px-8 py-4 flex justify-between items-center bg-surface-container-lowest/80 backdrop-blur-xl">
+        <Link href="/create/review" className="px-6 py-2.5 rounded-full text-on-surface-variant text-[10px] tracking-[0.2em] uppercase font-bold hover:text-on-surface transition-colors">
+          Back to Review
+        </Link>
+        <Link
+          href={nodes.length > 0 ? '/create/generating' : '#'}
+          className={`flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-on-primary-fixed text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_30px_rgba(198,191,255,0.2)] hover:scale-105 active:scale-95 transition-all ${
+            nodes.length === 0 ? 'opacity-40 cursor-not-allowed hover:scale-100' : ''
+          }`}
+        >
+          <span className="material-symbols-outlined text-sm">auto_awesome</span>
+          Generate Film ({nodes.length} scenes)
+        </Link>
+      </div>
     </main>
   );
 }

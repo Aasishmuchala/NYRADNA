@@ -11,7 +11,7 @@ interface GapDetailPanelProps {
 const severityBadge: Record<string, string> = {
   critical: 'bg-red-500/20 text-red-400 border-red-500',
   moderate: 'bg-amber-500/20 text-amber-400 border-amber-500',
-  minor:    'bg-[#555]/20 text-[#c8c4d6] border-[#555]',
+  minor:    'bg-outline/20 text-on-surface-variant border-outline',
 };
 
 const typeBadge: Record<string, { label: string; icon: string; color: string }> = {
@@ -24,7 +24,7 @@ function StatusLabel({ status }: { status: string }) {
     return <span className="text-xs font-medium text-green-400">Accepted</span>;
   }
   if (status === 'dismissed') {
-    return <span className="text-xs font-medium text-[#555] line-through">Dismissed</span>;
+    return <span className="text-xs font-medium text-outline line-through">Dismissed</span>;
   }
   if (status === 'fill-requested') {
     return <span className="text-xs font-medium text-[var(--color-primary)] animate-pulse">Fill Requested</span>;
@@ -62,7 +62,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
         <button
           type="button"
           onClick={onClose}
-          className="text-[#555] hover:text-on-surface transition-colors"
+          className="text-outline hover:text-on-surface transition-colors"
         >
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>
@@ -95,10 +95,10 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
               <h4 className="text-sm font-bold text-on-surface mb-1">{gap.title}</h4>
 
               {/* Description */}
-              <p className="text-xs text-[#c8c4d6] mb-1">{gap.description}</p>
+              <p className="text-xs text-on-surface-variant mb-1">{gap.description}</p>
 
               {/* Suggestion */}
-              <p className="text-xs text-[#c8c4d6] italic flex items-start gap-1 mb-3">
+              <p className="text-xs text-on-surface-variant italic flex items-start gap-1 mb-3">
                 <span className="material-symbols-outlined text-xs mt-0.5 flex-shrink-0">lightbulb</span>
                 {gap.suggestion}
               </p>
@@ -118,7 +118,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
                       <button
                         type="button"
                         onClick={() => dismissGap(gap.id)}
-                        className="rounded-lg border border-[#555] px-3 py-1 text-xs font-medium text-[#c8c4d6] transition-colors hover:bg-[#555]/10"
+                        className="rounded-lg border border-outline px-3 py-1 text-xs font-medium text-on-surface-variant transition-colors hover:bg-outline/10"
                       >
                         Dismiss
                       </button>
@@ -144,7 +144,7 @@ export default function GapDetailPanel({ gaps, onClose }: GapDetailPanelProps) {
       </div>
 
       {gaps.length === 0 && (
-        <p className="text-xs text-[#555] text-center mt-8">No gaps for this edge.</p>
+        <p className="text-xs text-outline text-center mt-8">No gaps for this edge.</p>
       )}
     </div>
   );

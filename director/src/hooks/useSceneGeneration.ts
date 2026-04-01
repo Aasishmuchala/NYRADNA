@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useWizard } from '@/context/WizardContext';
 import { apiFetch } from '@/lib/api';
+import { persistImageUrl } from '@/lib/persistImage';
 import type { Prediction, SceneImage } from '@/types/replicate';
 
 export function useSceneGeneration() {
@@ -138,11 +139,12 @@ export function useSceneGeneration() {
 
       // Step 2: Poll until done
       const prediction = await pollUntilDone(predictionId);
-      const imageUrl = Array.isArray(prediction.output)
+      const rawUrl = Array.isArray(prediction.output)
         ? prediction.output[0]
         : prediction.output;
 
-      if (prediction.status === 'succeeded' && imageUrl) {
+      if (prediction.status === 'succeeded' && rawUrl) {
+        const imageUrl = await persistImageUrl(rawUrl);
         update({
           scenes: stateRef.current.scenes.map((s) =>
             s.id === id ? { ...s, status: 'completed' as const, imageUrl, predictionId } : s
@@ -252,11 +254,12 @@ export function useSceneGeneration() {
       });
 
       const prediction = await pollUntilDone(predictionId);
-      const imageUrl = Array.isArray(prediction.output)
+      const rawEditUrl = Array.isArray(prediction.output)
         ? prediction.output[0]
         : prediction.output;
 
-      if (prediction.status === 'succeeded' && imageUrl) {
+      if (prediction.status === 'succeeded' && rawEditUrl) {
+        const imageUrl = await persistImageUrl(rawEditUrl);
         update({
           scenes: stateRef.current.scenes.map((s) =>
             s.id === sceneId ? { ...s, status: 'completed' as const, imageUrl, predictionId } : s
@@ -328,11 +331,12 @@ export function useSceneGeneration() {
         });
 
         const prediction = await pollUntilDone(predictionId);
-        const imageUrl = Array.isArray(prediction.output)
+        const rawVariantUrl = Array.isArray(prediction.output)
           ? prediction.output[0]
           : prediction.output;
 
-        if (prediction.status === 'succeeded' && imageUrl) {
+        if (prediction.status === 'succeeded' && rawVariantUrl) {
+          const imageUrl = await persistImageUrl(rawVariantUrl);
           update({
             scenes: stateRef.current.scenes.map(s =>
               s.id === variantId ? { ...s, status: 'completed' as const, imageUrl, predictionId } : s

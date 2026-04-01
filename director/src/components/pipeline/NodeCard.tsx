@@ -72,10 +72,10 @@ export const NodeCard = React.memo(function NodeCard({
     >
       {/* Header */}
       <div className="flex items-center gap-2 px-3 py-2 border-b border-white/5 cursor-grab active:cursor-grabbing">
-        <span className="material-symbols-outlined text-base text-white/60" style={{ fontSize: '16px' }}>
+        <span className="material-symbols-outlined text-base text-on-surface/60" style={{ fontSize: '16px' }}>
           {typeDef.icon}
         </span>
-        <span className="text-xs font-medium text-white/80 truncate flex-1">
+        <span className="text-xs font-medium text-on-surface/80 truncate flex-1">
           {typeDef.label}
         </span>
         <StatusBadge status={status} />
@@ -156,7 +156,7 @@ export const NodeCard = React.memo(function NodeCard({
           {node.error ? (
             <p className="text-[10px] text-error truncate">{node.error}</p>
           ) : (
-            <p className="text-[10px] text-white/40 truncate">{node.progressMessage}</p>
+            <p className="text-[10px] text-on-surface/40 truncate">{node.progressMessage}</p>
           )}
         </div>
       )}

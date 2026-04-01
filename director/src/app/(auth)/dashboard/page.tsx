@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import Modal, { AlertModal, ConfirmModal } from '@/components/ui/Modal';
+import Link from 'next/link';
+import { AlertModal, ConfirmModal } from '@/components/ui/Modal';
 import { listProjects, deleteProject, loadProject } from '@/lib/projectStorage';
 import type { ProjectIndexEntry } from '@/lib/projectStorage';
 import { useWizard } from '@/context/WizardContext';
@@ -41,23 +42,13 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState<ProjectIndexEntry[]>([]);
   const [alertModal, setAlertModal] = useState({ open: false, title: '', message: '' });
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; id: string; title: string }>({ open: false, id: '', title: '' });
-  const [showNewProject, setShowNewProject] = useState(false);
-  const [newProjectName, setNewProjectName] = useState('');
-  const [newProjectConcept, setNewProjectConcept] = useState('');
-  const [newProjectType, setNewProjectType] = useState('');
-  const nameInputRef = useRef<HTMLInputElement>(null);
+  // New project modal removed — lives on /projects page now
 
   const refreshProjects = useCallback(() => { setProjects(listProjects()); }, []);
   useEffect(() => { document.title = 'Dashboard — DIRECTOR'; }, []);
   useEffect(() => { refreshProjects(); }, [refreshProjects]);
 
-  const hasAutoOpened = useRef(false);
-  useEffect(() => {
-    if (!hasAutoOpened.current && projects.length === 0) {
-      hasAutoOpened.current = true;
-      setTimeout(() => handleNewProject(), 200);
-    }
-  }, [projects]);
+  // No auto-popup — new project modal lives on /projects
 
   const handleContinue = (id: string) => {
     const s = loadProject(id);
@@ -76,23 +67,7 @@ export default function DashboardPage() {
     refreshProjects();
   };
 
-  const handleNewProject = () => {
-    setNewProjectName(''); setNewProjectConcept(''); setNewProjectType('');
-    setShowNewProject(true);
-    setTimeout(() => nameInputRef.current?.focus(), 100);
-  };
-
-  const handleCreateProject = () => {
-    if (!newProjectName.trim()) return;
-    reset();
-    const parts: string[] = [];
-    if (newProjectConcept.trim()) parts.push(newProjectConcept.trim());
-    const st = PROJECT_TYPES.find(t => t.id === newProjectType);
-    if (st) parts.push(`[Format: ${st.label}]`);
-    update({ visionText: parts.join('\n\n') || '' });
-    setShowNewProject(false);
-    router.push('/create/intent');
-  };
+  // handleNewProject and handleCreateProject removed — lives on /projects page
 
   function getClipInfo(id: string): string {
     const s = loadProject(id);
@@ -142,9 +117,9 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center mb-16 px-4">
           <h2 className="text-[10px] tracking-[0.5em] uppercase font-bold text-on-surface-variant">Recent Archives</h2>
           <div className="h-[1px] flex-1 mx-12 bg-surface-container-high"></div>
-          <button onClick={handleNewProject} className="text-[10px] tracking-[0.2em] uppercase text-primary/80 hover:text-primary font-bold transition-colors">
+          <Link href="/projects" className="text-[10px] tracking-[0.2em] uppercase text-primary/80 hover:text-primary font-bold transition-colors">
             New Sequence
-          </button>
+          </Link>
         </div>
 
         {projects.length === 0 ? (
@@ -191,46 +166,18 @@ export default function DashboardPage() {
 
       {/* FAB */}
       <div className="fixed bottom-12 right-12 z-50">
-        <button
-          onClick={handleNewProject}
+        <Link
+          href="/projects"
           className="flex items-center bg-primary text-on-primary-fixed px-8 py-4 rounded-full shadow-[0_20px_50px_rgba(198,191,255,0.3)] hover:scale-105 active:scale-95 transition-all duration-500 group border border-outline-variant/30"
         >
           <span className="material-symbols-outlined mr-3 group-hover:rotate-90 transition-transform duration-500 font-bold">add</span>
           <span className="text-[10px] tracking-[0.3em] font-bold uppercase">New Sequence</span>
-        </button>
+        </Link>
       </div>
 
       {/* Modals */}
       <AlertModal open={alertModal.open} onClose={() => setAlertModal({ ...alertModal, open: false })} title={alertModal.title} message={alertModal.message} />
       <ConfirmModal open={confirmDelete.open} onClose={() => setConfirmDelete({ ...confirmDelete, open: false })} onConfirm={handleDeleteConfirm} title="Delete Project" message={`Are you sure you want to delete "${confirmDelete.title}"? This cannot be undone.`} confirmLabel="Delete" danger />
-      <Modal open={showNewProject} onClose={() => setShowNewProject(false)} title="New Sequence" wide actions={
-        <>
-          <button onClick={() => setShowNewProject(false)} className="px-6 py-3 rounded-full bg-surface-container-low text-on-surface-variant text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-surface-container transition-colors">Cancel</button>
-          <button onClick={handleCreateProject} disabled={!newProjectName.trim()} className="px-8 py-3 rounded-full bg-primary text-on-primary-fixed text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_30px_rgba(198,191,255,0.2)] hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:hover:scale-100">Create</button>
-        </>
-      }>
-        <div className="space-y-6">
-          <div>
-            <label className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant mb-3 block">Project Name</label>
-            <input ref={nameInputRef} type="text" value={newProjectName} onChange={(e) => setNewProjectName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()} placeholder="e.g. Neural Horizons" className="w-full px-4 py-3 bg-surface-container-low backdrop-blur-xl text-on-surface rounded-lg border border-outline-variant/20 focus:border-primary/50 focus:outline-none transition-colors placeholder-on-surface-variant/40" />
-          </div>
-          <div>
-            <label className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant mb-3 block">Type</label>
-            <div className="grid grid-cols-2 gap-2">
-              {PROJECT_TYPES.map((type) => (
-                <button key={type.id} onClick={() => setNewProjectType(newProjectType === type.id ? '' : type.id)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all text-xs border ${newProjectType === type.id ? 'bg-primary/10 border-primary/40 text-on-surface' : 'bg-surface-container-low border-outline-variant/20 text-on-surface-variant hover:border-outline-variant/30'}`}>
-                  <span className={`material-symbols-outlined text-[16px] ${newProjectType === type.id ? 'text-primary' : ''}`}>{type.icon}</span>
-                  <span className="font-medium">{type.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="text-[10px] tracking-[0.3em] font-bold uppercase text-on-surface-variant mb-3 block">Brief Concept <span className="text-on-surface-variant/40 font-normal">(optional)</span></label>
-            <textarea value={newProjectConcept} onChange={(e) => setNewProjectConcept(e.target.value)} placeholder="Describe your vision..." rows={3} className="w-full px-4 py-3 bg-surface-container-low backdrop-blur-xl text-on-surface rounded-lg border border-outline-variant/20 focus:border-primary/50 focus:outline-none transition-colors placeholder-on-surface-variant/40 resize-none" />
-          </div>
-        </div>
-      </Modal>
     </main>
   );
 }

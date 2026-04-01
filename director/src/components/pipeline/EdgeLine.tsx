@@ -11,7 +11,7 @@ interface EdgeLineProps {
   onDelete?: (edgeId: string) => void;
 }
 
-export const EdgeLine = React.memo(function EdgeLine({ edge, sourcePos, targetPos, color = '#ff906466', onDelete }: EdgeLineProps) {
+export const EdgeLine = React.memo(function EdgeLine({ edge, sourcePos, targetPos, color = 'var(--color-primary)66', onDelete }: EdgeLineProps) {
   const d = useMemo(() => {
     const dx = targetPos.x - sourcePos.x;
     const cp = Math.max(Math.abs(dx) * 0.5, 50);
@@ -51,7 +51,7 @@ export const EdgeLine = React.memo(function EdgeLine({ edge, sourcePos, targetPo
 export const EdgeDraft = React.memo(function EdgeDraft({
   from,
   to,
-  color = '#ff906444',
+  color = 'var(--color-primary)44',
 }: {
   from: { x: number; y: number };
   to: { x: number; y: number };

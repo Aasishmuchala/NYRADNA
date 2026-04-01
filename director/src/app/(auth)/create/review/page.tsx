@@ -725,12 +725,12 @@ export default function ReviewPage() {
             <span className="text-on-surface font-bold ml-2">{completedCount}/{parentScenes.length}</span>
           </div>
           <Link
-            href={completedCount > 0 ? '/create/generating' : '#'}
+            href={completedCount > 0 ? '/create/pipeline' : '#'}
             className={`px-10 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-headline font-black transition-all hover:scale-105 active:scale-95 ${
               completedCount === 0 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            GENERATE FILM ({completedCount} clips)
+            PIPELINE ({completedCount} clips)
           </Link>
         </div>
       </div>

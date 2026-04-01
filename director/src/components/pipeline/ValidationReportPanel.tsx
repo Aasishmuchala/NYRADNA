@@ -61,7 +61,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
         <button
           type="button"
           onClick={onClose}
-          className="text-[#555] hover:text-on-surface transition-colors"
+          className="text-outline hover:text-on-surface transition-colors"
         >
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>
@@ -69,7 +69,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
 
       {/* Summary bar */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-xs text-[#c8c4d6]">{issues.length} total</span>
+        <span className="text-xs text-on-surface-variant">{issues.length} total</span>
         {criticalCount > 0 && (
           <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 border border-red-500 px-2 py-0.5 text-[10px] font-medium text-red-400">
             {criticalCount} critical
@@ -97,9 +97,9 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
           <div key={category} className="mb-4">
             {/* Category header */}
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="material-symbols-outlined text-sm text-[#c8c4d6]">{config.icon}</span>
-              <h4 className="text-xs font-bold text-[#c8c4d6] uppercase tracking-wide">{config.label}</h4>
-              <span className="text-[10px] text-[#555]">({categoryIssues.length})</span>
+              <span className="material-symbols-outlined text-sm text-on-surface-variant">{config.icon}</span>
+              <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-wide">{config.label}</h4>
+              <span className="text-[10px] text-outline">({categoryIssues.length})</span>
             </div>
 
             {/* Issue cards */}
@@ -129,10 +129,10 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-[#c8c4d6] mb-1">{issue.description}</p>
+                    <p className="text-sm text-on-surface-variant mb-1">{issue.description}</p>
 
                     {/* Suggestion */}
-                    <p className="text-xs text-[#555] italic mb-2">{issue.suggestion}</p>
+                    <p className="text-xs text-outline italic mb-2">{issue.suggestion}</p>
 
                     {/* Action buttons */}
                     {issue.status === 'flagged' && (
@@ -179,7 +179,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
       })}
 
       {issues.length === 0 && (
-        <p className="text-xs text-[#555] text-center mt-8">No validation issues found.</p>
+        <p className="text-xs text-outline text-center mt-8">No validation issues found.</p>
       )}
 
       {/* Footer: Accept All */}
@@ -191,7 +191,7 @@ export default function ValidationReportPanel({ issues, onClose, onRegenerate }:
               const first = issues[0];
               if (first) acceptAll(first.projectId, first.assetSetId);
             }}
-            className="w-full rounded-lg bg-[#4cb150] px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-[#5ec462]"
+            className="w-full rounded-lg bg-success px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-success/80"
           >
             Accept All Issues
           </button>

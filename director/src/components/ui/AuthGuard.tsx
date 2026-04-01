@@ -1,12 +1,17 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
-  if (isLoading) {
+  useEffect(() => setMounted(true), []);
+
+  // Don't render anything until mounted — prevents hydration mismatch
+  if (!mounted || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-surface">
         <div className="flex flex-col items-center gap-4">
@@ -27,17 +32,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <h1 className="text-3xl font-bold font-headline">Sign in to Director</h1>
-          <p className="text-on-surface-variant">
-            You need to sign in to access this page. Create an account or log in to get started.
-          </p>
-          <div className="flex flex-col gap-3">
-            <Link
-              href="/"
-              className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold text-center hover:bg-primary-container transition-colors"
-            >
-              Go to Home
-            </Link>
-          </div>
+          <p className="text-on-surface-variant">Create an account or log in to get started.</p>
+          <Link href="/" className="inline-block px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:bg-primary-container transition-colors">
+            Go to Home
+          </Link>
         </div>
       </div>
     );

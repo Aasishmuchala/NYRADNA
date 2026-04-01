@@ -21,7 +21,7 @@ const personas: Persona[] = [
     description: 'Efficiency, ambition, and high-tech minimalism.',
     feedDescription: 'Your audience values streamlined messaging, professional polish, and cutting-edge technology. Recommend: Clean transitions, geometric camera work, minimal soundtrack.',
     icon: 'business_center',
-    iconColor: '#ff9064',
+    iconColor: 'var(--color-primary)',
   },
   {
     id: 2,
@@ -37,7 +37,7 @@ const personas: Persona[] = [
     description: 'Exclusivity, timeless craft, and premium detail.',
     feedDescription: 'Your audience appreciates sophistication, subtle elegance, and exclusivity. Recommend: Slow cinematic pacing, warm lighting, premium color grading, sophisticated soundtrack.',
     icon: 'diamond',
-    iconColor: '#ff9064',
+    iconColor: 'var(--color-primary)',
   },
   {
     id: 4,

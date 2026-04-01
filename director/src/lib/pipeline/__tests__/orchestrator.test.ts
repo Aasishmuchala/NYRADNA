@@ -39,7 +39,7 @@ describe('PipelineOrchestrator', () => {
       // Advance through intent -> brief -> directors-cut
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
       // Now at style-dna (active)
       // style-dna: awaitUserAdvance=false, canSkip=true
       // character-setup: awaitUserAdvance=false, canSkip=true
@@ -63,7 +63,7 @@ describe('PipelineOrchestrator', () => {
       // Navigate to review stage
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
       getState().completeStage('style-dna');
       getState().completeStage('character-setup');
       // Now at review (active, awaitUserAdvance=true)
@@ -155,7 +155,7 @@ describe('PipelineOrchestrator', () => {
       // Get to review stage
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
       getState().completeStage('style-dna');
       getState().completeStage('character-setup');
       // Now at review (active, awaitUserAdvance=true)
@@ -196,7 +196,7 @@ describe('PipelineOrchestrator', () => {
     it('returns true when at review (awaitUserAdvance=true, status=active)', () => {
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
       getState().completeStage('style-dna');
       getState().completeStage('character-setup');
 
@@ -218,7 +218,7 @@ describe('PipelineOrchestrator', () => {
       // Complete through to generating
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
       getState().completeStage('style-dna');
       getState().completeStage('character-setup');
       getState().completeStage('review');
@@ -251,7 +251,7 @@ describe('PipelineOrchestrator', () => {
 
       // Advance from brief -> stops at directors-cut (mandatory, canSkip=false, requires user work)
       result = orchestrator.advanceToNext();
-      expect(result).toBe('directors-cut');
+      expect(result).toBe('style-dna');
 
       // Complete directors-cut manually (user does their work), then advance
       // directors-cut is mandatory but awaitUserAdvance=false, so advanceToNext will:

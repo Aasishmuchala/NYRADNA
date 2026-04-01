@@ -13,7 +13,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
   if (!node) {
     return (
       <div className="w-[260px] bg-surface-container-low/95 backdrop-blur-lg border-l border-white/5 flex items-center justify-center">
-        <p className="text-xs text-white/20">Select a node to inspect</p>
+        <p className="text-xs text-on-surface/20">Select a node to inspect</p>
       </div>
     );
   }
@@ -33,12 +33,12 @@ export const NodeInspector = React.memo(function NodeInspector() {
       {/* Header */}
       <div className="p-3 border-b border-white/5">
         <div className="flex items-center gap-2 mb-1">
-          <span className="material-symbols-outlined text-white/50" style={{ fontSize: '18px' }}>
+          <span className="material-symbols-outlined text-on-surface/50" style={{ fontSize: '18px' }}>
             {typeDef.icon}
           </span>
-          <h3 className="text-sm font-medium text-white/80">{typeDef.label}</h3>
+          <h3 className="text-sm font-medium text-on-surface/80">{typeDef.label}</h3>
         </div>
-        <p className="text-[10px] text-white/30">{typeDef.description}</p>
+        <p className="text-[10px] text-on-surface/30">{typeDef.description}</p>
         <div className="mt-2 flex items-center gap-2">
           <StatusBadge status={node.status ?? 'idle'} />
           {node.status === 'failed' && (
@@ -57,7 +57,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
       {/* Config fields */}
       {typeDef.config.length > 0 && (
         <div className="p-3 space-y-3">
-          <h4 className="text-[10px] font-medium text-white/30 uppercase tracking-wider">Configuration</h4>
+          <h4 className="text-[10px] font-medium text-on-surface/30 uppercase tracking-wider">Configuration</h4>
           {typeDef.config.map((field) => (
             <ConfigField
               key={field.id}
@@ -72,12 +72,12 @@ export const NodeInspector = React.memo(function NodeInspector() {
       {/* Outputs viewer */}
       {node.status === 'done' && node.outputs && Object.keys(node.outputs).length > 0 && (
         <div className="p-3 border-t border-white/5 space-y-2">
-          <h4 className="text-[10px] font-medium text-white/30 uppercase tracking-wider">Outputs</h4>
+          <h4 className="text-[10px] font-medium text-on-surface/30 uppercase tracking-wider">Outputs</h4>
 
           {/* Image preview */}
           {typeof node.outputs.image === 'string' && (
             <div>
-              <span className="text-[10px] text-white/30 block mb-1">Image</span>
+              <span className="text-[10px] text-on-surface/30 block mb-1">Image</span>
               {node.outputs.image.startsWith('data:') ? (
                 <img src={node.outputs.image} alt="Generated output" className="w-full rounded-lg" />
               ) : (
@@ -85,7 +85,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
                   <img src={node.outputs.image} alt="Generated output" className="w-full rounded-lg mb-1" loading="lazy" />
                   <button
                     onClick={() => navigator.clipboard.writeText(node.outputs!.image as string)}
-                    className="text-[9px] text-white/30 hover:text-white/60 transition-colors focus:outline-none focus:text-white/60"
+                    className="text-[9px] text-on-surface/30 hover:text-on-surface/60 transition-colors focus:outline-none focus:text-on-surface/60"
                     aria-label="Copy image URL to clipboard"
                   >
                     Copy URL
@@ -98,7 +98,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
           {/* Frame preview */}
           {typeof node.outputs.frame === 'string' && (
             <div>
-              <span className="text-[10px] text-white/30 block mb-1">Extracted Frame</span>
+              <span className="text-[10px] text-on-surface/30 block mb-1">Extracted Frame</span>
               <img src={node.outputs.frame} alt="Extracted frame" className="w-full rounded-lg" loading="lazy" />
             </div>
           )}
@@ -106,7 +106,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
           {/* Video preview */}
           {typeof node.outputs.video === 'string' && (
             <div>
-              <span className="text-[10px] text-white/30 block mb-1">Video</span>
+              <span className="text-[10px] text-on-surface/30 block mb-1">Video</span>
               <video
                 src={node.outputs.video}
                 controls
@@ -115,7 +115,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
               />
               <button
                 onClick={() => navigator.clipboard.writeText(node.outputs!.video as string)}
-                className="text-[9px] text-white/30 hover:text-white/60 transition-colors mt-1 focus:outline-none focus:text-white/60"
+                className="text-[9px] text-on-surface/30 hover:text-on-surface/60 transition-colors mt-1 focus:outline-none focus:text-on-surface/60"
                 aria-label="Copy video URL to clipboard"
               >
                 Copy URL
@@ -134,7 +134,7 @@ export const NodeInspector = React.memo(function NodeInspector() {
                   {node.outputs.pass ? 'Gate Passed' : 'Gate Failed'}
                 </span>
                 {node.outputs.score !== undefined && (
-                  <span className="text-[10px] text-white/40 ml-2">
+                  <span className="text-[10px] text-on-surface/40 ml-2">
                     Score: {(node.outputs.score as number).toFixed(3)}
                   </span>
                 )}
@@ -145,14 +145,14 @@ export const NodeInspector = React.memo(function NodeInspector() {
           {/* Audio */}
           {typeof node.outputs.audio === 'string' && (
             <div>
-              <span className="text-[10px] text-white/30 block mb-1">Audio</span>
+              <span className="text-[10px] text-on-surface/30 block mb-1">Audio</span>
               <audio src={node.outputs.audio} controls className="w-full" preload="metadata" />
             </div>
           )}
 
           {/* Refset info */}
           {node.outputs.count !== undefined && (
-            <div className="text-[10px] text-white/40">
+            <div className="text-[10px] text-on-surface/40">
               {node.outputs.count as number} reference images loaded
             </div>
           )}
@@ -160,8 +160,8 @@ export const NodeInspector = React.memo(function NodeInspector() {
           {/* Prompt preview */}
           {typeof node.outputs.prompt === 'string' && (
             <div>
-              <span className="text-[10px] text-white/30 block mb-1">Prompt</span>
-              <p className="text-[10px] text-white/60 bg-white/5 rounded-lg p-2 break-words max-h-24 overflow-y-auto">
+              <span className="text-[10px] text-on-surface/30 block mb-1">Prompt</span>
+              <p className="text-[10px] text-on-surface/60 bg-white/5 rounded-lg p-2 break-words max-h-24 overflow-y-auto">
                 {node.outputs.prompt}
               </p>
             </div>
@@ -170,12 +170,12 @@ export const NodeInspector = React.memo(function NodeInspector() {
           {/* Videos array */}
           {Array.isArray(node.outputs.videos) && (
             <div>
-              <span className="text-[10px] text-white/30 block mb-1">{(node.outputs.videos as string[]).length} videos</span>
+              <span className="text-[10px] text-on-surface/30 block mb-1">{(node.outputs.videos as string[]).length} videos</span>
               {(node.outputs.videos as string[]).slice(0, 3).map((url, i) => (
                 <video key={i} src={url} controls className="w-full rounded-lg mb-1" preload="metadata" />
               ))}
               {(node.outputs.videos as string[]).length > 3 && (
-                <span className="text-[9px] text-white/30">+{(node.outputs.videos as string[]).length - 3} more</span>
+                <span className="text-[9px] text-on-surface/30">+{(node.outputs.videos as string[]).length - 3} more</span>
               )}
             </div>
           )}
@@ -219,11 +219,11 @@ function ConfigField({
     case 'select':
       return (
         <label className="block">
-          <span className="text-[10px] text-white/40 mb-0.5 block">{field.label}</span>
+          <span className="text-[10px] text-on-surface/40 mb-0.5 block">{field.label}</span>
           <select
             value={String(value)}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-on-surface/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           >
             {field.options?.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -238,8 +238,8 @@ function ConfigField({
       return (
         <label className="block">
           <div className="flex items-center justify-between mb-0.5">
-            <span className="text-[10px] text-white/40">{field.label}</span>
-            <span className="text-[10px] text-white/60 font-mono">{String(value)}</span>
+            <span className="text-[10px] text-on-surface/40">{field.label}</span>
+            <span className="text-[10px] text-on-surface/60 font-mono">{String(value)}</span>
           </div>
           <input
             type="range"
@@ -256,7 +256,7 @@ function ConfigField({
     case 'number':
       return (
         <label className="block">
-          <span className="text-[10px] text-white/40 mb-0.5 block">{field.label}</span>
+          <span className="text-[10px] text-on-surface/40 mb-0.5 block">{field.label}</span>
           <input
             type="number"
             value={Number(value)}
@@ -264,7 +264,7 @@ function ConfigField({
             max={field.max}
             step={field.step ?? 1}
             onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-on-surface/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </label>
       );
@@ -278,19 +278,19 @@ function ConfigField({
             onChange={(e) => onChange(e.target.checked)}
             className="w-3.5 h-3.5 rounded border-white/20 bg-white/5 accent-primary"
           />
-          <span className="text-[10px] text-white/50">{field.label}</span>
+          <span className="text-[10px] text-on-surface/50">{field.label}</span>
         </label>
       );
 
     case 'text':
       return (
         <label className="block">
-          <span className="text-[10px] text-white/40 mb-0.5 block">{field.label}</span>
+          <span className="text-[10px] text-on-surface/40 mb-0.5 block">{field.label}</span>
           <input
             type="text"
             value={String(value ?? '')}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-on-surface/80 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </label>
       );

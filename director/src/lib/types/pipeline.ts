@@ -1,4 +1,4 @@
-export type StageId = 'intent' | 'brief' | 'directors-cut' | 'style-dna' | 'character-setup' | 'review' | 'generating' | 'export';
+export type StageId = 'intent' | 'brief' | 'style-dna' | 'character-setup' | 'review' | 'generating' | 'export';
 
 export type StageStatus = 'idle' | 'completed' | 'blocked' | 'active';
 
@@ -21,13 +21,12 @@ export interface PipelineRun {
 }
 
 export const STAGE_ORDER: StageId[] = [
-  'intent', 'brief', 'directors-cut', 'style-dna', 'character-setup', 'review', 'generating', 'export'
+  'intent', 'brief', 'style-dna', 'character-setup', 'review', 'generating', 'export'
 ];
 
 export const DEFAULT_STAGES: PipelineStage[] = [
   { id: 'intent', label: 'Intent', href: '/create/intent', icon: 'edit_note', status: 'idle', canSkip: false, awaitUserAdvance: false },
   { id: 'brief', label: 'Brief', href: '/create/brief', icon: 'psychology', status: 'idle', canSkip: false, awaitUserAdvance: false },
-  { id: 'directors-cut', label: "Director's Cut", href: '/create/directors-cut', icon: 'movie_filter', status: 'idle', canSkip: false, awaitUserAdvance: false },
   { id: 'style-dna', label: 'Style DNA', href: '/create/style-dna', icon: 'palette', status: 'idle', canSkip: true, awaitUserAdvance: false },
   { id: 'character-setup', label: 'Characters', href: '/create/character-setup', icon: 'face', status: 'idle', canSkip: true, awaitUserAdvance: false },
   { id: 'review', label: 'Review', href: '/create/review', icon: 'movie', status: 'idle', canSkip: false, awaitUserAdvance: true },

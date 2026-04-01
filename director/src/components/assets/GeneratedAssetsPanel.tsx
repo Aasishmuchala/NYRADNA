@@ -86,7 +86,7 @@ export default function GeneratedAssetsPanel({
         className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-surface-container"
       >
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[18px] text-[#c8c4d6]">
+          <span className="material-symbols-outlined text-[18px] text-on-surface-variant">
             auto_awesome
           </span>
           <span className="text-sm font-semibold text-on-surface">Generated Assets</span>
@@ -107,7 +107,7 @@ export default function GeneratedAssetsPanel({
 
       {/* Expanded content */}
       {expanded && (
-        <div className="border-t border-[#222] px-4 pb-4 pt-3">
+        <div className="border-t border-outline-variant/20 px-4 pb-4 pt-3">
           {loading ? (
             <p className="animate-pulse text-center text-xs text-[#928f9f]">
               Loading generated assets...
@@ -144,12 +144,12 @@ export default function GeneratedAssetsPanel({
                     </div>
 
                     {/* Name */}
-                    <p className="mt-1.5 truncate text-[11px] text-[#c8c4d6]">{item.name}</p>
+                    <p className="mt-1.5 truncate text-[11px] text-on-surface-variant">{item.name}</p>
 
                     {/* Source badge */}
                     <span
                       className={`mt-1 inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                        sourceColors[source] || 'bg-surface-container text-[#c8c4d6]'
+                        sourceColors[source] || 'bg-surface-container text-on-surface-variant'
                       }`}
                     >
                       <span className="material-symbols-outlined text-[12px]">
@@ -163,7 +163,7 @@ export default function GeneratedAssetsPanel({
                       type="button"
                       onClick={() => handleAddToSet(item)}
                       disabled={!activeSetId || addingId === item.id}
-                      className="mt-2 flex w-full items-center justify-center gap-1 rounded-md bg-white/5 px-2 py-1.5 text-[11px] font-medium text-[#c8c4d6] transition-colors hover:bg-surface-container hover:text-on-surface disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-[#c8c4d6]"
+                      className="mt-2 flex w-full items-center justify-center gap-1 rounded-md bg-white/5 px-2 py-1.5 text-[11px] font-medium text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-on-surface-variant"
                       title={
                         !activeSetId
                           ? 'Select an asset set first'

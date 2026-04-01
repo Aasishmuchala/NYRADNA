@@ -112,7 +112,7 @@ export default function AssetSetsPage() {
       {/* Page header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-on-surface">Asset Sets</h1>
-        <p className="mt-1 text-sm text-[#c8c4d6]">
+        <p className="mt-1 text-sm text-on-surface-variant">
           Organize your media assets into narrative sequences
         </p>
       </div>
@@ -135,7 +135,7 @@ export default function AssetSetsPage() {
 
             {/* Create form */}
             {showCreateForm && (
-              <div className="mb-4 rounded-lg bg-[#1a1a1a] p-4">
+              <div className="mb-4 rounded-lg bg-surface-container p-4">
                 <h3 className="mb-3 text-sm font-semibold text-on-surface">Create Asset Set</h3>
                 <input
                   type="text"
@@ -170,7 +170,7 @@ export default function AssetSetsPage() {
                       setNewSetName('');
                       setNewSetDescription('');
                     }}
-                    className="rounded-lg bg-white/5 px-4 py-2 text-sm text-[#c8c4d6] transition-colors hover:bg-[rgba(127,114,247,0.1)]"
+                    className="rounded-lg bg-white/5 px-4 py-2 text-sm text-on-surface-variant transition-colors hover:bg-[rgba(127,114,247,0.1)]"
                   >
                     Cancel
                   </button>
@@ -181,14 +181,14 @@ export default function AssetSetsPage() {
             {/* Set list */}
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <p className="animate-pulse text-sm text-[#555]">Loading sets...</p>
+                <p className="animate-pulse text-sm text-outline">Loading sets...</p>
               </div>
             ) : assetSets.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8">
                 <span className="material-symbols-outlined mb-2 text-3xl text-[rgba(127,114,247,0.1)]">
                   photo_library
                 </span>
-                <p className="text-center text-sm text-[#555]">
+                <p className="text-center text-sm text-outline">
                   No asset sets yet. Create one to get started.
                 </p>
               </div>
@@ -216,9 +216,9 @@ export default function AssetSetsPage() {
               <div className="rounded-xl bg-surface-container p-4">
                 <h2 className="text-lg font-bold text-on-surface">{activeSet.name}</h2>
                 {activeSet.description && (
-                  <p className="mt-1 text-sm text-[#c8c4d6]">{activeSet.description}</p>
+                  <p className="mt-1 text-sm text-on-surface-variant">{activeSet.description}</p>
                 )}
-                <p className="mt-2 text-xs text-[#555]">
+                <p className="mt-2 text-xs text-outline">
                   {activeSet.items.length} {activeSet.items.length === 1 ? 'asset' : 'assets'}
                   {' '}&middot;{' '}
                   Updated {new Date(activeSet.updatedAt).toLocaleDateString()}
@@ -260,7 +260,7 @@ export default function AssetSetsPage() {
                 <span className="material-symbols-outlined mb-3 text-5xl text-[rgba(127,114,247,0.1)]">
                   collections
                 </span>
-                <p className="text-sm text-[#555]">
+                <p className="text-sm text-outline">
                   Select or create an asset set to view its contents
                 </p>
               </div>

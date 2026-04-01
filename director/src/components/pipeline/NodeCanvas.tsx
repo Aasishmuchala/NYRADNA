@@ -363,7 +363,7 @@ export function NodeCanvas() {
           </div>
 
           {/* Zoom indicator */}
-          <div className="absolute bottom-3 left-3 text-[10px] text-white/20 font-mono">
+          <div className="absolute bottom-3 left-3 text-[10px] text-on-surface/20 font-mono">
             {Math.round(zoom * 100)}%
           </div>
         </div>

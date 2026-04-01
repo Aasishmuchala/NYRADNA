@@ -64,7 +64,7 @@ describe('Pipeline Store', () => {
       getState().startRun();
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
 
       const canDoStyleDna = getState().canExecuteStage('style-dna');
       expect(canDoStyleDna).toBe(true);
@@ -83,7 +83,7 @@ describe('Pipeline Store', () => {
       getState().startRun();
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
       // style-dna and character-setup are skippable, so they should NOT block review
 
       const canDoReview = getState().canExecuteStage('review');
@@ -122,7 +122,7 @@ describe('Pipeline Store', () => {
       getState().startRun();
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
 
       const result = getState().jumpToStage('review');
       expect(result).toBe(true);
@@ -133,7 +133,7 @@ describe('Pipeline Store', () => {
       getState().startRun();
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
 
       getState().jumpToStage('review');
       const reviewStage = getState().currentRun!.stages.find(s => s.id === 'review');
@@ -144,7 +144,7 @@ describe('Pipeline Store', () => {
       getState().startRun();
       getState().completeStage('intent');
       getState().completeStage('brief');
-      getState().completeStage('directors-cut');
+      getState().completeStage('style-dna');
 
       // Jump to review, skipping style-dna and character-setup
       getState().jumpToStage('review');

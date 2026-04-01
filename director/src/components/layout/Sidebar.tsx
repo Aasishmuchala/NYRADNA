@@ -32,7 +32,18 @@ const createSteps: NavItem[] = [
 export default function Sidebar() {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || (href !== '/dashboard' && href !== '/assets' && pathname.startsWith(href));
-  const inCreateFlow = pathname.startsWith('/create');
+
+  // Stay in create flow mode even when visiting /assets (keeps sidebar consistent)
+  const inCreateFlow = pathname.startsWith('/create') || (pathname === '/assets' && typeof window !== 'undefined' && sessionStorage.getItem('director-in-create') === '1');
+
+  // Track create flow state
+  if (typeof window !== 'undefined') {
+    if (pathname.startsWith('/create')) {
+      sessionStorage.setItem('director-in-create', '1');
+    } else if (pathname !== '/assets') {
+      sessionStorage.removeItem('director-in-create');
+    }
+  }
 
   const renderItem = (item: NavItem) => {
     const active = isActive(item.href);

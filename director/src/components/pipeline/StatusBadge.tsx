@@ -3,12 +3,12 @@
 import type { NodeStatus } from '@/lib/pipeline/graph';
 
 const STATUS_STYLES: Record<NodeStatus, { bg: string; text: string; label: string }> = {
-  idle: { bg: 'bg-white/5', text: 'text-white/40', label: 'Idle' },
-  pending: { bg: 'bg-white/10', text: 'text-white/60', label: 'Pending' },
+  idle: { bg: 'bg-white/5', text: 'text-on-surface/40', label: 'Idle' },
+  pending: { bg: 'bg-white/10', text: 'text-on-surface/60', label: 'Pending' },
   running: { bg: 'bg-primary/20', text: 'text-primary', label: 'Running' },
   done: { bg: 'bg-success/20', text: 'text-success', label: 'Done' },
   failed: { bg: 'bg-error/20', text: 'text-error', label: 'Failed' },
-  skipped: { bg: 'bg-white/5', text: 'text-white/30', label: 'Skipped' },
+  skipped: { bg: 'bg-white/5', text: 'text-on-surface/30', label: 'Skipped' },
 };
 
 export function StatusBadge({ status }: { status: NodeStatus }) {

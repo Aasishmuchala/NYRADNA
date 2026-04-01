@@ -37,7 +37,7 @@ export default function Modal({ open, onClose, title, children, actions, wide }:
   return (
     <dialog
       ref={dialogRef}
-      className={`bg-surface-container-high text-on-surface rounded-2xl border border-outline-variant/20 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm w-full shadow-2xl ${wide ? 'max-w-lg' : 'max-w-md'}`}
+      className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-high text-on-surface rounded-2xl border border-outline-variant/20 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm w-full shadow-2xl ${wide ? 'max-w-lg' : 'max-w-md'}`}
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
       }}
