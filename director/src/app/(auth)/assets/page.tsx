@@ -1,4 +1,5 @@
 'use client';
+import { CachedImg } from '@/components/ui/CachedImg';
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -400,7 +401,7 @@ export default function AssetsPage() {
                               <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                             </div>
                           ) : asset.imageUrl ? (
-                            <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
+                            <CachedImg src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="material-symbols-outlined text-4xl text-on-surface-variant/20">image</span>
@@ -476,7 +477,7 @@ export default function AssetsPage() {
               <div className="sticky top-8 glass-card rounded-xl overflow-hidden">
                 <div className="aspect-square bg-surface-container-highest">
                   {selectedEntry.asset.imageUrl ? (
-                    <img src={selectedEntry.asset.imageUrl} alt={selectedEntry.asset.name} className="w-full h-full object-cover" />
+                    <CachedImg src={selectedEntry.asset.imageUrl} alt={selectedEntry.asset.name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <span className="material-symbols-outlined text-5xl text-on-surface-variant/30">image</span>

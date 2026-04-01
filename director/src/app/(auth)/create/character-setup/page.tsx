@@ -1,4 +1,5 @@
 'use client';
+import { CachedImg } from '@/components/ui/CachedImg';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -1409,7 +1410,7 @@ export default function CharacterSetupPage() {
                     <div className="aspect-square relative bg-surface-container">
                       {asset.imageUrl ? (
                         <>
-                          <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
+                          <CachedImg src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
                           <button onClick={() => generateAsset(asset)} className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span className="material-symbols-outlined text-on-surface">refresh</span>
                           </button>

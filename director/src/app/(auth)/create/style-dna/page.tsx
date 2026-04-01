@@ -1,4 +1,5 @@
 'use client';
+import { CachedImg } from '@/components/ui/CachedImg';
 
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
@@ -535,7 +536,7 @@ function AssetGalleryGrouped({
                       </div>
                     ) : asset.imageUrl ? (
                       <>
-                        <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
+                        <CachedImg src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
                         {/* Color grade overlay that reflects the selected palette */}
                         <div
                           className="absolute inset-0 mix-blend-color opacity-[0.08] pointer-events-none"

@@ -1,4 +1,5 @@
 'use client';
+import { CachedImg } from '@/components/ui/CachedImg';
 
 import Link from 'next/link';
 import { useState, useRef, useCallback, useEffect } from 'react';
@@ -235,7 +236,7 @@ export default function ExportPage() {
                   rel="noopener noreferrer"
                   className="aspect-video rounded-lg overflow-hidden border border-outline-variant hover:border-primary/50 transition"
                 >
-                  <img src={scene.imageUrl!} alt={scene.prompt} className="w-full h-full object-cover" />
+                  <CachedImg src={scene.imageUrl!} alt={scene.prompt} className="w-full h-full object-cover" />
                 </a>
               ))}
               {completedVideos.map((video) => (

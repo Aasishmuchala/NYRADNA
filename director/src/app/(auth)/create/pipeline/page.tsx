@@ -1,4 +1,5 @@
 'use client';
+import { CachedImg } from '@/components/ui/CachedImg';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
@@ -212,7 +213,7 @@ export default function PipelinePage() {
                   {/* Thumbnail */}
                   <div className="relative aspect-video bg-surface-container-highest">
                     {node.imageUrl ? (
-                      <img src={node.imageUrl} alt={node.title} className="w-full h-full object-cover" />
+                      <CachedImg src={node.imageUrl} alt={node.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="material-symbols-outlined text-3xl text-on-surface-variant/20">image</span>

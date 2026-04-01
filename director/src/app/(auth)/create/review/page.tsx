@@ -1,4 +1,5 @@
 'use client';
+import { CachedImg } from '@/components/ui/CachedImg';
 
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
